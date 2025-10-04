@@ -105,7 +105,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ portfolioAssets, messages, isLo
         const defaultSuggestions = {
             markets: [
                 'آخرین وضعیت شاخص کل بورس و ارزهای پرطرفدار را تحلیل کن.',
-                'تحلیل تکنیکال بیت‌کوین در تایم‌فریم روزانه چیست؟',
+                'تحلیل تکنیکال طلای آب‌شده در تایم‌فریم روزانه چیست؟',
                 'چشم‌انداز طلا و دلار برای هفته آینده چگونه است؟',
             ],
             portfolio: [
@@ -303,7 +303,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ portfolioAssets, messages, isLo
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="مثلاً تحلیل بیت‌کوین یا بررسی پرتفو..."
+                            placeholder="مثلاً تحلیل طلای آب‌شده یا بررسی پرتفو..."
                             aria-label="ارسال پرسش به دستیار هوشمند"
                             aria-describedby="search-shortcuts"
                             ref={inputRef}
