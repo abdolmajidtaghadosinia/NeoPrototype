@@ -9,7 +9,6 @@ import { userPortfolioData, userRecentTrades } from '../../data/marketData';
 import AssetCategories, { AssetCategory } from '../AssetCategories';
 import { toPersianDigits } from '../formatters';
 import TradeHistoryCard from '../TradeHistoryCard';
-import ERC20Wallet from '../ERC20Wallet';
 
 const portfolioHistoryData = [
   { name: '۶ روز پیش', value: 31200000 },
@@ -22,12 +21,10 @@ const portfolioHistoryData = [
 
 const fundAssets = userPortfolioData.filter(a => a.name.includes('صندوق'));
 const stockAssets = userPortfolioData.filter(a => a.name.includes('سهام'));
-const cryptoAssets = userPortfolioData.filter(a => !a.name.includes('صندوق') && !a.name.includes('سهام'));
-
 const categories: AssetCategory[] = [
-    { name: 'ارزش صندوق‌ها', value: 16350000, percentage: 50, color: '#D7FE43', lastUpdated: 'بروزرسانی سه شنبه, ۱۱ شهریور', assets: fundAssets },
-    { name: 'ارزش سبد سهام', value: 8175000, percentage: 25, color: '#8b5cf6', lastUpdated: 'بروزرسانی پنج شنبه, ۱۳ شهریور', assets: stockAssets },
-    { name: 'ارزش رمزارزها', value: 8175000, percentage: 25, color: '#38bdf8', lastUpdated: 'بروزرسانی لحظه‌ای', assets: cryptoAssets },
+    { name: 'ارزش صندوق‌ها', value: 19500000, percentage: 45, color: '#D7FE43', lastUpdated: 'بروزرسانی سه شنبه, ۱۱ شهریور', assets: fundAssets },
+    { name: 'ارزش سبد سهام', value: 17250000, percentage: 40, color: '#8b5cf6', lastUpdated: 'بروزرسانی پنج شنبه, ۱۳ شهریور', assets: stockAssets },
+    { name: 'اوراق و سپرده‌ها', value: 6500000, percentage: 15, color: '#38bdf8', lastUpdated: 'بروزرسانی لحظه‌ای', assets: userPortfolioData.filter(a => a.name.includes('اوراق')) },
 ];
 
 const tooltipStyles = {
@@ -109,8 +106,6 @@ const WalletPage: React.FC<WalletPageProps> = ({ onSellClick, onLoanRequestClick
                     onSliceClick={onPortfolioSliceSelect}
                     variant="highlight"
                 />
-
-                <ERC20Wallet />
 
                 <div>
                     <h2 className="text-xl font-bold text-white text-right mb-4">آخرین معاملات</h2>

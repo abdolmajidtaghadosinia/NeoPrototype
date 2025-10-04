@@ -32,10 +32,10 @@ interface PublicProfilePageProps {
 
 // Mock data for the profile page
 const userPortfolioData: PortfolioSlice[] = [
-  { name: 'بیت‌کوین', value: 35, color: '#f59e0b' },
+  { name: 'صندوق طلا عیار', value: 35, color: '#f59e0b' },
   { name: 'سهام خودرو', value: 25, color: '#ef4444' },
   { name: 'صندوق دارا', value: 20, color: '#7a96c2' },
-  { name: 'اتریوم', value: 15, color: '#475569' },
+  { name: 'سهام وبملت', value: 15, color: '#475569' },
   { name: 'متفرقه', value: 5, color: '#334155' },
 ];
 

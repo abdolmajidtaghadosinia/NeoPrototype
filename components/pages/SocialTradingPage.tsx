@@ -263,19 +263,19 @@ const SocialTradingPage: React.FC<SocialTradingPageProps> = ({ onUserSelect, onI
   };
 
   const ideaTemplates = useMemo<IdeaTemplate[]>(() => {
-    const bitcoinId = assets.find((asset) => asset.id === 'bitcoin')?.id;
     const khodroId = assets.find((asset) => asset.id === 'khodro')?.id;
     const ayarId = assets.find((asset) => asset.id === 'ayar')?.id;
+    const webmelatId = assets.find((asset) => asset.id === 'webmelat')?.id;
 
     return [
       {
-        id: 'btc-swing',
-        label: 'سوئینگ بیت‌کوین',
-        title: 'سناریوی سوئینگ بیت‌کوین',
-        description: 'بررسی واکنش قیمت بین محدوده حمایتی ۵۸ تا ۶۲ هزار دلار با تمرکز بر حجم معاملات.',
+        id: 'tse-outlook',
+        label: 'چشم‌انداز شاخص کل',
+        title: 'تحلیل ناحیه مقاومتی شاخص کل بورس',
+        description: 'بررسی رفتار شاخص کل در محدوده ۲.۲ میلیون واحد با تمرکز بر ورود پول حقیقی.',
         type: 'bullish',
         timeframe: '۱ هفته',
-        assetId: bitcoinId || defaultAssetId,
+        assetId: webmelatId || defaultAssetId,
       },
       {
         id: 'auto-risk',

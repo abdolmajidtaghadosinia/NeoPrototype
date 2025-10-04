@@ -1,69 +1,34 @@
-import React, { useEffect, useState, memo } from 'react';
-import { BrowserProvider, parseEther } from 'ethers';
-import { MetaMaskErrorParser } from '../utils/metaMaskError';
-
-const PREMIUM_ADDRESS = '0x000000000000000000000000000000000000dead';
-const PREMIUM_PRICE_ETH = '0.01';
-
-declare global {
-  interface Window { ethereum?: any }
-}
+import React, { memo, useState } from 'react';
 
 const PremiumSection: React.FC = () => {
-  const [expiry, setExpiry] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('premiumExpiry');
-    if (stored) {
-      const time = Number(stored);
-      if (time > Date.now()) setExpiry(time);
-    }
-  }, []);
-
-  const buyPremium = async () => {
-    setError(null);
-    try {
-      if (!window.ethereum) {
-        setError('متامسک نصب نشده است');
-        return;
-      }
-      setLoading(true);
-      const provider = new BrowserProvider(window.ethereum);
-      await provider.send('eth_requestAccounts', []);
-      const signer = await provider.getSigner();
-      await signer.sendTransaction({
-        to: PREMIUM_ADDRESS,
-        value: parseEther(PREMIUM_PRICE_ETH),
-      });
-      const newExpiry = Date.now() + 30 * 24 * 60 * 60 * 1000;
-      localStorage.setItem('premiumExpiry', String(newExpiry));
-      setExpiry(newExpiry);
-    } catch (err) {
-      setError(MetaMaskErrorParser.parse(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const remaining = expiry ? Math.ceil((expiry - Date.now()) / (1000 * 60 * 60 * 24)) : 0;
+  const [showInstructions, setShowInstructions] = useState(false);
 
   return (
-    <div className="bg-neo-dark-2 rounded-xl p-4 space-y-3">
-      <h3 className="text-lg font-bold text-right text-white">اشتراک پرمیوم</h3>
-      {expiry && expiry > Date.now() ? (
-        <p className="text-right text-gray-300">اکانت پرمیوم فعال است؛ {remaining} روز باقی مانده.</p>
-      ) : (
-        <button
-          onClick={buyPremium}
-          disabled={loading}
-          className="w-full bg-neo-green text-black rounded-lg py-2 font-semibold disabled:opacity-50"
-        >
-          {loading ? 'در حال پرداخت…' : `خرید ماهانه (${PREMIUM_PRICE_ETH} ETH)`}
-        </button>
+    <div className="bg-neo-dark-2 rounded-xl p-4 space-y-4">
+      <div className="flex flex-col gap-2 text-right">
+        <h3 className="text-lg font-bold text-white">اشتراک پرمیوم</h3>
+        <p className="text-sm text-gray-300 leading-6">
+          با فعال‌سازی پرمیوم، به تحلیل‌های تخصصی‌تر بازار سرمایه ایران، هشدارهای هوشمند و گزارش‌های اختصاصی دسترسی خواهید داشت.
+          این سرویس از طریق قرارداد واریز ریالی به حساب کارگزاری فعال می‌شود.
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={() => setShowInstructions((prev) => !prev)}
+        className="w-full rounded-lg bg-neo-green py-2 font-semibold text-black transition hover:bg-lime-300"
+      >
+        {showInstructions ? 'پنهان کردن مراحل' : 'نحوه فعال‌سازی پرمیوم'}
+      </button>
+      {showInstructions && (
+        <ol className="list-decimal space-y-2 pr-6 text-sm text-gray-200">
+          <li>در پرتال کارگزاری خود، بخش خدمات جانبی را باز کنید.</li>
+          <li>فرم «درخواست سرویس پرمیوم رایا» را تکمیل و مبلغ اشتراک را واریز کنید.</li>
+          <li>رسید واریز را در بخش پشتیبانی بارگذاری کنید تا دسترسی شما ظرف حداکثر ۲۴ ساعت فعال شود.</li>
+        </ol>
       )}
-      {error && <p className="text-red-500 text-sm text-right">{error}</p>}
+      <p className="text-xs text-gray-400 text-right">
+        برای دریافت تخفیف سازمانی یا پشتیبانی بیشتر با ایمیل <span className="text-neo-green">support@raya.finance</span> در تماس باشید.
+      </p>
     </div>
   );
 };

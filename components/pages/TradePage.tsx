@@ -107,7 +107,9 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
     const userTradableTomanBalance = 45_000_000;
     const userAssetBalance = useMemo(() => {
         if (asset.id === 'khodro') return 1500;
-        if (asset.category === 'کریپتو') return 0.5;
+        if (asset.id === 'ayar') return 30;
+        if (asset.category === 'صندوق‌ها') return 120;
+        if (asset.category === 'کالا') return 10;
         return 100;
     }, [asset]);
 
@@ -145,13 +147,16 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
     }, [asset.id, priceSourceInfo.currency]);
 
     const assetUnit = useMemo(() => {
-       if(asset.category === 'کریپتو') {
-           const symbolMatch = asset.name.match(/\(([^)]+)\)/);
-           if (symbolMatch) return symbolMatch[1];
+       if(asset.category === 'بورس') return 'سهم';
+       if(asset.category === 'صندوق‌ها') return 'واحد';
+       if(asset.category === 'کالا') return 'گرم';
+       if(asset.category === 'ارزها') {
+           if(asset.id === 'dollar') return 'USD';
+           if(asset.id === 'euro') return 'EUR';
+           return 'واحد';
        }
-       if(asset.category === 'بورس' || asset.category === 'صندوق‌ها') return 'سهم';
-       if(asset.id === 'dollar') return 'USD';
-       if(asset.id === 'euro') return 'EUR';
+       const symbolMatch = asset.name.match(/\(([^)]+)\)/);
+       if (symbolMatch) return symbolMatch[1];
        return asset.name.split(' ')[0];
     }, [asset]);
 
@@ -190,18 +195,18 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
         {
             id: '1',
             type: 'buy',
-            asset: 'بیت کوین',
-            amount: 0.1,
-            price: 650000000,
+            asset: 'صندوق طلا عیار',
+            amount: 20,
+            price: 152000,
             status: 'ongoing',
             time: 'لحظاتی پیش',
         },
         {
             id: '2',
             type: 'sell',
-            asset: 'اتریوم',
-            amount: 1,
-            price: 70000000,
+            asset: 'سهام خودرو',
+            amount: 500,
+            price: 2150,
             status: 'ongoing',
             time: 'امروز',
         },
@@ -211,9 +216,9 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
         {
             id: '3',
             type: 'buy',
-            asset: 'دوج کوین',
-            amount: 1000,
-            price: 5000,
+            asset: 'صندوق درآمد ثابت کمند',
+            amount: 50,
+            price: 11000,
             status: 'done',
             time: 'دیروز',
         },

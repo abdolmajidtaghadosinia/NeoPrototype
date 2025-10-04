@@ -80,7 +80,9 @@ describe('Page components render', () => {
         onAnalyze={noop}
       />
     );
-    expect(screen.getAllByText(new RegExp(financialNewsData[0].title)).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText((content) => content.includes(financialNewsData[0].title)).length,
+    ).toBeGreaterThan(0);
   });
 
   test('ProfilePage renders', () => {
@@ -100,7 +102,7 @@ describe('Page components render', () => {
 
   test('QuickTradePage renders', () => {
     render(<QuickTradePage onBack={noop} />);
-    expect(screen.getByText('واریز رمزارز')).toBeInTheDocument();
+    expect(screen.getByText('حساب‌های وکالتی فعال')).toBeInTheDocument();
   });
 
   test('SearchPage renders', () => {
@@ -160,7 +162,7 @@ describe('Page components render', () => {
         error={null}
       />
     );
-    expect(screen.getByText('کریپتو')).toBeInTheDocument();
+    expect(screen.getByText('بورس')).toBeInTheDocument();
   });
 
   test('TradePage renders', () => {
@@ -185,7 +187,11 @@ describe('Page components render', () => {
         onAddComment={noop}
       />
     );
-    expect(screen.getByText(tradingIdeasData[0].title)).toBeInTheDocument();
+    expect(
+      screen
+        .getAllByText((content) => content.includes(tradingIdeasData[0].title))
+        .length,
+    ).toBeGreaterThan(0);
   });
 
   test('WalletPage renders', () => {

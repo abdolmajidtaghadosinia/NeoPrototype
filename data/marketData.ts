@@ -135,11 +135,11 @@ export const marketTechnicalSummary: TechnicalSignalInsight[] = [
 
 export const userPortfolioData: PortfolioSlice[] = [
   { name: 'سهام وبملت', value: 15, color: '#A0A0A0', amount: '۱۲۰ سهم', icon: '🏦', dailyChange: -0.2 },
-  { name: 'دوج کوین', value: 15, color: '#6A6A6A', amount: '۳,۵۰۰ توکن', icon: '🐶', dailyChange: 4.23 },
-  { name: 'صندوق درآمدثابت', value: 10, color: '#808080', amount: '۵۰ واحد', icon: '📈', dailyChange: 0.07 },
-  { name: 'سهام خودرو', value: 10, color: '#4A4A4A', amount: '۵۴۰ سهم', icon: '🚗', dailyChange: 1.5 },
-  { name: 'صندوق طلا عیار', value: 40, color: '#1C1C1E', amount: '۲۵ واحد', icon: '💰', dailyChange: 0.8 },
-  { name: 'اتریوم', value: 10, color: '#2C2C2E', amount: '۰.۷۵ توکن', icon: 'Ξ', dailyChange: 1.49 },
+  { name: 'سهام فولاد', value: 18, color: '#6A6A6A', amount: '۹۵۰ سهم', icon: '🏭', dailyChange: 0.85 },
+  { name: 'صندوق درآمدثابت کمند', value: 12, color: '#808080', amount: '۵۰ واحد', icon: '📈', dailyChange: 0.09 },
+  { name: 'سهام خودرو', value: 12, color: '#4A4A4A', amount: '۵۴۰ سهم', icon: '🚗', dailyChange: 1.5 },
+  { name: 'صندوق طلا عیار', value: 30, color: '#1C1C1E', amount: '۲۵ واحد', icon: '💰', dailyChange: 0.8 },
+  { name: 'اوراق مشارکت دولتی', value: 13, color: '#2C2C2E', amount: '۲۰۰ ورقه', icon: '📜', dailyChange: 0.12 },
 ];
 
 const sharedNewsArticles: NewsArticle[] = [
@@ -161,19 +161,19 @@ const sharedNewsArticles: NewsArticle[] = [
   },
   {
     id: 'user-news-5',
-    category: 'کریپتو',
-    title: 'نوسانات شدید در قیمت دوج‌کوین (DOGE) پس از توییت ایلان ماسک',
+    category: 'بورس',
+    title: 'بورس کالا اعلام کرد عرضه خودروهای داخلی تمدید شد',
     summary:
-      'قیمت دوج‌کوین پس از انتشار توییتی از سوی ایلان ماسک، شاهد افزایش ۱۰ درصدی و سپس اصلاح قیمتی بود که بار دیگر تاثیر این چهره بر بازار را نشان داد.',
-    source: 'توییتر',
+      'با توجه به استقبال متقاضیان، عرضه خودروهای داخلی در بورس کالا یک روز دیگر تمدید شد تا امکان ثبت سفارش برای خریداران بیشتری فراهم شود.',
+    source: 'بورس کالا',
     time: '۴ ساعت پیش',
-    imageUrl: 'https://picsum.photos/seed/doge-news/400/400',
+    imageUrl: 'https://picsum.photos/seed/ime-car/400/400',
     content: [
-      'پس از توییت جدید ایلان ماسک درباره استفاده از دوج‌کوین در سرویس‌های پلتفرم ایکس، قیمت این رمزارز جهش ۱۰ درصدی داشت اما در کمتر از یک ساعت بخش عمده رشد خود را از دست داد.',
-      'کارشناسان هشدار می‌دهند حجم معاملات سفته‌بازانه همچنان بالاست و نوسان شدید می‌تواند سرمایه‌گذاران خرد را غافلگیر کند. مدیریت ریسک و تعیین حد ضرر برای پوزیشن‌های پرریسک توصیه می‌شود.',
+      'مدیریت عملیات بازار بورس کالا از تمدید عرضه خودروهای داخلی در تالار خودرو خبر داد. متقاضیان می‌توانند با مراجعه به درگاه کارگزاری‌های عضو، سفارش‌های خرید خود را ثبت کنند.',
+      'با توجه به اختلاف قیمت بازار آزاد و قیمت پایه اعلام شده، کارشناسان توصیه می‌کنند خریداران هزینه‌های جانبی مانند مالیات و کارمزد را نیز در تصمیم‌گیری خود لحاظ کنند.',
     ],
-    relatedAssets: ['dogecoin'],
-    url: 'https://twitter.com/elonmusk',
+    relatedAssets: ['khodro'],
+    url: 'https://www.ime.co.ir/',
   },
   {
     id: 'user-news-2',
@@ -225,19 +225,19 @@ const sharedNewsArticles: NewsArticle[] = [
   },
   {
     id: 'user-news-4',
-    category: 'کریپتو',
-    title: 'آپدیت جدید اتریوم (ETH) با موفقیت انجام شد',
+    category: 'بورس',
+    title: 'تعیین سقف جدید برای تسعیر ارز شرکت‌های صادراتی',
     summary:
-      'شبکه اتریوم آپدیت "پراگ" را با موفقیت پیاده‌سازی کرد که انتظار می‌رود به بهبود مقیاس‌پذیری و کاهش کارمزدها کمک کند.',
-    source: 'کوین‌دسک',
+      'سازمان بورس در اطلاعیه‌ای از بازنگری در نحوه تسعیر ارز شرکت‌های صادرات محور خبر داد که می‌تواند بر سودآوری شرکت‌های پتروشیمی و فلزی اثرگذار باشد.',
+    source: 'سازمان بورس',
     time: '۳ روز پیش',
-    imageUrl: 'https://picsum.photos/seed/eth-news/400/400',
+    imageUrl: 'https://picsum.photos/seed/export-earnings/400/400',
     content: [
-      'شبکه اتریوم آپدیت «پراگ» را با موفقیت اجرا کرد که شامل بهبودهای مهم در لایه اجرا و کاهش هزینه گس برای تراکنش‌های رول‌آپ است. توسعه‌دهندگان اعلام کردند این مرحله، مسیر را برای شاردینگ کامل هموار می‌کند.',
-      'پس از اجرای به‌روزرسانی، نرخ کارمزد میانگین به محدوده‌ای کمتر از ۱۸ گوی کاهش یافت و فعالیت قراردادهای هوشمند افزایش داشت. تحلیلگران انتظار دارند پروژه‌های دیفای از این کاهش هزینه بهره‌مند شوند.',
+      'سازمان بورس و اوراق بهادار اعلام کرد سقف جدیدی برای نرخ تسعیر ارز درآمدهای صادراتی شرکت‌های بورسی ابلاغ شده است. این تصمیم در راستای همگرایی بیشتر نرخ‌های نیما و بازار آزاد اتخاذ شده است.',
+      'کارشناسان معتقدند اجرای این دستورالعمل می‌تواند سود هر سهم شرکت‌های پتروشیمی و معدنی را بهبود دهد. در عین حال بر لزوم شفافیت در اعلام نرخ‌های فروش و تسویه تاکید شده است.',
     ],
-    relatedAssets: ['ethereum'],
-    url: 'https://www.coindesk.com/tech/2024/03/13/ethereum-prague-upgrade/',
+    relatedAssets: ['shepna', 'foolad'],
+    url: 'https://www.seo.ir/',
   },
   {
     id: 'bourse-1',
@@ -286,36 +286,36 @@ const sharedNewsArticles: NewsArticle[] = [
     url: 'https://www.isna.ir/news/14030101010/%D8%B1%D8%B4%D8%AF-%D8%AA%D9%88%D9%84%DB%8C%D8%AF-%D9%81%D9%88%D9%84%D8%A7%D8%AF',
   },
   {
-    id: 'crypto-1',
-    category: 'کریپتو',
-    title: 'تحلیل قیمت بیت‌کوین: آیا روند صعودی ادامه خواهد داشت؟',
+    id: 'bourse-4',
+    category: 'بورس',
+    title: 'ارزش معاملات خرد به بالاترین سطح ماهانه رسید',
     summary:
-      'بیت‌کوین پس از اصلاح قیمتی، نشانه‌هایی از بازگشت به روند صعودی را نشان می‌دهد. تحلیلگران نظرات متفاوتی دارند.',
-    source: 'میهن بلاکچین',
+      'آمارهای امروز نشان می‌دهد ارزش معاملات خرد بازار سهام با رشد ۲۵ درصدی نسبت به میانگین هفتگی رکورد جدیدی ثبت کرده است.',
+    source: 'تحلیل بازار',
     time: '۳ ساعت پیش',
-    imageUrl: 'https://picsum.photos/seed/crypto1/400/400',
+    imageUrl: 'https://picsum.photos/seed/tse-volume/400/400',
     content: [
-      'بیت‌کوین پس از اصلاح اخیر در محدوده ۶۷ هزار دلار معامله می‌شود. ساختار تکنیکال نشان می‌دهد سطح حمایتی ۶۴ هزار دلار همچنان معتبر است.',
-      'در سناریوی صعودی، عبور از مقاومت ۷۰ هزار دلار مسیر را برای آزمون سقف تاریخی هموار می‌کند. تحلیلگران توصیه می‌کنند حجم معاملات با مدیریت ریسک همراه باشد.',
+      'امروز ارزش معاملات خرد بازار به بیش از ۱۰ هزار میلیارد تومان رسید که بالاترین سطح از ابتدای ماه محسوب می‌شود. گروه فلزات اساسی و خودرو بیشترین سهم را در این رشد داشته‌اند.',
+      'کارشناسان معتقدند افزایش ورود پول حقیقی و انتشار گزارش‌های فصلی مثبت شرکت‌ها از عوامل اصلی رشد ارزش معاملات است. در عین حال هشدار داده می‌شود که مدیریت ریسک در نمادهای پرنوسان فراموش نشود.',
     ],
-    relatedAssets: ['bitcoin'],
-    url: 'https://mihanblockchain.com/bitcoin-price-analysis/',
+    relatedAssets: ['foolad', 'khodro'],
+    url: 'https://www.tsetmc.com/',
   },
   {
-    id: 'crypto-3',
-    category: 'کریپتو',
-    title: 'رگولاتوری جدید در اروپا برای استیبل‌کوین‌ها',
+    id: 'bourse-5',
+    category: 'بورس',
+    title: 'ابلاغ بسته حمایتی جدید برای افزایش سرمایه شرکت‌های بورسی',
     summary:
-      'اتحادیه اروپا قوانین جدیدی تحت عنوان MiCA را برای نظارت بر استیبل‌کوین‌ها مانند تتر و USDC تصویب کرد که می‌تواند بر بازار کریپتو تاثیرگذار باشد.',
-    source: 'کوین‌بیس',
+      'وزارت اقتصاد بسته‌ای حمایتی شامل تسهیل افزایش سرمایه از محل آورده نقدی و مطالبات را برای شرکت‌های بورسی تصویب کرد.',
+    source: 'وزارت اقتصاد',
     time: '۲ روز پیش',
-    imageUrl: 'https://picsum.photos/seed/crypto-mica/400/400',
+    imageUrl: 'https://picsum.photos/seed/support-package/400/400',
     content: [
-      'اتحادیه اروپا چارچوب نظارتی MiCA را برای مدیریت انتشار و نگهداری استیبل‌کوین‌ها تصویب کرد. این مقررات شرکت‌های صادرکننده را ملزم به نگهداری ذخایر نقدشونده می‌کند.',
-      'صرافی‌ها باید گزارش‌های دوره‌ای شفاف ارائه دهند و محدودیت‌هایی برای حجم تراکنش استیبل‌کوین‌های غیراروپایی اعمال می‌شود. فعالان بازار انتظار دارند ثبات بیشتری در بازار رمزارزها ایجاد شود.',
+      'وزارت امور اقتصادی و دارایی در اطلاعیه‌ای از بسته جدید حمایتی برای شرکت‌های پذیرفته شده در بورس تهران خبر داد. این بسته شامل تسریع در فرآیندهای اداری و اعطای معافیت‌های موقت مالیاتی برای افزایش سرمایه است.',
+      'هدف از این بسته تقویت تامین مالی تولید و توسعه پروژه‌های نیمه تمام عنوان شده است. کارشناسان معتقدند اجرای دقیق این سیاست می‌تواند نقدشوندگی سهام شرکت‌های تولیدی را افزایش دهد.',
     ],
-    relatedAssets: ['usdt', 'usdc'],
-    url: 'https://www.coinbase.com/blog/eu-mica-stablecoin-rules',
+    relatedAssets: ['webmelat', 'shepna'],
+    url: 'https://www.mefa.gov.ir/',
   },
   {
     id: 'global-1',
@@ -368,14 +368,14 @@ export const userRecentTrades: Trade[] = [
   },
   {
     id: 't3', type: 'buy',
-    asset: { id: 'ethereum', name: 'اتریوم', icon: 'Ξ' },
-    amount: 0.1, unit: 'ETH', pricePerUnit: 210000000, currency: 'تومان',
+    asset: { id: 'foolad', name: 'سهام فولاد', icon: '🏭' },
+    amount: 1200, unit: 'سهم', pricePerUnit: 4500, currency: 'ریال',
     timestamp: 'دیروز'
   },
    {
     id: 't4', type: 'sell',
-    asset: { id: 'dogecoin', name: 'دوج کوین', icon: '🐶' },
-    amount: 1500, unit: 'DOGE', pricePerUnit: 9500, currency: 'تومان',
+    asset: { id: 'webmelat', name: 'سهام وبملت', icon: '🏦' },
+    amount: 100, unit: 'سهم', pricePerUnit: 3210, currency: 'ریال',
     timestamp: '۳ روز پیش'
   },
 ];
@@ -389,8 +389,8 @@ export const publicProfileRecentTrades: Trade[] = [
   },
   {
     id: 'pt2', type: 'sell',
-    asset: { id: 'dogecoin', name: 'دوج کوین', icon: '🐶' },
-    amount: 50000, unit: 'DOGE', pricePerUnit: 9500, currency: 'تومان',
+    asset: { id: 'shepna', name: 'شپنا', icon: '⛽️' },
+    amount: 4000, unit: 'سهم', pricePerUnit: 755, currency: 'ریال',
     timestamp: 'دیروز'
   },
   {
@@ -403,9 +403,9 @@ export const publicProfileRecentTrades: Trade[] = [
 
 
 export const leaderboardData: LeaderboardUser[] = [
-    { 
+    {
       id: 1, name: 'زهرا مرادی', profit: 452, rank: 1, followers: 2300, winRate: 78, risk: 'متوسط', picture: 'https://randomuser.me/api/portraits/women/44.jpg',
-      rankChange: 'up', weeklyProfitValue: 12500000, favoriteAsset: { id: 'bitcoin', name: 'بیت‌کوین', icon: '₿' }
+      rankChange: 'up', weeklyProfitValue: 12500000, favoriteAsset: { id: 'foolad', name: 'فولاد', icon: '🏭' }
     },
     { 
       id: 2, name: 'علی عبدالمالکی', profit: 359, rank: 2, followers: 1800, winRate: 65, risk: 'زیاد', picture: 'https://randomuser.me/api/portraits/men/46.jpg',
@@ -417,7 +417,7 @@ export const leaderboardData: LeaderboardUser[] = [
     },
     { 
       id: 4, name: 'امیرحسین احمدی', profit: 288, rank: 4, followers: 950, winRate: 71, risk: 'متوسط', picture: 'https://randomuser.me/api/portraits/men/66.jpg',
-      rankChange: 'down', weeklyProfitValue: 5100000, favoriteAsset: { id: 'ethereum', name: 'اتریوم', icon: 'Ξ' }
+      rankChange: 'down', weeklyProfitValue: 5100000, favoriteAsset: { id: 'ayar', name: 'عیار', icon: '💰' }
     },
     { 
       id: 5, name: 'سارا حسینی', profit: 250, rank: 5, followers: 800, winRate: 68, risk: 'کم', picture: 'https://randomuser.me/api/portraits/women/55.jpg',
@@ -441,23 +441,23 @@ export const followedActivityData: FollowedActivity[] = [
         id: 'act-2',
         user: { id: 1, name: 'زهرا مرادی', picture: 'https://randomuser.me/api/portraits/women/44.jpg' },
         type: 'trade_sell',
-        asset: { id: 'dogecoin', name: 'دوج کوین', icon: '🐶' },
+        asset: { id: 'shepna', name: 'شپنا', icon: '⛽️' },
         timestamp: '۱۲ دقیقه پیش',
-        tradeAmount: 15000,
-        tradeUnit: 'DOGE',
-        tradePrice: 9500,
-        tradePriceCurrency: 'تومان',
+        tradeAmount: 1500,
+        tradeUnit: 'سهم',
+        tradePrice: 755,
+        tradePriceCurrency: 'ریال',
     },
     {
         id: 'act-3',
         user: { id: 4, name: 'امیرحسین احمدی', picture: 'https://randomuser.me/api/portraits/men/66.jpg' },
         type: 'trade_buy',
-        asset: { id: 'ethereum', name: 'اتریوم', icon: 'Ξ' },
+        asset: { id: 'foolad', name: 'فولاد', icon: '🏭' },
         timestamp: '۳۰ دقیقه پیش',
-        tradeAmount: 0.5,
-        tradeUnit: 'ETH',
-        tradePrice: 210000000,
-        tradePriceCurrency: 'تومان',
+        tradeAmount: 3000,
+        tradeUnit: 'سهم',
+        tradePrice: 4500,
+        tradePriceCurrency: 'ریال',
     },
     {
         id: 'act-4',
@@ -485,9 +485,9 @@ export const followedActivityData: FollowedActivity[] = [
         id: 'act-6',
         user: { id: 3, name: 'مریم رضایی', picture: 'https://randomuser.me/api/portraits/women/68.jpg' },
         type: 'new_idea',
-        asset: { id: 'bitcoin', name: 'بیت‌کوین', icon: '₿' },
+        asset: { id: 'khodro', name: 'خودرو', icon: '🚗' },
         timestamp: 'دیروز',
-        details: 'تحلیل تازه‌ای درباره محدوده حمایتی ۵۸ هزار دلاری منتشر کرد.',
+        details: 'تحلیل تازه‌ای درباره محدوده حمایتی ۲,۰۰۰ ریالی منتشر کرد.',
     },
 ];
 
@@ -497,10 +497,10 @@ export const tradingIdeasData: TradingIdea[] = [
     {
         id: 'idea-1',
         user: { id: 1, name: 'زهرا مرادی', picture: 'https://randomuser.me/api/portraits/women/44.jpg', isPremium: true },
-        asset: { id: 'bitcoin', name: 'بیت‌کوین', icon: '₿' },
+        asset: { id: 'foolad', name: 'فولاد', icon: '🏭' },
         type: 'bullish',
-        title: 'فرصت خرید بیت‌کوین در کف قیمتی',
-        description: 'به نظر می‌رسد بیت‌کوین پس از اصلاح اخیر، در محدوده حمایتی قوی ۶۰ تا ۶۲ هزار دلار قرار گرفته است. این ناحیه می‌تواند نقطه ورود مناسبی برای یک موج صعودی جدید به سمت کانال ۷۰ هزار دلار باشد. اندیکاتور RSI نیز در ناحیه اشباع فروش قرار دارد.',
+        title: 'فرصت خرید فولاد پس از اصلاح',
+        description: 'نمودار فولاد پس از اصلاح کوتاه‌مدت به محدوده حمایتی ۴۳۰۰ ریالی واکنش مثبت نشان داده است. با توجه به رشد صادرات و گزارش تولید قوی، احتمال برگشت به سقف ۴۸۰۰ ریالی وجود دارد.',
         likes: 125,
         comments: 12,
         predictionTimeframe: '۱ ماهه',
@@ -541,10 +541,10 @@ export const tradingIdeasData: TradingIdea[] = [
     {
         id: 'idea-4',
         user: { id: 4, name: 'امیرحسین احمدی', picture: 'https://randomuser.me/api/portraits/men/66.jpg' },
-        asset: { id: 'ethereum', name: 'اتریوم', icon: 'Ξ' },
+        asset: { id: 'ayar', name: 'صندوق طلا عیار', icon: '💰' },
         type: 'bullish',
-        title: 'پتانسیل رشد اتریوم پس از آپدیت',
-        description: 'بعد از آپدیت اخیر و کاهش کارمزدها، اتریوم آماده است تا رشد قابل توجهی را تجربه کند. می‌تواند از بیت‌کوین پیشی بگیرد.',
+        title: 'پتانسیل رشد صندوق طلا با توجه به نوسانات جهانی',
+        description: 'با توجه به افزایش قیمت اونس و رشد تقاضای داخلی برای سکه، صندوق طلا عیار می‌تواند در شش‌ماهه آینده بازدهی جذابی ثبت کند. پیشنهاد می‌شود وزن دارایی‌های امن در سبد حفظ شود.',
         likes: 98,
         comments: 18,
         predictionTimeframe: '۶ ماهه',
@@ -653,137 +653,6 @@ const categoryMap: { [key: string]: MarketAsset['category'] } = {
 };
 
 export const staticMarketData: MarketAsset[] = [
-    // کریپتو
-    {
-        id: 'bitcoin', name: 'بیت‌کوین (BTC)', icon: '₿', price: '$60,000',
-        aliases: ['بیت کوین', 'bitcoin', 'btc', 'بی‌تی‌سی'],
-        description: 'بیت‌کوین اولین ارز دیجیتال غیرمتمرکز است که در سال ۲۰۰۹ معرفی شد.',
-        marketCap: '$1,180,000,000,000', volume24h: '$35,000,000,000', circulatingSupply: '19,000,000 BTC',
-        performance: {
-            daily: { change: 1.2, chartData: generateChartData(60000, 24, 0.02, 'daily') },
-            weekly: { change: -3.5, chartData: generateChartData(62000, 7, 0.05, 'weekly') },
-            monthly: { change: 10.0, chartData: generateChartData(55000, 30, 0.08, 'monthly') },
-            yearly: { change: 120.0, chartData: generateChartData(30000, 12, 0.12, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
-    {
-        id: 'ethereum', name: 'اتریوم (ETH)', icon: 'Ξ', price: '$3,000',
-        aliases: ['اتریوم', 'اتر', 'ethereum', 'eth'],
-        description: 'اتریوم دومین شبکه بزرگ بلاک‌چین است که قراردادهای هوشمند را پشتیبانی می‌کند.',
-        marketCap: '$360,000,000,000', volume24h: '$15,000,000,000', circulatingSupply: '120,000,000 ETH',
-        performance: {
-            daily: { change: 0.8, chartData: generateChartData(3000, 24, 0.025, 'daily') },
-            weekly: { change: -2.0, chartData: generateChartData(3100, 7, 0.05, 'weekly') },
-            monthly: { change: 8.0, chartData: generateChartData(2800, 30, 0.08, 'monthly') },
-            yearly: { change: 80.0, chartData: generateChartData(1600, 12, 0.12, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
-    {
-        id: 'tether', name: 'تتر (USDT)', icon: '🪙', price: '$1.00',
-        aliases: ['تتر', 'usdt', 'یو اس دی تی'],
-        description: 'تتر یک استیبل‌کوین با پشتوانه دلار آمریکا است.',
-        marketCap: '$100,000,000,000', volume24h: '$50,000,000,000', circulatingSupply: '100,000,000,000 USDT',
-        performance: {
-            daily: { change: 0.0, chartData: generateChartData(1, 24, 0.0001, 'daily') },
-            weekly: { change: 0.0, chartData: generateChartData(1, 7, 0.0001, 'weekly') },
-            monthly: { change: 0.0, chartData: generateChartData(1, 30, 0.0001, 'monthly') },
-            yearly: { change: 0.0, chartData: generateChartData(1, 12, 0.0001, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
-    {
-        id: 'bnb', name: 'بایننس کوین (BNB)', icon: '🟡', price: '$500',
-        aliases: ['بایننس کوین', 'bnb', 'بایننس'],
-        description: 'توکن بومی صرافی بایننس با کاربردهای متعدد در این اکوسیستم.',
-        marketCap: '$75,000,000,000', volume24h: '$1,500,000,000', circulatingSupply: '150,000,000 BNB',
-        performance: {
-            daily: { change: 2.5, chartData: generateChartData(500, 24, 0.03, 'daily') },
-            weekly: { change: -1.5, chartData: generateChartData(520, 7, 0.06, 'weekly') },
-            monthly: { change: 12.0, chartData: generateChartData(450, 30, 0.09, 'monthly') },
-            yearly: { change: 90.0, chartData: generateChartData(260, 12, 0.13, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
-    {
-        id: 'solana', name: 'سولانا (SOL)', icon: '🌞', price: '$150',
-        aliases: ['سولانا', 'sol', 'سول'],
-        description: 'سولانا یک بلاک‌چین پرسرعت با کارمزد پایین است.',
-        marketCap: '$65,000,000,000', volume24h: '$2,000,000,000', circulatingSupply: '430,000,000 SOL',
-        performance: {
-            daily: { change: -1.0, chartData: generateChartData(150, 24, 0.04, 'daily') },
-            weekly: { change: -5.5, chartData: generateChartData(165, 7, 0.07, 'weekly') },
-            monthly: { change: 20.0, chartData: generateChartData(120, 30, 0.1, 'monthly') },
-            yearly: { change: 300.0, chartData: generateChartData(40, 12, 0.15, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
-    {
-        id: 'ripple', name: 'ریپل (XRP)', icon: '🌊', price: '$0.50',
-        aliases: ['ریپل', 'xrp'],
-        description: 'ریپل بر انتقال سریع و ارزان وجوه بین‌المللی تمرکز دارد.',
-        marketCap: '$27,000,000,000', volume24h: '$1,200,000,000', circulatingSupply: '55,000,000,000 XRP',
-        performance: {
-            daily: { change: 0.5, chartData: generateChartData(0.5, 24, 0.03, 'daily') },
-            weekly: { change: -1.2, chartData: generateChartData(0.52, 7, 0.05, 'weekly') },
-            monthly: { change: 4.0, chartData: generateChartData(0.48, 30, 0.08, 'monthly') },
-            yearly: { change: 50.0, chartData: generateChartData(0.32, 12, 0.12, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
-    {
-        id: 'cardano', name: 'کاردانو (ADA)', icon: '🔷', price: '$0.60',
-        aliases: ['کاردانو', 'ada'],
-        description: 'کاردانو پلتفرمی برای اجرای قراردادهای هوشمند با رویکردی پژوهش‌محور است.',
-        marketCap: '$21,000,000,000', volume24h: '$600,000,000', circulatingSupply: '35,000,000,000 ADA',
-        performance: {
-            daily: { change: 1.0, chartData: generateChartData(0.6, 24, 0.03, 'daily') },
-            weekly: { change: -2.5, chartData: generateChartData(0.63, 7, 0.05, 'weekly') },
-            monthly: { change: 6.0, chartData: generateChartData(0.55, 30, 0.08, 'monthly') },
-            yearly: { change: 70.0, chartData: generateChartData(0.32, 12, 0.12, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
-    {
-        id: 'dogecoin', name: 'دوج‌کوین (DOGE)', icon: '🐶', price: '$0.15',
-        aliases: ['دوج کوین', 'دوج', 'doge', 'dogecoin'],
-        description: 'دوج‌کوین یک ارز دیجیتال مبتنی بر میم اینترنتی است.',
-        marketCap: '$20,000,000,000', volume24h: '$800,000,000', circulatingSupply: '132,000,000,000 DOGE',
-        performance: {
-            daily: { change: 3.0, chartData: generateChartData(0.15, 24, 0.05, 'daily') },
-            weekly: { change: -4.0, chartData: generateChartData(0.17, 7, 0.07, 'weekly') },
-            monthly: { change: 15.0, chartData: generateChartData(0.13, 30, 0.1, 'monthly') },
-            yearly: { change: 200.0, chartData: generateChartData(0.05, 12, 0.15, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
-    {
-        id: 'tron', name: 'ترون (TRX)', icon: '⚡', price: '$0.10',
-        aliases: ['ترون', 'trx'],
-        description: 'ترون شبکه‌ای برای اشتراک‌گذاری محتوای دیجیتال با کارمزد کم است.',
-        marketCap: '$8,800,000,000', volume24h: '$500,000,000', circulatingSupply: '88,000,000,000 TRX',
-        performance: {
-            daily: { change: 0.2, chartData: generateChartData(0.1, 24, 0.02, 'daily') },
-            weekly: { change: -0.8, chartData: generateChartData(0.105, 7, 0.04, 'weekly') },
-            monthly: { change: 3.0, chartData: generateChartData(0.095, 30, 0.07, 'monthly') },
-            yearly: { change: 40.0, chartData: generateChartData(0.07, 12, 0.1, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
-    {
-        id: 'polygon', name: 'پالیگان (MATIC)', icon: '🔸', price: '$0.90',
-        aliases: ['پالیگان', 'matic', 'ماتیک'],
-        description: 'پالیگان راهکاری لایه دوم برای افزایش مقیاس‌پذیری اتریوم است.',
-        marketCap: '$8,000,000,000', volume24h: '$400,000,000', circulatingSupply: '9,000,000,000 MATIC',
-        performance: {
-            daily: { change: 1.5, chartData: generateChartData(0.9, 24, 0.04, 'daily') },
-            weekly: { change: -3.0, chartData: generateChartData(0.95, 7, 0.06, 'weekly') },
-            monthly: { change: 9.0, chartData: generateChartData(0.82, 30, 0.09, 'monthly') },
-            yearly: { change: 150.0, chartData: generateChartData(0.36, 12, 0.13, 'yearly') }
-        },
-        category: 'کریپتو'
-    },
     // بورس
     {
         id: 'khodro', name: 'خودرو (ایران خودرو)', icon: '🚗', price: '۲,۱۲۰ ریال',

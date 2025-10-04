@@ -129,22 +129,22 @@ const initialMarketSummaryData: MarketSummaryItem[] = [
         }
     },
     {
-        id: 'btc',
-        name: 'بیت‌کوین',
-        icon: '₿',
+        id: 'tse-index',
+        name: 'شاخص کل بورس',
+        icon: '📈',
         performance: {
-            daily: { value: '$۶۷,۵۰۰', change: -1.8, chartData: generateSummaryChartData(67500, 7, 0.03) },
-            weekly: { value: '$۶۹,۰۰۰', change: 2.5, chartData: generateSummaryChartData(69000, 4, 0.05) },
-            monthly: { value: '$۶۵,۰۰۰', change: 3.8, chartData: generateSummaryChartData(65000, 30, 0.1) },
-            yearly: { value: '$۳۰,۰۰۰', change: 125.0, chartData: generateSummaryChartData(30000, 12, 0.2) },
+            daily: { value: '۲,۱۸۰,۰۰۰', change: 0.6, chartData: generateSummaryChartData(2180, 7, 0.015) },
+            weekly: { value: '۲,۱۵۵,۰۰۰', change: 1.2, chartData: generateSummaryChartData(2155, 4, 0.02) },
+            monthly: { value: '۲,۰۹۵,۰۰۰', change: 3.5, chartData: generateSummaryChartData(2095, 30, 0.04) },
+            yearly: { value: '۱,۸۹۰,۰۰۰', change: 12.3, chartData: generateSummaryChartData(1890, 12, 0.05) },
         },
         details: {
-            volume: '۳۵ میلیارد دلار',
-            value: '۱.۳ تریلیون دلار',
-            positiveCount: 3,
-            negativeCount: 7,
-            buyQueueValue: '۵ میلیارد دلار',
-            sellQueueValue: '۴ میلیارد دلار',
+            volume: '۷,۵۰۰ میلیارد تومان',
+            value: '۱۳,۴۰۰ میلیارد تومان',
+            positiveCount: 275,
+            negativeCount: 180,
+            buyQueueValue: '۹۵۰ میلیارد تومان',
+            sellQueueValue: '۶۸۰ میلیارد تومان',
         }
     },
     {
@@ -277,7 +277,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const [activeTab, setActiveTab] = useState('پورتفوی من');
   const [displayedStocks, setDisplayedStocks] = useState<Stock[]>([]);
   const [marketSummaryItems, setMarketSummaryItems] = useState<MarketSummaryItem[]>(initialMarketSummaryData);
-  const [marketMapView, setMarketMapView] = useState<'stock' | 'crypto' | 'funds'>('stock');
+  const [marketMapView, setMarketMapView] = useState<'stock' | 'commodities' | 'funds'>('stock');
   const [activeTabLabelId, setActiveTabLabelId] = useState<string>('');
   const topStripMinHeight = activeTab === 'پورتفوی من' ? 'min-h-[5rem]' : 'min-h-[4.5rem]';
   const tabPanelId = 'homepage-tabpanel';
@@ -745,16 +745,27 @@ const HomePage: React.FC<HomePageProps> = ({
     onStockSelect(stockForNavigation);
   };
 
-  const cryptoMarketData = useMemo(() => {
-    const cryptoAssets = marketAssets.filter(a => a.category === 'کریپتو').slice(0, 10);
+  const commodityMarketData = useMemo(() => {
+    const commodityAssets = marketAssets.filter(a => a.category === 'کالا').slice(0, 10);
     const sizeOrder: MarketMapStock['size'][] = ['xl', 'xl', 'lg', 'lg', 'md', 'md', 'md', 'sm', 'sm', 'sm'];
-    const stocks: MarketMapStock[] = cryptoAssets.map((asset, index) => ({
+    const stocks: MarketMapStock[] = commodityAssets.map((asset, index) => ({
       name: asset.name.replace(/\s*\(.*\)/, ''),
       change: asset.performance.daily.change,
       size: sizeOrder[index] || 'sm',
       id: asset.id,
     }));
-    return [{ name: 'رمزارزها', stocks }];
+    return stocks.length
+      ? [{ name: 'بازار کالایی', stocks }]
+      : [
+          {
+            name: 'بازار کالایی',
+            stocks: [
+              { name: 'انس جهانی طلا', change: 0.6, size: 'lg' as const },
+              { name: 'سکه طرح جدید', change: 0.9, size: 'md' as const },
+              { name: 'شمش طلا', change: 0.4, size: 'md' as const },
+            ],
+          },
+        ];
   }, [marketAssets]);
 
   const fundMarketData = useMemo(() => {
@@ -820,7 +831,7 @@ const HomePage: React.FC<HomePageProps> = ({
       if (!apiKey) return;
       try {
         const ai = new GoogleGenAI({ apiKey });
-        const prompt = `Search the web and provide latest market summary for Tehran Stock Exchange (tse), gold price in Iran (gold), Bitcoin price in USD (btc), and US dollar price in Iran (usd). Return a JSON array with objects {id, value, change, details: {volume, value, positiveCount, negativeCount, buyQueueValue, sellQueueValue}}. Use Persian digits and appropriate currency units.`;
+        const prompt = `Search the web and provide latest market summary for Tehran Stock Exchange main index (tse), gold price in Iran (gold), major equity fund performance (fund), and US dollar price in Iran (usd). Return a JSON array with objects {id, value, change, details: {volume, value, positiveCount, negativeCount, buyQueueValue, sellQueueValue}}. Use Persian digits and appropriate currency units.`;
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -873,11 +884,11 @@ const HomePage: React.FC<HomePageProps> = ({
 
         const assetKeywordMap: { [key: string]: string } = {
             'وبملت': 'webmelat',
-            'دوجکوین': 'dogecoin',
             'درآمدثابت': 'kamand',
             'خودرو': 'khodro',
             'طلاعیار': 'ayar',
-            'اتریوم': 'ethereum',
+            'فولاد': 'foolad',
+            'شپنا': 'shepna',
         };
 
         const portfolioAssetsAsStocks: Stock[] = userPortfolioData
@@ -901,11 +912,7 @@ const HomePage: React.FC<HomePageProps> = ({
                 const performance = foundAsset.performance.daily;
                 const isPositive = performance.change >= 0;
 
-                // For crypto assets from the API, we have weekly sparkline data.
-                // For other static assets, we have generated daily chart data.
-                const chartDataForTicker = foundAsset.category === 'کریپتو' 
-                    ? foundAsset.performance.weekly.chartData 
-                    : foundAsset.performance.daily.chartData;
+                const chartDataForTicker = foundAsset.performance.daily.chartData;
 
                 return {
                     id: foundAsset.id,
@@ -1100,7 +1107,7 @@ const HomePage: React.FC<HomePageProps> = ({
               {[
                 { key: 'stock' as const, label: 'بورس' },
                 { key: 'funds' as const, label: 'صندوق‌ها' },
-                { key: 'crypto' as const, label: 'کریپتو' },
+                { key: 'commodities' as const, label: 'بازار کالایی' },
               ].map((tab) => (
                 <button
                   key={tab.key}
@@ -1124,7 +1131,7 @@ const HomePage: React.FC<HomePageProps> = ({
                     ? marketMapData
                     : marketMapView === 'funds'
                       ? fundMarketData
-                      : cryptoMarketData
+                      : commodityMarketData
                 }
                 onStockClick={handleMarketMapStockClick}
               />

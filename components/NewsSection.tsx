@@ -11,10 +11,10 @@ interface NewsSectionProps {
 }
 
 const NewsSection: React.FC<NewsSectionProps> = ({ news, onArticleSelect, title = 'اخبار و تحلیل‌ها' }) => {
-  type NewsCategory = 'بورس' | 'کریپتو' | 'جهان';
+  type NewsCategory = 'بورس' | 'جهان';
   const [activeTab, setActiveTab] = useState<NewsCategory>('بورس');
 
-  const newsCategories: NewsCategory[] = ['بورس', 'کریپتو', 'جهان'];
+  const newsCategories: NewsCategory[] = ['بورس', 'جهان'];
 
   const generateMockArticles = (count: number, category: NewsCategory): NewsArticle[] =>
     Array.from({ length: count }).map((_, i) => ({

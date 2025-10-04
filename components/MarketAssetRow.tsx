@@ -29,10 +29,9 @@ const MarketAssetRow: React.FC<MarketAssetRowProps> = ({ asset }) => {
   const isPositive = performance.change >= 0;
   const chartColor = isPositive ? '#D7FE43' : '#ef4444';
   
-  const isCrypto = asset.category === 'کریپتو';
-  const nameParts = isCrypto ? asset.name.match(/(.*)\s+\((.*)\)/) : null;
-  const cryptoFullName = nameParts ? nameParts[1].trim() : asset.name;
-  const cryptoTicker = nameParts ? nameParts[2].trim() : '';
+  const nameParts = asset.name.match(/(.*)\s+\((.*)\)/);
+  const assetBaseName = nameParts ? nameParts[1].trim() : asset.name;
+  const assetTicker = nameParts ? nameParts[2].trim() : '';
 
   const renderIcon = () => {
     if (asset.category === 'ارزها' && typeof asset.icon === 'string' && asset.icon.startsWith('http')) {
@@ -53,10 +52,10 @@ const MarketAssetRow: React.FC<MarketAssetRowProps> = ({ asset }) => {
 
         {/* Column 2: Name & Ticker */}
         <div className="text-right flex-1 min-w-0">
-          {isCrypto && cryptoTicker ? (
+          {assetTicker ? (
             <>
-              <p className="font-bold text-white text-sm truncate">{cryptoTicker}</p>
-              <p className="text-xs text-gray-400 truncate">{cryptoFullName}</p>
+              <p className="font-bold text-white text-sm truncate">{assetTicker}</p>
+              <p className="text-xs text-gray-400 truncate">{assetBaseName}</p>
             </>
           ) : (
             <p className="font-bold text-white text-sm truncate">{asset.name}</p>

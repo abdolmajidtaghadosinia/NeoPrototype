@@ -88,81 +88,8 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
 
     // This effect fetches the dynamic chart data whenever the asset or timeframe changes.
     useEffect(() => {
-        const fetchChartData = async () => {
-            // For non-crypto assets, we use the static data from props and don't need to fetch.
-            if (detailedAsset.category !== 'کریپتو') {
-                setIsLoadingChart(false);
-                return;
-            }
-
-            // If chart data for the selected timeframe already exists from the initial load, don't re-fetch.
-            if (detailedAsset.performance[timeframe]?.chartData?.length > 0) {
-                 setIsLoadingChart(false);
-                 return;
-            }
-
-            setIsLoadingChart(true);
-            setChartError(null);
-
-            const daysMap: { [key in Timeframe]: number } = {
-                daily: 1,
-                weekly: 7,
-                monthly: 30,
-                yearly: 365,
-            };
-            const days = daysMap[timeframe];
-
-            try {
-                // We fetch data specific to the selected timeframe.
-                const response = await fetch(`https://api.coingecko.com/api/v3/coins/${detailedAsset.id}/market_chart?vs_currency=usd&days=${days}`);
-                if (!response.ok) {
-                    throw new Error(`Could not fetch chart for ${detailedAsset.name}`);
-                }
-                
-                const data = await response.json();
-                if (!data.prices || data.prices.length === 0) {
-                    throw new Error('Invalid chart data received');
-                }
-
-                const prices: [number, number][] = data.prices;
-                const chartPoints = prices.map((p) => ({ name: String(p[0]), value: p[1] }));
-                
-                const currentPrice = chartPoints[chartPoints.length - 1].value;
-                const oldPrice = chartPoints[0].value;
-                const change = oldPrice > 0 ? ((currentPrice - oldPrice) / oldPrice) * 100 : 0;
-                
-                const newPerformanceData: PerformanceData = {
-                    change,
-                    chartData: chartPoints,
-                };
-
-                // Update the performance data for the specific timeframe in our local asset state.
-                setDetailedAsset(prevAsset => ({
-                    ...prevAsset,
-                    performance: {
-                        ...prevAsset.performance,
-                        [timeframe]: newPerformanceData,
-                    },
-                }));
-
-            } catch (err) {
-                 const message = err instanceof Error ? err.message : 'An unknown error occurred';
-                 setChartError(message);
-                 console.error(err);
-                 // On error, clear the chart for the current timeframe to avoid showing stale data.
-                 setDetailedAsset(prevAsset => ({
-                    ...prevAsset,
-                    performance: {
-                        ...prevAsset.performance,
-                        [timeframe]: { change: 0, chartData: [] },
-                    },
-                 }));
-            } finally {
-                setIsLoadingChart(false);
-            }
-        };
-
-        fetchChartData();
+        setIsLoadingChart(false);
+        setChartError(null);
     }, [detailedAsset.id, detailedAsset.category, timeframe]);
 
     const toggleWatchlist = () => setIsInWatchlist((prev) => !prev);

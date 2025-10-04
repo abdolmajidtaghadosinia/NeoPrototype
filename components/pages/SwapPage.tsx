@@ -31,8 +31,8 @@ interface SwapPageProps {
  * @returns {JSX.Element} The market browsing and search page.
  */
 const SwapPage: React.FC<SwapPageProps> = ({ onAssetSelect, allAssets, isLoading, error }) => {
-    const marketCategories: MarketAsset['category'][] = ['کریپتو', 'ارزها', 'بورس', 'صندوق‌ها', 'کالا'];
-    const [activeCategory, setActiveCategory] = useState<MarketAsset['category']>('کریپتو');
+    const marketCategories: MarketAsset['category'][] = ['بورس', 'صندوق‌ها', 'ارزها', 'کالا'];
+    const [activeCategory, setActiveCategory] = useState<MarketAsset['category']>('بورس');
     const [searchQuery, setSearchQuery] = useState('');
     const searchFieldId = useId();
     const helperTextId = `${searchFieldId}-hint`;
@@ -160,7 +160,7 @@ const SwapPage: React.FC<SwapPageProps> = ({ onAssetSelect, allAssets, isLoading
                             </div>
                         </div>
                         <p id={helperTextId} className="text-[11px] leading-6 text-gray-400">
-                            می‌توانید نام فارسی، انگلیسی یا نماد اختصاری (مثل «بیت کوین»، «BTC» یا «وبملت») را جستجو کنید. نتایج بر اساس موجودی همه بازارها پیشنهاد می‌شوند.
+                            می‌توانید نام فارسی، انگلیسی یا نماد اختصاری (مثل «فولاد»، «FOOLAD» یا «وبملت») را جستجو کنید. نتایج بر اساس موجودی همه بازارها پیشنهاد می‌شوند.
                         </p>
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-semibold text-gray-400">دسته‌بندی بازارها</span>

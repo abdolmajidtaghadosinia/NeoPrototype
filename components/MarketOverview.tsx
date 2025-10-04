@@ -233,7 +233,7 @@ const MarketItemIcon: React.FC<{ icon?: MarketAsset['icon']; name: string }> = (
   return renderFallback();
 };
 
-const marketLabelOrder = ['بورس', 'صندوق‌ها', 'فلزهای گرانبها', 'کریپتوکارنسی', 'بازار ارز', 'بازار کالایی'];
+const marketLabelOrder = ['بورس', 'صندوق‌ها', 'فلزهای گرانبها', 'بازار ارز', 'بازار کالایی'];
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
@@ -660,10 +660,6 @@ const getMarketLabel = (asset: MarketAsset): string | null => {
 
   if (asset.category === 'صندوق‌ها') {
     return 'صندوق‌ها';
-  }
-
-  if (asset.category === 'کریپتو') {
-    return 'کریپتوکارنسی';
   }
 
   if (asset.category === 'ارزها') {
