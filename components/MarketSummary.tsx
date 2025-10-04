@@ -1,11 +1,12 @@
 
 
-import React, { useState, memo } from 'react';
+import React, { useId, useState, memo } from 'react';
 import clsx from 'clsx';
 import { AreaChart, Area, ResponsiveContainer, YAxis } from 'recharts';
 import { MarketSummaryItem } from '../types';
 import { toPersianDigits } from './formatters';
 import { composeHomeCardClasses, HomeCardPadding, HomeCardTone } from './designSystem';
+import { ChevronDownIcon } from './icons/ChevronDownIcon';
 
 type Timeframe = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
@@ -111,27 +112,39 @@ interface MarketSummaryProps {
 
 const MarketSummary: React.FC<MarketSummaryProps> = ({ items, onItemClick, columns = 2 }) => {
     const [activeTimeframe, setActiveTimeframe] = useState<Timeframe>('daily');
-    const timeframes: { label: string; value: Timeframe }[] = [
-        { label: 'روزانه', value: 'daily' },
-        { label: 'هفتگی', value: 'weekly' },
-        { label: 'ماهانه', value: 'monthly' },
-        { label: 'سالیانه', value: 'yearly' },
+    const timeframeSelectId = useId();
+    const timeframeLabelId = `${timeframeSelectId}-label`;
+    const timeframes: { label: string; value: Timeframe; hint: string }[] = [
+        { label: 'روزانه', value: 'daily', hint: '۲۴ ساعت اخیر' },
+        { label: 'هفتگی', value: 'weekly', hint: '۷ روز اخیر' },
+        { label: 'ماهانه', value: 'monthly', hint: '۳۰ روز اخیر' },
+        { label: 'سالیانه', value: 'yearly', hint: '۱۲ ماه اخیر' },
     ];
 
     return (
         <div className={composeHomeCard('space-y-4', 'default', 'md')}>
             <div className="space-y-3">
-                <h2 className="text-xl font-bold text-white">خلاصه وضعیت بازارها</h2>
-                <div className="flex w-full flex-wrap items-center justify-start gap-1 rounded-full bg-neo-dark-1 p-1 sm:w-auto">
-                    {timeframes.map(tf => (
-                        <button
-                            key={tf.value}
-                            onClick={() => setActiveTimeframe(tf.value)}
-                            className={`px-3 py-1 text-xs font-semibold rounded-full transition-colors ${activeTimeframe === tf.value ? 'bg-neo-green text-[rgb(var(--tabs-active-text))]' : 'text-gray-400'}`}
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <h2 className="text-xl font-bold text-white">خلاصه وضعیت بازارها</h2>
+                    <div className="relative w-full sm:w-64">
+                        <label id={timeframeLabelId} htmlFor={timeframeSelectId} className="sr-only">
+                            انتخاب بازه زمانی خلاصه بازار
+                        </label>
+                        <select
+                            id={timeframeSelectId}
+                            aria-labelledby={timeframeLabelId}
+                            value={activeTimeframe}
+                            onChange={(event) => setActiveTimeframe(event.target.value as Timeframe)}
+                            className="w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-right text-xs font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60"
                         >
-                            {tf.label}
-                        </button>
-                    ))}
+                            {timeframes.map((tf) => (
+                                <option key={tf.value} value={tf.value} className="text-gray-900">
+                                    {`${tf.label} — ${tf.hint}`}
+                                </option>
+                            ))}
+                        </select>
+                        <ChevronDownIcon className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-300" />
+                    </div>
                 </div>
             </div>
             <div className={`grid gap-3 ${columns === 1 ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>

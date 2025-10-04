@@ -1,9 +1,10 @@
-import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { MarketAsset, MarketSession, SignalStance } from '../types';
 import { globalMarketSessions } from '../data/marketData';
 import { toPersianDigits } from './formatters';
 import { composeHomeCardClasses, HomeCardPadding, HomeCardTone } from './designSystem';
+import { ChevronDownIcon } from './icons/ChevronDownIcon';
 
 export type MarketDisplayTab = 'دیده‌بان' | 'پورتفوی من' | 'بیشترین سود' | 'بیشترین ضرر';
 export type MarketOverviewTimeframe = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -851,54 +852,9 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
   const [activeList, setActiveList] = useState<MarketDisplayTab>('دیده‌بان');
   const [selectedTimeframe, setSelectedTimeframe] = useState<MarketOverviewTimeframe>('daily');
   const [page, setPage] = useState(0);
-  const timeframeListId = useId();
-  const timeframePanelId = `${timeframeListId}-panel`;
-  const timeframeButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const focusTimeframeAt = (targetIndex: number) => {
-    const total = timeframeOptions.length;
-    if (!total) {
-      return;
-    }
-
-    const normalizedIndex = ((targetIndex % total) + total) % total;
-    const target = timeframeOptions[normalizedIndex];
-    if (!target) {
-      return;
-    }
-
-    setSelectedTimeframe(target.value);
-    const button = timeframeButtonRefs.current[normalizedIndex];
-    button?.focus();
-  };
-
-  const handleTimeframeKeyDown = (
-    event: React.KeyboardEvent<HTMLButtonElement>,
-    currentIndex: number,
-  ) => {
-    switch (event.key) {
-      case 'ArrowLeft':
-      case 'ArrowDown':
-        event.preventDefault();
-        focusTimeframeAt(currentIndex + 1);
-        break;
-      case 'ArrowRight':
-      case 'ArrowUp':
-        event.preventDefault();
-        focusTimeframeAt(currentIndex - 1);
-        break;
-      case 'Home':
-        event.preventDefault();
-        focusTimeframeAt(0);
-        break;
-      case 'End':
-        event.preventDefault();
-        focusTimeframeAt(timeframeOptions.length - 1);
-        break;
-      default:
-        break;
-    }
-  };
+  const timeframeSelectId = useId();
+  const timeframePanelId = `${timeframeSelectId}-panel`;
+  const timeframeLabelId = `${timeframeSelectId}-label`;
 
   const allItems = useMemo(
     () =>
@@ -1051,56 +1007,39 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
       </div>
 
       <div className="mt-4" role="presentation">
-        <div
-          id={timeframeListId}
-          role="tablist"
-          aria-label="فیلتر بازه زمانی بازارها"
-          aria-orientation="horizontal"
-          className="flex flex-wrap gap-2 sm:flex-nowrap sm:gap-3"
-        >
-          {timeframeOptions.map((option, index) => {
-            const isActive = selectedTimeframe === option.value;
-            const stateClasses = isActive
-              ? 'border border-neo-green/40 bg-neo-green/15 text-neo-green shadow-[0_12px_28px_-18px_rgba(107,255,110,0.8)]'
-              : 'border border-white/10 bg-white/5 text-gray-300 hover:border-white/20 hover:bg-white/10';
-            const tabId = `${timeframeListId}-${option.value}`;
-
-            return (
-              <button
-                key={option.value}
-                id={tabId}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-controls={timeframePanelId}
-                tabIndex={isActive ? 0 : -1}
-                onClick={() => setSelectedTimeframe(option.value)}
-                onKeyDown={(event) => handleTimeframeKeyDown(event, index)}
-                ref={(element) => {
-                  timeframeButtonRefs.current[index] = element;
-                }}
-                className={clsx(
-                  'group relative flex basis-[calc(50%-0.25rem)] flex-col items-center justify-center gap-1 rounded-2xl px-4 py-3 text-center text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60 sm:basis-0 sm:flex-1 sm:px-5',
-                  stateClasses,
-                )}
-              >
-                <span className="text-sm font-extrabold tracking-tight">{option.label}</span>
-                <span className="text-[11px] font-medium text-gray-400/90 group-hover:text-gray-200/90">
-                  {option.hint}
-                </span>
-                {isActive && (
-                  <span className="pointer-events-none absolute inset-x-3 bottom-1 h-0.5 rounded-full bg-neo-green/60" aria-hidden="true" />
-                )}
-              </button>
-            );
-          })}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div id={timeframeLabelId} className="text-xs font-medium text-gray-400">
+            بازه زمانی: <span className="font-semibold text-white">{timeframeLabels[selectedTimeframe]}</span>
+            <span className="mx-1 text-gray-500">•</span>
+            <span className="text-gray-300">{timeframeDescriptions[selectedTimeframe]}</span>
+          </div>
+          <div className="relative w-full sm:w-60">
+            <label htmlFor={timeframeSelectId} className="sr-only">
+              انتخاب بازه زمانی بازار
+            </label>
+            <select
+              id={timeframeSelectId}
+              aria-labelledby={timeframeLabelId}
+              aria-controls={timeframePanelId}
+              value={selectedTimeframe}
+              onChange={(event) => setSelectedTimeframe(event.target.value as MarketOverviewTimeframe)}
+              className="w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-right text-xs font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60"
+            >
+              {timeframeOptions.map((option) => (
+                <option key={option.value} value={option.value} className="text-gray-900">
+                  {`${option.label} — ${option.hint}`}
+                </option>
+              ))}
+            </select>
+            <ChevronDownIcon className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-300" />
+          </div>
         </div>
       </div>
 
       <div
         id={timeframePanelId}
         role="tabpanel"
-        aria-labelledby={`${timeframeListId}-${selectedTimeframe}`}
+        aria-labelledby={timeframeLabelId}
         className="relative mt-2.5 -mx-2 overflow-x-auto pb-1 scrollbar-hide sm:mx-0 sm:overflow-visible"
       >
         <div className="flex min-w-full gap-2 sm:flex-wrap sm:gap-3">
