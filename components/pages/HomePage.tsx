@@ -724,7 +724,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const renderRightPanels = () => (
     <>
       <Suspense fallback={<Skeleton className="h-[26rem] rounded-3xl" />}>
-        <div className={homeCard('sm:p-5', 'default', 'md')}>
+        <div className={homeCard('sm:p-5 w-full min-w-0', 'default', 'md')}>
           <MarketSummary items={marketSummaryItems} onItemClick={onMarketSummarySelect} columns={1} />
         </div>
       </Suspense>
@@ -1057,27 +1057,29 @@ const HomePage: React.FC<HomePageProps> = ({
         <div className="order-2 space-y-6 sm:space-y-7 lg:order-1 lg:col-start-1 lg:space-y-7 xl:order-1 xl:space-y-7 2xl:space-y-8">
           {renderLeftPanels()}
         </div>
-        <div className="order-1 space-y-6 sm:space-y-7 lg:col-start-2 xl:order-2 xl:space-y-7 2xl:space-y-8">
-          <Suspense fallback={<Skeleton className="h-[26rem] rounded-3xl" />}>
-            <MarketOverview
-              marketAssets={marketAssets}
-              onAssetSelect={handleMarketOverviewSelect}
-              onQuickTradeClick={onQuickTradeClick}
-              isLoading={isLoading}
-              onPortfolioItemSelect={(item) =>
-                onPortfolioSliceSelect({
-                  name: item.assetName,
-                  value: 0,
-                  color: '#D7FE43',
-                  dailyChange: item.change,
-                })
-              }
-              portfolioReturns={portfolioReturnInsights}
-              renderHighlightsInline={false}
-            />
-          </Suspense>
+        <div className="order-1 space-y-6 sm:space-y-7 lg:col-start-2 lg:min-w-0 xl:order-2 xl:space-y-7 xl:min-w-0 2xl:space-y-8">
+          <div className="min-w-0">
+            <Suspense fallback={<Skeleton className="h-[26rem] rounded-3xl" />}>
+              <MarketOverview
+                marketAssets={marketAssets}
+                onAssetSelect={handleMarketOverviewSelect}
+                onQuickTradeClick={onQuickTradeClick}
+                isLoading={isLoading}
+                onPortfolioItemSelect={(item) =>
+                  onPortfolioSliceSelect({
+                    name: item.assetName,
+                    value: 0,
+                    color: '#D7FE43',
+                    dailyChange: item.change,
+                  })
+                }
+                portfolioReturns={portfolioReturnInsights}
+                renderHighlightsInline={false}
+              />
+            </Suspense>
+          </div>
         </div>
-        <div className="order-3 space-y-6 sm:space-y-7 lg:col-span-2 lg:col-start-1 xl:col-span-1 xl:col-start-auto xl:space-y-7 2xl:space-y-8">
+        <div className="order-3 space-y-6 sm:space-y-7 lg:col-span-2 lg:col-start-1 xl:col-span-1 xl:col-start-auto xl:space-y-7 xl:min-w-0 2xl:space-y-8">
           {renderRightPanels()}
         </div>
       </div>

@@ -977,7 +977,7 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
   return (
     <div
       className={composeHomeCard(
-        'relative overflow-hidden bg-gradient-to-br from-neo-dark-2 via-neo-dark-3 to-neo-dark-1 px-4 py-5 text-white sm:px-5 sm:py-6 lg:px-6 lg:py-7 xl:px-7 xl:py-8 2xl:px-10 2xl:py-10',
+        'relative w-full min-w-0 overflow-hidden bg-gradient-to-br from-neo-dark-2 via-neo-dark-3 to-neo-dark-1 px-4 py-5 text-white sm:px-5 sm:py-6 lg:px-6 lg:py-7 xl:px-7 xl:py-8 2xl:px-10 2xl:py-10',
         'default',
         'none',
       )}
@@ -985,12 +985,12 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
       <div className="absolute -top-32 -left-24 h-64 w-64 rounded-full bg-neo-green/10 blur-3xl" />
       <div className="absolute -bottom-40 -right-24 h-72 w-72 rounded-full bg-neo-green/5 blur-3xl" />
 
-      <div className="relative flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
+      <div className="relative flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:flex-nowrap">
+        <div className="flex min-w-0 flex-col gap-1">
           <p className="text-[11px] text-gray-300/80">نمای سریع بازارهای منتخب</p>
           <h3 className="text-lg font-extrabold text-white sm:text-xl">بازارها در یک نگاه</h3>
         </div>
-        <div className="flex w-full flex-col gap-2 text-xs text-gray-200 sm:w-auto sm:flex-row sm:items-center sm:justify-end sm:gap-3">
+        <div className="flex w-full flex-col gap-2 text-xs text-gray-200 sm:w-full sm:flex-row sm:items-center sm:justify-end sm:gap-3 md:w-auto md:flex-nowrap">
           <div className="flex items-center gap-2 text-xs text-gray-200">
             <span className="h-2 w-2 rounded-full bg-neo-green animate-pulse" />
             <span>به‌روزرسانی زنده</span>
@@ -1007,13 +1007,13 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
       </div>
 
       <div className="mt-4" role="presentation">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div id={timeframeLabelId} className="text-xs font-medium text-gray-400">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between md:flex-nowrap">
+          <div id={timeframeLabelId} className="min-w-0 text-xs font-medium text-gray-400 sm:flex-1">
             بازه زمانی: <span className="font-semibold text-white">{timeframeLabels[selectedTimeframe]}</span>
             <span className="mx-1 text-gray-500">•</span>
             <span className="text-gray-300">{timeframeDescriptions[selectedTimeframe]}</span>
           </div>
-          <div className="relative w-full sm:w-60">
+          <div className="relative w-full sm:w-full md:w-60">
             <label htmlFor={timeframeSelectId} className="sr-only">
               انتخاب بازه زمانی بازار
             </label>
@@ -1040,7 +1040,7 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
         id={timeframePanelId}
         role="tabpanel"
         aria-labelledby={timeframeLabelId}
-        className="relative mt-2.5 -mx-2 overflow-x-auto pb-1 scrollbar-hide sm:mx-0 sm:overflow-visible"
+        className="relative mt-2.5 -mx-2 min-w-0 overflow-x-auto pb-1 scrollbar-hide sm:mx-0 sm:overflow-visible"
       >
         <div className="flex min-w-full gap-2 sm:flex-wrap sm:gap-3">
           {displayTabs.map((tab) => {
