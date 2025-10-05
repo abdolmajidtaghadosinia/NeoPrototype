@@ -109,6 +109,21 @@
         --filter-highlight-value-down: 255 228 230;
         --filter-highlight-value-info: 219 234 254;
         --filter-highlight-value-alert: 254 243 199;
+        --technical-section-bg: rgba(11, 17, 24, 0.92);
+        --technical-section-border: rgba(255, 255, 255, 0.08);
+        --technical-section-shadow: 0 30px 90px -40px rgba(0, 0, 0, 0.85);
+        --technical-section-chip-bg: rgba(255, 255, 255, 0.06);
+        --technical-section-chip-border: rgba(255, 255, 255, 0.12);
+        --technical-aside-bg: rgba(3, 7, 12, 0.55);
+        --technical-aside-border: rgba(255, 255, 255, 0.12);
+        --technical-aside-shadow: 0 32px 90px -48px rgba(0, 0, 0, 0.8);
+        --technical-card-bg: rgba(255, 255, 255, 0.08);
+        --technical-card-border: rgba(255, 255, 255, 0.12);
+        --technical-progress-track: rgba(255, 255, 255, 0.14);
+        --technical-badge-bg: rgba(15, 23, 42, 0.3);
+        --technical-badge-border: rgba(255, 255, 255, 0.12);
+        --technical-note-bg: rgba(12, 18, 28, 0.68);
+        --technical-note-border: rgba(255, 255, 255, 0.12);
       }
 
       html,
@@ -219,6 +234,21 @@
         --filter-highlight-value-down: 220 38 38;
         --filter-highlight-value-info: 37 99 235;
         --filter-highlight-value-alert: 217 119 6;
+        --technical-section-bg: rgba(255, 255, 255, 0.96);
+        --technical-section-border: rgba(15, 23, 42, 0.08);
+        --technical-section-shadow: 0 36px 98px -56px rgba(71, 85, 105, 0.28);
+        --technical-section-chip-bg: rgba(236, 248, 240, 0.9);
+        --technical-section-chip-border: rgba(148, 163, 184, 0.32);
+        --technical-aside-bg: rgba(244, 247, 255, 0.9);
+        --technical-aside-border: rgba(148, 163, 184, 0.32);
+        --technical-aside-shadow: 0 34px 92px -54px rgba(148, 163, 184, 0.28);
+        --technical-card-bg: rgba(255, 255, 255, 0.88);
+        --technical-card-border: rgba(148, 163, 184, 0.28);
+        --technical-progress-track: rgba(148, 163, 184, 0.28);
+        --technical-badge-bg: rgba(40, 161, 104, 0.12);
+        --technical-badge-border: rgba(40, 161, 104, 0.32);
+        --technical-note-bg: rgba(239, 243, 255, 0.9);
+        --technical-note-border: rgba(148, 163, 184, 0.32);
       }
 
       html[data-theme='light'] body {
@@ -405,6 +435,54 @@
         color: rgb(var(--tabs-active-text));
         border-color: transparent;
         box-shadow: var(--tabs-active-shadow);
+      }
+      .technical-section {
+        background: var(--technical-section-bg);
+        border-color: var(--technical-section-border);
+        box-shadow: var(--technical-section-shadow);
+        backdrop-filter: blur(22px);
+        transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      }
+      .technical-chip {
+        background: var(--technical-section-chip-bg);
+        border-color: var(--technical-section-chip-border);
+        color: rgb(var(--neo-text-secondary));
+        backdrop-filter: blur(12px);
+        transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+      }
+      .technical-aside {
+        background: var(--technical-aside-bg);
+        border-color: var(--technical-aside-border);
+        box-shadow: var(--technical-aside-shadow);
+        backdrop-filter: blur(20px);
+        transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      }
+      .technical-stat-card {
+        background: var(--technical-card-bg);
+        border-color: var(--technical-card-border);
+        backdrop-filter: blur(18px);
+        transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      }
+      .technical-progress-track {
+        background: var(--technical-progress-track);
+      }
+      .technical-insight {
+        background: var(--technical-card-bg);
+        border-color: var(--technical-card-border);
+        backdrop-filter: blur(18px);
+        transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      }
+      .technical-badge {
+        background: var(--technical-badge-bg);
+        border-color: var(--technical-badge-border);
+        backdrop-filter: blur(12px);
+        transition: background 0.35s ease, border-color 0.35s ease;
+      }
+      .technical-note {
+        background: var(--technical-note-bg);
+        border-color: var(--technical-note-border);
+        backdrop-filter: blur(18px);
+        transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
       }
       html[data-theme='light'] a:hover {
         color: #48681b;
