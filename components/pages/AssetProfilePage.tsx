@@ -139,7 +139,8 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
 
     const performance = detailedAsset.performance[timeframe];
     const isPositive = performance && performance.change >= 0;
-    const chartColor = isPositive ? '#D7FE43' : '#ef4444';
+    const accentColor = 'rgb(var(--neo-accent))';
+    const chartColor = isPositive ? accentColor : '#ef4444';
     const priceUnitLabel = useMemo(() => {
         const priceText = detailedAsset.price;
         if (priceText.includes('$')) return 'دلار';
@@ -362,7 +363,7 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                                                     return 'خطا در تاریخ';
                                                 }
                                             }}
-                                            cursor={{ stroke: '#D7FE43', strokeWidth: 1 }}
+                                            cursor={{ stroke: accentColor, strokeWidth: 1 }}
                                         />
                                         <YAxis hide domain={['dataMin', 'dataMax']} />
                                         <Area type="linear" dataKey="value" stroke={chartColor} strokeWidth={3} fill="url(#chart-gradient)" fillOpacity={1} />

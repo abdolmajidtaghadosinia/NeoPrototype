@@ -54,6 +54,8 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
     async function init() {
       const element = containerRef.current;
       if (!element) return;
+      const accentRaw = getComputedStyle(document.documentElement).getPropertyValue('--neo-accent').trim();
+      const accentColor = accentRaw ? `rgb(${accentRaw.split(/\s+/).join(', ')})` : '#28A168';
       const { createChart } = await import('lightweight-charts');
       if (!element) return;
       const width = element.clientWidth || 400;
@@ -76,9 +78,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
       });
 
       candleSeries = chart.addCandlestickSeries({
-        upColor: '#16a34a',
+        upColor: accentColor,
         downColor: '#dc2626',
-        wickUpColor: '#16a34a',
+        wickUpColor: accentColor,
         wickDownColor: '#dc2626',
         borderVisible: false,
       });
@@ -106,7 +108,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
         const time = Math.floor(Number(d.name) / 1000);
         const vol = Math.abs(close - open) * 100 + Math.random() * 1000;
         candles.push({ time, open, high, low, close });
-        volumes.push({ time, value: vol, color: close >= open ? '#16a34a' : '#dc2626' });
+        volumes.push({ time, value: vol, color: close >= open ? accentColor : '#dc2626' });
         prev = close;
       });
 

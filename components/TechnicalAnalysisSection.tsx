@@ -3,14 +3,16 @@ import { MarketAsset } from '../types';
 import TechnicalAnalysisGauge from './TechnicalAnalysisGauge';
 import { SignalIcon } from './icons/SignalIcon';
 
+const accentColor = 'rgb(var(--neo-accent))';
+
 export const getAnalysisDetails = (
     val: number,
 ): { longLabel: string; shortLabel: string; color: string } => {
     if (val <= 15) return { longLabel: 'فروش قوی', shortLabel: 'فروش قوی', color: '#ef4444' };
     if (val <= 35) return { longLabel: 'فروش', shortLabel: 'فروش', color: '#f97316' };
     if (val <= 65) return { longLabel: 'خنثی', shortLabel: 'خنثی', color: '#fbbf24' };
-    if (val <= 85) return { longLabel: 'خرید', shortLabel: 'خرید', color: '#99ff57' };
-    return { longLabel: 'خرید قوی', shortLabel: 'خرید قوی', color: '#6bff3d' };
+    if (val <= 85) return { longLabel: 'خرید', shortLabel: 'خرید', color: accentColor };
+    return { longLabel: 'خرید قوی', shortLabel: 'خرید قوی', color: accentColor };
 };
 
 const summaryNarratives: Record<string, string> = {

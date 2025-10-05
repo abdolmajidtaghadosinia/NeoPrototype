@@ -17,7 +17,7 @@ export interface AssetCategory {
   value: number;
   /** The percentage this category represents of the total portfolio value. */
   percentage: number;
-  /** A hex color code associated with the category for UI elements. */
+  /** A CSS color value associated with the category for UI elements. */
   color: string;
   /** An optional string describing when the category data was last updated. */
   lastUpdated?: string;

@@ -6,6 +6,8 @@ import { GoogleGenAI, Type } from '@google/genai';
 import { PortfolioSlice, PortfolioAnalysisData } from '../types';
 import { toPersianDigits } from './formatters';
 
+const accentColor = 'rgb(var(--neo-accent))';
+
 const mockAnalysisData: PortfolioAnalysisData = {
     radarData: [
         { subject: 'ارزش', score: 75 },
@@ -146,14 +148,14 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ portfolioData }) 
                         <PolarGrid stroke="#4A4A4A" />
                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#A0A0A0', fontSize: 12, fontWeight: 500 }} />
                         <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                        <Radar 
-                            name="Portfolio" 
-                            dataKey="score" 
-                            stroke="#D7FE43" 
-                            fill="#D7FE43" 
-                            fillOpacity={0.4} 
-                            dot={{ stroke: '#D7FE43', fill: '#1C1C1E', strokeWidth: 2, r: 4 }}
-                            activeDot={{ r: 6, stroke: '#D7FE43', fill: 'white', strokeWidth: 2 }}
+                        <Radar
+                            name="Portfolio"
+                            dataKey="score"
+                            stroke={accentColor}
+                            fill={accentColor}
+                            fillOpacity={0.4}
+                            dot={{ stroke: accentColor, fill: '#1C1C1E', strokeWidth: 2, r: 4 }}
+                            activeDot={{ r: 6, stroke: accentColor, fill: 'white', strokeWidth: 2 }}
                         />
                     </RadarChart>
                 </ResponsiveContainer>

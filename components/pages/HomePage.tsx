@@ -1069,7 +1069,7 @@ const HomePage: React.FC<HomePageProps> = ({
                   onPortfolioSliceSelect({
                     name: item.assetName,
                     value: 0,
-                    color: '#D7FE43',
+                    color: 'rgb(var(--neo-accent))',
                     dailyChange: item.change,
                   })
                 }

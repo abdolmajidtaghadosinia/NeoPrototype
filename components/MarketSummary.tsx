@@ -8,6 +8,8 @@ import { toPersianDigits } from './formatters';
 import { composeHomeCardClasses, HomeCardPadding, HomeCardTone } from './designSystem';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
 
+const accentColor = 'rgb(var(--neo-accent))';
+
 type Timeframe = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
 interface MarketSummaryCardProps {
@@ -55,15 +57,15 @@ const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timefr
                     <AreaChart data={performance.chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
                         <defs>
                             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#D7FE43" stopOpacity={0.4} />
-                                <stop offset="100%" stopColor="#D7FE43" stopOpacity={0} />
+                                <stop offset="0%" stopColor={accentColor} stopOpacity={0.4} />
+                                <stop offset="100%" stopColor={accentColor} stopOpacity={0} />
                             </linearGradient>
                         </defs>
                         <YAxis hide domain={['dataMin', 'dataMax']} />
                         <Area
                             type="monotone"
                             dataKey="value"
-                            stroke="#D7FE43"
+                            stroke={accentColor}
                             strokeWidth={2}
                             fill={`url(#${gradientId})`}
                             dot={false}

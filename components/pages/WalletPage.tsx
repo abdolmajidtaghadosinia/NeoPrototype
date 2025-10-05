@@ -21,8 +21,10 @@ const portfolioHistoryData = [
 
 const fundAssets = userPortfolioData.filter(a => a.name.includes('صندوق'));
 const stockAssets = userPortfolioData.filter(a => a.name.includes('سهام'));
+const accentColor = 'rgb(var(--neo-accent))';
+
 const categories: AssetCategory[] = [
-    { name: 'ارزش صندوق‌ها', value: 19500000, percentage: 45, color: '#D7FE43', lastUpdated: 'بروزرسانی سه شنبه, ۱۱ شهریور', assets: fundAssets },
+    { name: 'ارزش صندوق‌ها', value: 19500000, percentage: 45, color: accentColor, lastUpdated: 'بروزرسانی سه شنبه, ۱۱ شهریور', assets: fundAssets },
     { name: 'ارزش سبد سهام', value: 17250000, percentage: 40, color: '#8b5cf6', lastUpdated: 'بروزرسانی پنج شنبه, ۱۳ شهریور', assets: stockAssets },
     { name: 'اوراق و سپرده‌ها', value: 6500000, percentage: 15, color: '#38bdf8', lastUpdated: 'بروزرسانی لحظه‌ای', assets: userPortfolioData.filter(a => a.name.includes('اوراق')) },
 ];
@@ -79,9 +81,9 @@ const WalletPage: React.FC<WalletPageProps> = ({ onSellClick, onLoanRequestClick
                             <ComposedChart data={portfolioHistoryData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
                                 <defs>
                                     <pattern id="portfolioBar" width="8" height="8" patternUnits="userSpaceOnUse">
-                                        <rect width="8" height="8" fill="#D7FE43" opacity="0.15" />
-                                        <rect width="4" height="4" fill="#D7FE43" opacity="0.25" />
-                                        <rect x="4" y="4" width="4" height="4" fill="#D7FE43" opacity="0.25" />
+                                        <rect width="8" height="8" fill={accentColor} opacity="0.15" />
+                                        <rect width="4" height="4" fill={accentColor} opacity="0.25" />
+                                        <rect x="4" y="4" width="4" height="4" fill={accentColor} opacity="0.25" />
                                     </pattern>
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.1} />
@@ -89,7 +91,7 @@ const WalletPage: React.FC<WalletPageProps> = ({ onSellClick, onLoanRequestClick
                                 <YAxis hide domain={['dataMin', 'dataMax']} />
                                 <Tooltip content={<PortfolioTooltip />} />
                                 <Bar dataKey="value" fill="url(#portfolioBar)" radius={[8, 8, 0, 0]} barSize={24} />
-                                <Scatter dataKey="value" fill="#D7FE43" />
+                                <Scatter dataKey="value" fill={accentColor} />
                             </ComposedChart>
                         </ResponsiveContainer>
                     </div>

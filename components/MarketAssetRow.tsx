@@ -27,7 +27,8 @@ const MarketAssetRow: React.FC<MarketAssetRowProps> = ({ asset }) => {
   // Use daily performance data as default since timeframe selectors are removed
   const performance = asset.performance.daily;
   const isPositive = performance.change >= 0;
-  const chartColor = isPositive ? '#D7FE43' : '#ef4444';
+  const accentColor = 'rgb(var(--neo-accent))';
+  const chartColor = isPositive ? accentColor : '#ef4444';
   
   const nameParts = asset.name.match(/(.*)\s+\((.*)\)/);
   const assetBaseName = nameParts ? nameParts[1].trim() : asset.name;

@@ -5,6 +5,8 @@ import { Stock } from '../types';
 import { toPersianDigits } from './formatters';
 import { composeHomeCardClasses } from './designSystem';
 
+const accentColor = 'rgb(var(--neo-accent))';
+
 interface StockTickerCardProps {
   stock: Stock;
   onClick?: () => void;
@@ -13,7 +15,7 @@ interface StockTickerCardProps {
 
 const StockTickerCard: React.FC<StockTickerCardProps> = ({ stock, onClick, className }) => {
   const isPositive = stock.status === 'buy' || stock.status === 'up';
-  const color = isPositive ? '#D7FE43' : '#ef4444';
+  const color = isPositive ? accentColor : '#ef4444';
 
   const statusText = stock.statusText || (stock.status === 'buy'
     ? 'حتما خرید'

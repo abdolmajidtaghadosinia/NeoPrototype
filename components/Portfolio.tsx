@@ -4,6 +4,9 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { PortfolioSlice } from '../types';
 import { toPersianDigits } from './formatters';
 
+const accentColor = 'rgb(var(--neo-accent))';
+const accentInkColor = 'rgb(var(--neo-accent-ink))';
+
 // Helper function to determine if a color is dark
 const isColorDark = (hexColor: string): boolean => {
     if (!hexColor || !hexColor.startsWith('#')) return false;
@@ -113,7 +116,7 @@ const CustomLabel: React.FC<CustomLabelProps> = (props) => {
     }
 
     const isPositive = dailyChange !== undefined && dailyChange >= 0;
-    const changeColor = isPositive ? (isHighlight ? '#365314' : '#D7FE43') : '#ef4444'; // Dark green on light background
+    const changeColor = isPositive ? (isHighlight ? accentInkColor : accentColor) : '#ef4444';
     const parts = name.split(' ');
     const lineColor = isHighlight ? '#4A4A4A' : "#9ca3af";
 
