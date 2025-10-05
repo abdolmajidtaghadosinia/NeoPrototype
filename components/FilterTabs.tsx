@@ -46,12 +46,12 @@ interface FilterTabsProps {
 }
 
 const baseHighlightClasses =
-  'filter-tab-highlight bg-black/60 text-[rgb(var(--filter-highlight-text))] border border-white/10 backdrop-blur-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)]';
+  'filter-tab-highlight text-[rgb(var(--filter-highlight-text))] backdrop-blur-sm';
 
 const highlightToneClasses: Record<HighlightTone, string> = {
   up: 'border-emerald-400/60 shadow-[0_0_18px_rgba(16,185,129,0.35)]',
   down: 'border-rose-400/60 shadow-[0_0_18px_rgba(244,63,94,0.3)]',
-  neutral: 'border-white/20',
+  neutral: '',
   info: 'border-sky-400/60 shadow-[0_0_18px_rgba(56,189,248,0.35)]',
   alert: 'border-amber-400/60 shadow-[0_0_18px_rgba(251,191,36,0.35)]',
 };
@@ -65,11 +65,11 @@ const highlightToneDotClasses: Record<HighlightTone, string> = {
 };
 
 const highlightValueToneClasses: Record<HighlightTone, string> = {
-  up: 'text-emerald-100',
-  down: 'text-rose-100',
+  up: 'text-[rgb(var(--filter-highlight-value-up))]',
+  down: 'text-[rgb(var(--filter-highlight-value-down))]',
   neutral: 'text-[rgb(var(--filter-highlight-text))]',
-  info: 'text-sky-100',
-  alert: 'text-amber-100',
+  info: 'text-[rgb(var(--filter-highlight-value-info))]',
+  alert: 'text-[rgb(var(--filter-highlight-value-alert))]',
 };
 
 const getHighlightScore = (highlight: TabHighlight): number => {
@@ -378,7 +378,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
           <span>{tab.name.trim()}</span>
           {tab.icon}
           {tab.badge && (
-            <span className="rounded-md bg-black/50 px-1.5 py-0.5 text-[10px] font-bold text-white">
+            <span className="rounded-md bg-[color:var(--filter-highlight-chip-strong-bg)] px-1.5 py-0.5 text-[10px] font-bold text-[rgb(var(--filter-highlight-text))]">
               {tab.badge}
             </span>
           )}
@@ -394,7 +394,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
           <span>{tab.name.trim()}</span>
           {tab.icon}
           {tab.badge && (
-            <span className="rounded-md bg-black/50 px-1.5 py-0.5 text-[10px] font-bold text-white">
+            <span className="rounded-md bg-[color:var(--filter-highlight-chip-strong-bg)] px-1.5 py-0.5 text-[10px] font-bold text-[rgb(var(--filter-highlight-text))]">
               {tab.badge}
             </span>
           )}
@@ -410,7 +410,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
           {tab.icon}
           <span>{tab.name.trim()}</span>
           {tab.badge && (
-            <span className="rounded-md bg-black/50 px-1.5 py-0.5 text-[10px] font-bold text-[rgb(var(--filter-highlight-text))]">
+            <span className="rounded-md bg-[color:var(--filter-highlight-chip-strong-bg)] px-1.5 py-0.5 text-[10px] font-bold text-[rgb(var(--filter-highlight-text))]">
               {tab.badge}
             </span>
           )}
@@ -429,7 +429,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
               </span>
             )}
             {badge && (
-              <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wide text-[rgb(var(--filter-highlight-text))]">
+              <span className="rounded-full bg-[color:var(--filter-highlight-chip-subtle-bg)] px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wide text-[rgb(var(--filter-highlight-text))]">
                 {badge}
               </span>
             )}
