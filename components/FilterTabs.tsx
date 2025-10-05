@@ -1,5 +1,6 @@
 
 import React, { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import clsx from 'clsx';
 import { StarIcon } from './icons/StarIcon';
 import { ChartPieIcon } from './icons/ChartPieIcon';
 import { ChartBarIcon } from './icons/ChartBarIcon';
@@ -61,6 +62,14 @@ const highlightToneDotClasses: Record<HighlightTone, string> = {
   neutral: 'bg-slate-200',
   info: 'bg-sky-400',
   alert: 'bg-amber-400',
+};
+
+const highlightValueToneClasses: Record<HighlightTone, string> = {
+  up: 'text-emerald-100',
+  down: 'text-rose-100',
+  neutral: 'text-slate-50',
+  info: 'text-sky-100',
+  alert: 'text-amber-100',
 };
 
 const getHighlightScore = (highlight: TabHighlight): number => {
@@ -410,20 +419,24 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
           key={id}
           className={`flex w-full items-center justify-between gap-2 rounded-2xl px-2.5 py-1.5 text-[11px] font-semibold leading-tight ${baseHighlightClasses} ${highlightToneClasses[tone]}`}
         >
-          <div className="flex items-center gap-1 text-[10px] font-medium opacity-85">
+          <div className="flex items-center gap-1 text-[10px] font-medium text-white/85">
             <span
               className={`h-1.5 w-1.5 rounded-full ${highlightToneDotClasses[tone]}`}
             />
-            {label && <span className="truncate max-w-[6.5rem]">{label}</span>}
+            {label && (
+              <span className="max-w-[6.5rem] truncate text-white">
+                {label}
+              </span>
+            )}
             {badge && (
-              <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wide">
+              <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wide text-white">
                 {badge}
               </span>
             )}
           </div>
-          <div className="flex items-center gap-1 text-sm font-bold">
-            {icon && <span className="flex items-center text-xs opacity-90">{icon}</span>}
-            <span className="max-w-[8rem] truncate text-right tracking-tight">
+          <div className="flex items-center gap-1 text-sm font-bold text-white">
+            {icon && <span className="flex items-center text-xs text-white opacity-90">{icon}</span>}
+            <span className={clsx('max-w-[8rem] truncate text-right tracking-tight', highlightValueToneClasses[tone])}>
               {value ?? label ?? '—'}
             </span>
           </div>
