@@ -359,9 +359,14 @@ const generateTrendSeries = (key: string, change: number) => {
   });
 };
 
-const monoBarBase: [string, string] = ['rgba(215, 254, 67, 0.92)', 'rgba(215, 254, 67, 0.92)'];
-const monoBarBorder = 'rgba(215, 254, 67, 0.98)';
-const monoBarShadow = 'rgba(120, 190, 45, 0.35)';
+const accentBarStart = 'rgb(var(--neo-accent) / 0.9)';
+const accentBarEnd = 'rgb(var(--neo-accent) / 0.8)';
+const accentBarBorder = 'rgb(var(--neo-accent))';
+const accentBarShadow = 'rgb(var(--neo-accent) / 0.35)';
+
+const monoBarBase: [string, string] = [accentBarStart, accentBarEnd];
+const monoBarBorder = accentBarBorder;
+const monoBarShadow = accentBarShadow;
 
 const chartPalette: Record<
   'positive' | 'negative' | 'neutral',
