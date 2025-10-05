@@ -7,8 +7,8 @@ import { LogoutIcon } from './icons/LogoutIcon';
 import TradeList, { TradeRecord } from './TradeList';
 
 const sampleTrades: TradeRecord[] = [
-  { id: '1', type: 'buy', asset: 'شیبا', amount: 0, price: 0, status: 'ongoing', time: 'لحظاتی پیش' },
-  { id: '2', type: 'sell', asset: 'دوج کوین', amount: 0, price: 0, status: 'done', time: '۲ ساعت پیش' },
+  { id: '1', type: 'buy', asset: 'فولاد', amount: 0, price: 0, status: 'ongoing', time: 'لحظاتی پیش' },
+  { id: '2', type: 'sell', asset: 'خودرو', amount: 0, price: 0, status: 'done', time: '۲ ساعت پیش' },
   {
     id: '3',
     type: 'buy',
