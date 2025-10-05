@@ -598,9 +598,9 @@ const HomePage: React.FC<HomePageProps> = ({
             return (
               <div
                 key={event.id}
-                className="flex flex-col gap-4 sm:flex-row-reverse sm:items-stretch sm:gap-4"
+                className="flex flex-col gap-4 sm:flex-row sm:items-stretch sm:gap-4"
               >
-                <div className="hidden sm:flex sm:w-20 sm:flex-col sm:items-center sm:pt-1">
+                <div className="hidden sm:flex sm:w-20 sm:flex-col sm:items-end sm:pt-1">
                   <div
                     className={`flex min-h-[3.5rem] min-w-[4.25rem] items-center justify-center rounded-2xl px-3 text-center text-[11px] font-semibold ${accent.dayBadge}`}
                   >
