@@ -46,14 +46,14 @@ interface FilterTabsProps {
 }
 
 const baseHighlightClasses =
-  'bg-black/60 text-white border border-white/10 backdrop-blur-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)]';
+  'filter-tab-highlight bg-black/60 text-[rgb(var(--filter-highlight-text))] border border-white/10 backdrop-blur-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)]';
 
 const highlightToneClasses: Record<HighlightTone, string> = {
-  up: 'border-emerald-400/60 text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.35)]',
-  down: 'border-rose-400/60 text-rose-100 shadow-[0_0_18px_rgba(244,63,94,0.3)]',
-  neutral: 'border-white/20 text-slate-50',
-  info: 'border-sky-400/60 text-sky-100 shadow-[0_0_18px_rgba(56,189,248,0.35)]',
-  alert: 'border-amber-400/60 text-amber-100 shadow-[0_0_18px_rgba(251,191,36,0.35)]',
+  up: 'border-emerald-400/60 shadow-[0_0_18px_rgba(16,185,129,0.35)]',
+  down: 'border-rose-400/60 shadow-[0_0_18px_rgba(244,63,94,0.3)]',
+  neutral: 'border-white/20',
+  info: 'border-sky-400/60 shadow-[0_0_18px_rgba(56,189,248,0.35)]',
+  alert: 'border-amber-400/60 shadow-[0_0_18px_rgba(251,191,36,0.35)]',
 };
 
 const highlightToneDotClasses: Record<HighlightTone, string> = {
@@ -67,7 +67,7 @@ const highlightToneDotClasses: Record<HighlightTone, string> = {
 const highlightValueToneClasses: Record<HighlightTone, string> = {
   up: 'text-emerald-100',
   down: 'text-rose-100',
-  neutral: 'text-slate-50',
+  neutral: 'text-[rgb(var(--filter-highlight-text))]',
   info: 'text-sky-100',
   alert: 'text-amber-100',
 };
@@ -406,11 +406,11 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
 
     return (
       <div className="flex w-full flex-col items-center gap-1.5">
-        <span className="flex items-center gap-1 text-[13px] font-semibold">
+        <span className="flex items-center gap-1 text-[13px] font-semibold text-[rgb(var(--filter-highlight-text))]">
           {tab.icon}
           <span>{tab.name.trim()}</span>
           {tab.badge && (
-            <span className="rounded-md bg-black/50 px-1.5 py-0.5 text-[10px] font-bold text-white">
+            <span className="rounded-md bg-black/50 px-1.5 py-0.5 text-[10px] font-bold text-[rgb(var(--filter-highlight-text))]">
               {tab.badge}
             </span>
           )}
@@ -419,24 +419,33 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
           key={id}
           className={`flex w-full items-center justify-between gap-2 rounded-2xl px-2.5 py-1.5 text-[11px] font-semibold leading-tight ${baseHighlightClasses} ${highlightToneClasses[tone]}`}
         >
-          <div className="flex items-center gap-1 text-[10px] font-medium text-white/85">
+          <div className="flex items-center gap-1 text-[10px] font-medium text-[rgb(var(--filter-highlight-subtext))]">
             <span
               className={`h-1.5 w-1.5 rounded-full ${highlightToneDotClasses[tone]}`}
             />
             {label && (
-              <span className="max-w-[6.5rem] truncate text-white">
+              <span className="filter-tab-highlight__label max-w-[6.5rem] truncate text-[rgb(var(--filter-highlight-text))]">
                 {label}
               </span>
             )}
             {badge && (
-              <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wide text-white">
+              <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wide text-[rgb(var(--filter-highlight-text))]">
                 {badge}
               </span>
             )}
           </div>
-          <div className="flex items-center gap-1 text-sm font-bold text-white">
-            {icon && <span className="flex items-center text-xs text-white opacity-90">{icon}</span>}
-            <span className={clsx('max-w-[8rem] truncate text-right tracking-tight', highlightValueToneClasses[tone])}>
+          <div className="flex items-center gap-1 text-sm font-bold text-[rgb(var(--filter-highlight-text))]">
+            {icon && (
+              <span className="flex items-center text-xs text-[rgb(var(--filter-highlight-text))] opacity-90">
+                {icon}
+              </span>
+            )}
+            <span
+              className={clsx(
+                'filter-tab-highlight__value max-w-[8rem] truncate text-right tracking-tight',
+                highlightValueToneClasses[tone],
+              )}
+            >
               {value ?? label ?? '—'}
             </span>
           </div>
