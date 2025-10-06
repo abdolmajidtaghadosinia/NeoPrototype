@@ -31,16 +31,19 @@ interface TradeListProps {
 const statusMap = {
   ongoing: {
     text: 'در حال انجام',
-    badge: 'border border-amber-400/30 bg-amber-500/10 text-amber-400',
+    badge: 'border border-amber-400/40 bg-amber-500/10 text-amber-400',
+    dot: 'bg-amber-400',
   },
   done: {
     text: 'انجام شد',
     badge:
-      'border border-[color:rgba(var(--neo-accent),0.35)] bg-[color:rgba(var(--neo-accent),0.18)] text-[rgb(var(--neo-accent))] shadow-[0_16px_32px_-26px_rgba(82,255,122,0.55)]',
+      'border border-[color:rgba(var(--neo-accent),0.35)] bg-[color:rgba(var(--neo-accent),0.18)] text-[rgb(var(--neo-accent))]',
+    dot: 'bg-[rgb(var(--neo-accent))]',
   },
   canceled: {
     text: 'کنسل شد',
-    badge: 'border border-rose-400/30 bg-rose-500/10 text-rose-400',
+    badge: 'border border-rose-400/40 bg-rose-500/10 text-rose-400',
+    dot: 'bg-rose-400',
   },
 } as const;
 
@@ -56,16 +59,16 @@ const TradeList: React.FC<TradeListProps> = ({
   const visible = expanded ? trades : trades.slice(0, limit);
   const hasMore = trades.length > limit;
 
-  const containerClass = variant === 'compact'
-    ? 'neo-surface neo-surface--ghost rounded-2xl p-3 text-right space-y-3'
-    : 'neo-surface neo-surface--ghost rounded-3xl p-5 text-right space-y-4';
-  const listClass = variant === 'compact' ? 'space-y-2 text-xs' : 'space-y-3 text-sm';
-  const itemButtonClass = variant === 'compact'
-    ? 'w-full rounded-xl border border-[color:var(--neo-surface-border)] bg-transparent px-3 py-2 text-right text-xs transition hover:border-[rgb(var(--neo-accent))] hover:shadow-[0_14px_32px_-26px_rgba(15,23,42,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]'
-    : 'w-full rounded-2xl border border-[color:var(--neo-surface-border)] bg-transparent px-4 py-3 text-right text-sm transition hover:border-[rgb(var(--neo-accent))] hover:shadow-[0_18px_42px_-28px_rgba(15,23,42,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]';
-  const moreButtonClass = variant === 'compact'
-    ? 'text-xs font-semibold text-[rgb(var(--neo-accent))] hover:opacity-80'
-    : 'text-xs font-semibold text-[rgb(var(--neo-accent))] hover:opacity-80';
+  const containerClass =
+    variant === 'compact'
+      ? 'neo-surface neo-surface--ghost rounded-2xl p-3 text-right space-y-3'
+      : 'neo-surface neo-surface--ghost rounded-3xl p-5 text-right space-y-4';
+  const listClass = variant === 'compact' ? 'space-y-2' : 'space-y-3';
+  const itemButtonClass = clsx(
+    'group w-full min-w-0 rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] text-right transition hover:border-[rgb(var(--neo-accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
+    variant === 'compact' ? 'px-3 py-3' : 'px-4 py-4 rounded-3xl'
+  );
+  const moreButtonClass = 'text-xs font-semibold text-[rgb(var(--neo-accent))] hover:opacity-80';
 
   return (
     <div className={clsx(containerClass, className)}>
@@ -79,21 +82,39 @@ const TradeList: React.FC<TradeListProps> = ({
           visible.map((t) => {
             const status = statusMap[t.status];
             const desc = t.description || `${t.type === 'buy' ? 'خرید' : 'فروش'} ${t.asset}`;
+            const amountLabel = t.amount > 0 ? `${toPersianFormatted(t.amount)} واحد` : null;
+            const priceLabel = t.price > 0 ? `${toPersianFormatted(t.price)} تومان` : null;
+            const detailParts = [t.type === 'buy' ? 'سفارش خرید' : 'سفارش فروش', amountLabel, priceLabel].filter(Boolean);
+
             return (
               <li key={t.id}>
-                <button
-                  onClick={() => onSelectTrade?.(t)}
-                  className={itemButtonClass}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className={clsx('inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold', status.badge)}>
-                      {status.text}
-                    </span>
-                    <span className="text-[10px] text-[rgb(var(--neo-text-secondary))]">{t.time}</span>
-                  </div>
-                  <div className="mt-2 text-[rgb(var(--neo-text-strong))] font-semibold">{desc}</div>
-                  <div className="mt-1 text-[10px] text-[rgb(var(--neo-text-secondary))]">
-                    {t.type === 'buy' ? 'سفارش خرید' : 'سفارش فروش'} • {toPersianFormatted(t.amount)} واحد • {toPersianFormatted(t.price)} تومان
+                <button onClick={() => onSelectTrade?.(t)} className={itemButtonClass}>
+                  <div className="flex flex-col items-end gap-2 text-right">
+                    <div className="flex flex-row-reverse items-center gap-2">
+                      <span className="text-[10px] text-[rgb(var(--neo-text-secondary))]">{t.time}</span>
+                      <span
+                        className={clsx(
+                          'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold transition-colors',
+                          status.badge
+                        )}
+                      >
+                        <span className={clsx('h-1.5 w-1.5 rounded-full', status.dot)} aria-hidden="true" />
+                        {status.text}
+                      </span>
+                    </div>
+                    <p
+                      className={clsx(
+                        'line-clamp-2 w-full text-[rgb(var(--neo-text-strong))] font-semibold',
+                        variant === 'compact' ? 'text-sm' : 'text-base'
+                      )}
+                    >
+                      {desc}
+                    </p>
+                    {detailParts.length > 0 && (
+                      <p className="w-full text-[11px] text-[rgb(var(--neo-text-secondary))]">
+                        {detailParts.join(' • ')}
+                      </p>
+                    )}
                   </div>
                 </button>
               </li>
