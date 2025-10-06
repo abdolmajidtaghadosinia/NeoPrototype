@@ -466,7 +466,6 @@ const HomePage: React.FC<HomePageProps> = ({
         description: 'انتشار شاخص CPI آمریکا که می‌تواند روی بازار ارز و طلا در ابتدای هفته آینده اثر بگذارد.',
         time: '۲۳:۳۰ به وقت تهران',
         meta: 'پیگیری از طریق وب‌سایت BLS',
-        tag: 'رویداد جهانی',
         accent: 'alert',
       },
     ],
@@ -607,10 +606,12 @@ const HomePage: React.FC<HomePageProps> = ({
                     {event.day}
                   </div>
                   {index < upcomingEvents.length - 1 && (
-                    <div
-                      className={`mt-3 h-full w-[3px] flex-1 rounded-full ${accent.connector}`}
-                      aria-hidden="true"
-                    />
+                    <div className="relative mt-3 w-full flex-1">
+                      <span
+                        className={`mx-auto block h-full w-[3px] rounded-full ${accent.connector}`}
+                        aria-hidden="true"
+                      />
+                    </div>
                   )}
                 </div>
                 <article
