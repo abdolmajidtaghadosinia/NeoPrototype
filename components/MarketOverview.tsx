@@ -991,19 +991,19 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
       <div className="absolute -bottom-40 -right-24 h-72 w-72 rounded-full bg-neo-green/5 blur-3xl" />
 
       <div className="relative flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:flex-nowrap">
-        <div className="flex min-w-0 flex-col gap-1">
-          <p className="text-[11px] text-gray-300/80">نمای سریع بازارهای منتخب</p>
-          <h3 className="text-lg font-extrabold text-white sm:text-xl">بازارها در یک نگاه</h3>
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <p className="text-sm text-gray-300/90 sm:text-base">نمای سریع بازارهای منتخب</p>
+          <h3 className="text-xl font-extrabold text-white sm:text-2xl">بازارها در یک نگاه</h3>
         </div>
-        <div className="flex w-full flex-col gap-2 text-xs text-gray-200 sm:w-full sm:flex-row sm:items-center sm:justify-end sm:gap-3 md:w-auto md:flex-nowrap">
-          <div className="flex items-center gap-2 text-xs text-gray-200">
-            <span className="h-2 w-2 rounded-full bg-neo-green animate-pulse" />
-            <span>به‌روزرسانی زنده</span>
+        <div className="flex w-full flex-col gap-2 text-sm text-gray-100 sm:w-full sm:flex-row sm:items-center sm:justify-end sm:gap-3 md:w-auto md:flex-nowrap">
+          <div className="flex items-center gap-2 text-sm text-gray-100">
+            <span className="h-2.5 w-2.5 rounded-full bg-neo-green animate-pulse" />
+            <span className="font-medium">به‌روزرسانی زنده</span>
           </div>
           {onQuickTradeClick && (
             <button
               onClick={onQuickTradeClick}
-              className="w-full rounded-full bg-neo-green px-4 py-2 text-xs font-bold text-[rgb(var(--tabs-active-text))] shadow-lg shadow-neo-green/20 transition-transform hover:-translate-y-0.5 sm:w-auto sm:py-1.5"
+              className="w-full rounded-full bg-neo-green px-5 py-2.5 text-sm font-bold text-[rgb(var(--tabs-active-text))] shadow-lg shadow-neo-green/20 transition-transform hover:-translate-y-0.5 sm:w-auto sm:py-2 sm:text-base"
             >
               معامله سریع
             </button>
@@ -1013,10 +1013,10 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
 
       <div className="mt-4" role="presentation">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between md:flex-nowrap">
-          <div id={timeframeLabelId} className="min-w-0 text-xs font-medium text-gray-400 sm:flex-1">
+          <div id={timeframeLabelId} className="min-w-0 text-sm font-medium text-gray-300 sm:flex-1 sm:text-base">
             بازه زمانی: <span className="font-semibold text-white">{timeframeLabels[selectedTimeframe]}</span>
             <span className="mx-1 text-gray-500">•</span>
-            <span className="text-gray-300">{timeframeDescriptions[selectedTimeframe]}</span>
+            <span className="text-gray-100/80">{timeframeDescriptions[selectedTimeframe]}</span>
           </div>
           <div className="relative w-full sm:w-full md:w-60">
             <label htmlFor={timeframeSelectId} className="sr-only">
@@ -1028,7 +1028,7 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
               aria-controls={timeframePanelId}
               value={selectedTimeframe}
               onChange={(event) => setSelectedTimeframe(event.target.value as MarketOverviewTimeframe)}
-              className="w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-right text-xs font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60"
+              className="w-full appearance-none rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-right text-sm font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60"
             >
               {timeframeOptions.map((option) => (
                 <option key={option.value} value={option.value} className="text-gray-900">
@@ -1036,7 +1036,7 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
                 </option>
               ))}
             </select>
-            <ChevronDownIcon className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-300" />
+            <ChevronDownIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-200" />
           </div>
         </div>
       </div>

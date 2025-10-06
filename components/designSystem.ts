@@ -1,17 +1,21 @@
 import clsx from 'clsx';
 
 /** Base classes for a standard page container. */
-export const pageShell = 'space-y-8 pb-16 text-[rgb(var(--neo-text-primary))]';
+export const pageShell =
+  'space-y-8 pb-16 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
 /** Base classes for a narrower page container. */
-export const pageShellNarrow = 'space-y-6 pb-12 text-[rgb(var(--neo-text-primary))]';
+export const pageShellNarrow =
+  'space-y-6 pb-12 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
 /** Styling for a standard section title. */
-export const sectionTitle = 'flex items-center justify-between gap-3 text-right';
+export const sectionTitle =
+  'flex items-center justify-between gap-3 text-right text-lg font-bold sm:text-xl';
 /** Styling for a standard section subtitle. */
-export const sectionSubtitle = 'text-xs leading-relaxed text-[rgb(var(--neo-text-secondary))]';
+export const sectionSubtitle =
+  'text-sm leading-relaxed text-[rgb(var(--neo-text-secondary))] sm:text-[0.95rem]';
 /** Styling for a metric title within a card or widget. */
-export const metricTitle = 'text-sm font-semibold text-[rgb(var(--neo-text-strong))]';
+export const metricTitle = 'text-base font-semibold text-[rgb(var(--neo-text-strong))]';
 /** Styling for a metric description. */
-export const metricDescription = 'text-xs text-[rgb(var(--neo-text-secondary))]';
+export const metricDescription = 'text-sm text-[rgb(var(--neo-text-secondary))]';
 /** Styling for a neutral-toned chip element. */
 export const chipNeutral =
   'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-semibold text-[rgb(var(--neo-chip-color))] border-[var(--neo-chip-border)] bg-[var(--neo-chip-bg)]';
