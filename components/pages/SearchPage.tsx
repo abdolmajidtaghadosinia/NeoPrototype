@@ -37,7 +37,11 @@ const SearchPage: React.FC<SearchPageProps> = ({ portfolioAssets, messages, isLo
     const inputRef = useRef<HTMLInputElement>(null);
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (messages.length === 0) {
+            return;
+        }
+
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
     };
 
     useEffect(scrollToBottom, [messages]);
