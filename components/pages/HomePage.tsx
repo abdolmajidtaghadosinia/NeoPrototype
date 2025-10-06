@@ -188,7 +188,6 @@ interface UpcomingEventItem {
   time?: string;
   location?: string;
   meta?: string;
-  tag?: string;
   accent: UpcomingEventAccent;
 }
 
@@ -444,7 +443,6 @@ const HomePage: React.FC<HomePageProps> = ({
         description: 'جزئیات تولید اردیبهشت پس از بسته شدن بازار منتشر می‌شود و می‌تواند مسیر فردا را تعیین کند.',
         time: 'ساعت ۱۷:۳۰',
         meta: 'گزارش فصلی تولید',
-        tag: 'یادآوری مهم',
         accent: 'primary',
       },
       {
@@ -455,7 +453,6 @@ const HomePage: React.FC<HomePageProps> = ({
         description: 'ارائه گزارش هیئت‌مدیره و تصمیم‌گیری درباره تقسیم سود در مجمع عمومی سالانه.',
         time: 'ساعت ۱۰:۳۰',
         location: 'تهران، مرکز همایش‌های صدا و سیما',
-        tag: 'حضور سهامداران',
         accent: 'info',
       },
       {
@@ -483,7 +480,6 @@ const HomePage: React.FC<HomePageProps> = ({
     dayBadge: string;
     connector: string;
     mobileDivider: string;
-    tag: string;
     timeIcon: string;
   }> = {
     primary: {
@@ -491,7 +487,6 @@ const HomePage: React.FC<HomePageProps> = ({
       dayBadge: 'border border-neo-green/50 bg-neo-green/10 text-neo-green',
       connector: 'bg-gradient-to-b from-transparent via-neo-green/45 to-transparent',
       mobileDivider: 'bg-gradient-to-l from-transparent via-neo-green/60 to-transparent',
-      tag: 'border border-neo-green/45 bg-neo-green/10 text-neo-green',
       timeIcon: 'text-neo-green',
     },
     info: {
@@ -499,7 +494,6 @@ const HomePage: React.FC<HomePageProps> = ({
       dayBadge: 'border border-sky-500/40 bg-sky-500/10 text-sky-300',
       connector: 'bg-gradient-to-b from-transparent via-sky-500/40 to-transparent',
       mobileDivider: 'bg-gradient-to-l from-transparent via-sky-400/50 to-transparent',
-      tag: 'border border-sky-500/40 bg-sky-500/10 text-sky-200',
       timeIcon: 'text-sky-300',
     },
     alert: {
@@ -507,7 +501,6 @@ const HomePage: React.FC<HomePageProps> = ({
       dayBadge: 'border border-rose-500/40 bg-rose-500/10 text-rose-300',
       connector: 'bg-gradient-to-b from-transparent via-rose-500/35 to-transparent',
       mobileDivider: 'bg-gradient-to-l from-transparent via-rose-400/45 to-transparent',
-      tag: 'border border-rose-500/40 bg-rose-500/10 text-rose-200',
       timeIcon: 'text-rose-300',
     },
   };
@@ -625,19 +618,12 @@ const HomePage: React.FC<HomePageProps> = ({
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent" />
                   </div>
                   <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between text-[11px] sm:hidden">
+                    <div className="flex items-center justify-end text-[11px] sm:hidden">
                       <span
                         className={`inline-flex items-center rounded-full px-3 py-1 font-semibold ${accent.dayBadge}`}
                       >
                         {event.day}
                       </span>
-                      {event.tag && (
-                        <span
-                          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-medium ${accent.tag}`}
-                        >
-                          {event.tag}
-                        </span>
-                      )}
                     </div>
                     <div className="sm:hidden">
                       <div
@@ -645,18 +631,11 @@ const HomePage: React.FC<HomePageProps> = ({
                         aria-hidden="true"
                       />
                     </div>
-                    <div className="flex flex-row-reverse items-center justify-between gap-3 text-[11px]">
+                    <div className="flex flex-row-reverse items-center justify-end gap-3 text-[11px]">
                       <div className="flex flex-row-reverse items-center gap-2 text-gray-400">
                         <CalendarIcon className="h-4 w-4 text-gray-500" />
                         <span>{event.date}</span>
                       </div>
-                      {event.tag && (
-                        <span
-                          className={`hidden sm:inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-medium ${accent.tag}`}
-                        >
-                          {event.tag}
-                        </span>
-                      )}
                     </div>
                     <h4 className="text-sm font-semibold text-white md:text-base">{event.title}</h4>
                     <p className="text-xs leading-6 text-gray-400">{event.description}</p>
