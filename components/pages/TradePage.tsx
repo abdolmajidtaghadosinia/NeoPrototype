@@ -7,8 +7,273 @@ import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { ChevronDownIcon } from '../icons/ChevronDownIcon';
 import type { TradeRecord } from '../TradeList';
 import { toEnglishDigits, parsePrice, toPersianFormatted } from '../formatters';
-import PriceChart from '../PriceChart';
 import { normalizeText } from '../../utils/normalizeText';
+
+type AssetCategory = MarketAsset['category'];
+
+type OrderFlowSnapshot = {
+    queue: {
+        buy: { volume: number; value: number; orders: number };
+        sell: { volume: number; value: number; orders: number };
+    };
+    totalVolume: { buy: number; sell: number };
+    retailVolume: { buy: number; sell: number };
+    institutionalVolume: { buy: number; sell: number };
+};
+
+const volumeUnits: Record<AssetCategory, string> = {
+    'بورس': 'سهم',
+    'صندوق‌ها': 'واحد',
+    'ارزها': 'معامله',
+    'کالا': 'قرارداد',
+};
+
+const orderFlowPresets: Record<AssetCategory, OrderFlowSnapshot[]> = {
+    'بورس': [
+        {
+            queue: {
+                buy: { volume: 28_400_000, value: 1_980_000_000_000, orders: 182 },
+                sell: { volume: 8_600_000, value: 568_000_000_000, orders: 74 },
+            },
+            totalVolume: { buy: 65_200_000, sell: 48_900_000 },
+            retailVolume: { buy: 37_400_000, sell: 28_100_000 },
+            institutionalVolume: { buy: 27_800_000, sell: 20_800_000 },
+        },
+        {
+            queue: {
+                buy: { volume: 19_600_000, value: 1_120_000_000_000, orders: 139 },
+                sell: { volume: 6_200_000, value: 372_000_000_000, orders: 58 },
+            },
+            totalVolume: { buy: 52_400_000, sell: 41_700_000 },
+            retailVolume: { buy: 29_500_000, sell: 24_900_000 },
+            institutionalVolume: { buy: 22_900_000, sell: 16_800_000 },
+        },
+        {
+            queue: {
+                buy: { volume: 34_800_000, value: 2_480_000_000_000, orders: 214 },
+                sell: { volume: 9_400_000, value: 672_000_000_000, orders: 91 },
+            },
+            totalVolume: { buy: 71_600_000, sell: 54_300_000 },
+            retailVolume: { buy: 40_800_000, sell: 30_200_000 },
+            institutionalVolume: { buy: 30_800_000, sell: 24_100_000 },
+        },
+    ],
+    'صندوق‌ها': [
+        {
+            queue: {
+                buy: { volume: 9_200_000, value: 182_000_000_000, orders: 108 },
+                sell: { volume: 2_800_000, value: 52_000_000_000, orders: 46 },
+            },
+            totalVolume: { buy: 18_400_000, sell: 14_300_000 },
+            retailVolume: { buy: 11_200_000, sell: 8_900_000 },
+            institutionalVolume: { buy: 7_200_000, sell: 5_400_000 },
+        },
+        {
+            queue: {
+                buy: { volume: 6_700_000, value: 136_000_000_000, orders: 84 },
+                sell: { volume: 3_400_000, value: 64_000_000_000, orders: 52 },
+            },
+            totalVolume: { buy: 15_600_000, sell: 12_800_000 },
+            retailVolume: { buy: 9_400_000, sell: 7_800_000 },
+            institutionalVolume: { buy: 6_200_000, sell: 5_000_000 },
+        },
+        {
+            queue: {
+                buy: { volume: 11_400_000, value: 228_000_000_000, orders: 126 },
+                sell: { volume: 3_000_000, value: 58_000_000_000, orders: 49 },
+            },
+            totalVolume: { buy: 21_800_000, sell: 16_200_000 },
+            retailVolume: { buy: 12_600_000, sell: 9_600_000 },
+            institutionalVolume: { buy: 9_200_000, sell: 6_600_000 },
+        },
+    ],
+    'ارزها': [
+        {
+            queue: {
+                buy: { volume: 4_800, value: 86_000_000_000, orders: 58 },
+                sell: { volume: 3_600, value: 64_000_000_000, orders: 43 },
+            },
+            totalVolume: { buy: 12_400, sell: 10_800 },
+            retailVolume: { buy: 7_200, sell: 6_100 },
+            institutionalVolume: { buy: 5_200, sell: 4_700 },
+        },
+        {
+            queue: {
+                buy: { volume: 5_600, value: 94_000_000_000, orders: 64 },
+                sell: { volume: 2_900, value: 49_000_000_000, orders: 37 },
+            },
+            totalVolume: { buy: 11_800, sell: 9_500 },
+            retailVolume: { buy: 6_500, sell: 5_100 },
+            institutionalVolume: { buy: 5_300, sell: 4_400 },
+        },
+        {
+            queue: {
+                buy: { volume: 6_200, value: 102_000_000_000, orders: 71 },
+                sell: { volume: 3_100, value: 52_000_000_000, orders: 41 },
+            },
+            totalVolume: { buy: 13_400, sell: 11_200 },
+            retailVolume: { buy: 7_800, sell: 6_600 },
+            institutionalVolume: { buy: 5_600, sell: 4_600 },
+        },
+    ],
+    'کالا': [
+        {
+            queue: {
+                buy: { volume: 7_600, value: 148_000_000_000, orders: 92 },
+                sell: { volume: 3_100, value: 64_000_000_000, orders: 53 },
+            },
+            totalVolume: { buy: 16_400, sell: 13_200 },
+            retailVolume: { buy: 9_600, sell: 7_100 },
+            institutionalVolume: { buy: 6_800, sell: 6_100 },
+        },
+        {
+            queue: {
+                buy: { volume: 5_900, value: 122_000_000_000, orders: 81 },
+                sell: { volume: 2_700, value: 54_000_000_000, orders: 45 },
+            },
+            totalVolume: { buy: 13_800, sell: 10_900 },
+            retailVolume: { buy: 7_800, sell: 5_900 },
+            institutionalVolume: { buy: 6_000, sell: 5_000 },
+        },
+        {
+            queue: {
+                buy: { volume: 8_400, value: 162_000_000_000, orders: 104 },
+                sell: { volume: 3_600, value: 72_000_000_000, orders: 58 },
+            },
+            totalVolume: { buy: 18_200, sell: 14_500 },
+            retailVolume: { buy: 10_400, sell: 7_800 },
+            institutionalVolume: { buy: 7_800, sell: 6_700 },
+        },
+    ],
+};
+
+const cloneSnapshot = (snapshot: OrderFlowSnapshot): OrderFlowSnapshot => ({
+    queue: {
+        buy: { ...snapshot.queue.buy },
+        sell: { ...snapshot.queue.sell },
+    },
+    totalVolume: { ...snapshot.totalVolume },
+    retailVolume: { ...snapshot.retailVolume },
+    institutionalVolume: { ...snapshot.institutionalVolume },
+});
+
+const pickOrderFlowSnapshot = (asset: MarketAsset): OrderFlowSnapshot => {
+    const presets = orderFlowPresets[asset.category] || orderFlowPresets['بورس'];
+    if (!presets || presets.length === 0) {
+        return {
+            queue: {
+                buy: { volume: 0, value: 0, orders: 0 },
+                sell: { volume: 0, value: 0, orders: 0 },
+            },
+            totalVolume: { buy: 0, sell: 0 },
+            retailVolume: { buy: 0, sell: 0 },
+            institutionalVolume: { buy: 0, sell: 0 },
+        };
+    }
+
+    const hash = asset.id
+        .split('')
+        .reduce((acc, char, index) => acc + char.charCodeAt(0) * (index + 1), 0);
+
+    const selected = presets[hash % presets.length];
+    return cloneSnapshot(selected);
+};
+
+const formatVolume = (value: number, unit: string): string => {
+    if (value === 0) {
+        return `۰ ${unit}`;
+    }
+
+    if (value >= 1_000_000_000) {
+        const scaled = value / 1_000_000_000;
+        const label = scaled >= 10 ? toPersianFormatted(Math.round(scaled)) : toPersianFormatted(scaled.toFixed(1));
+        return `${label} میلیارد ${unit}`;
+    }
+
+    if (value >= 1_000_000) {
+        const scaled = value / 1_000_000;
+        const label = scaled >= 10 ? toPersianFormatted(Math.round(scaled)) : toPersianFormatted(scaled.toFixed(1));
+        return `${label} میلیون ${unit}`;
+    }
+
+    if (value >= 1_000) {
+        const scaled = value / 1_000;
+        const label = scaled >= 10 ? toPersianFormatted(Math.round(scaled)) : toPersianFormatted(scaled.toFixed(1));
+        return `${label} هزار ${unit}`;
+    }
+
+    return `${toPersianFormatted(value)} ${unit}`;
+};
+
+const formatMoney = (value: number): string => {
+    if (value === 0) {
+        return '۰ تومان';
+    }
+
+    if (value >= 1_000_000_000_000) {
+        const scaled = value / 1_000_000_000_000;
+        const label = scaled >= 10 ? toPersianFormatted(Math.round(scaled)) : toPersianFormatted(scaled.toFixed(1));
+        return `${label} هزار میلیارد تومان`;
+    }
+
+    if (value >= 1_000_000_000) {
+        const scaled = value / 1_000_000_000;
+        const label = scaled >= 10 ? toPersianFormatted(Math.round(scaled)) : toPersianFormatted(scaled.toFixed(1));
+        return `${label} میلیارد تومان`;
+    }
+
+    if (value >= 1_000_000) {
+        const scaled = value / 1_000_000;
+        const label = scaled >= 10 ? toPersianFormatted(Math.round(scaled)) : toPersianFormatted(scaled.toFixed(1));
+        return `${label} میلیون تومان`;
+    }
+
+    if (value >= 1_000) {
+        const scaled = value / 1_000;
+        const label = scaled >= 10 ? toPersianFormatted(Math.round(scaled)) : toPersianFormatted(scaled.toFixed(1));
+        return `${label} هزار تومان`;
+    }
+
+    return `${toPersianFormatted(value)} تومان`;
+};
+
+const formatNetFlow = (value: number, unit: string): { label: string; tone: 'positive' | 'negative' | 'neutral' } => {
+    if (value === 0) {
+        return { label: `۰ ${unit}`, tone: 'neutral' };
+    }
+
+    const tone: 'positive' | 'negative' = value > 0 ? 'positive' : 'negative';
+    const magnitude = Math.abs(value);
+    return {
+        label: `${value > 0 ? '+' : '−'}${formatVolume(magnitude, unit)}`,
+        tone,
+    };
+};
+
+const formatNetMoney = (value: number): { label: string; tone: 'positive' | 'negative' | 'neutral' } => {
+    if (value === 0) {
+        return { label: '۰ تومان', tone: 'neutral' };
+    }
+
+    const tone: 'positive' | 'negative' = value > 0 ? 'positive' : 'negative';
+    const magnitude = Math.abs(value);
+    const prefix = value > 0 ? '+' : '−';
+    return {
+        label: `${prefix}${formatMoney(magnitude)}`,
+        tone,
+    };
+};
+
+const toneClassName = (tone: 'positive' | 'negative' | 'neutral'): string => {
+    switch (tone) {
+        case 'positive':
+            return 'text-[rgb(var(--neo-accent))]';
+        case 'negative':
+            return 'text-[rgb(239,68,68)]';
+        default:
+            return 'text-[rgb(var(--neo-text-secondary))]';
+    }
+};
 
 const USD_TO_TOMAN = 59500;
 const EUR_TO_TOMAN = 65000;
@@ -40,7 +305,7 @@ type ChecklistKey = 'balance' | 'risk' | 'review';
  * - An optional section for setting take-profit and stop-loss levels.
  * - A pre-submission checklist to guide the user.
  * - Display of ongoing, completed, and canceled trades.
- * - An interactive price chart for the selected asset.
+ * - A market order-flow digest covering queues and participant volumes.
  *
  * @param {TradePageProps} props - The component props.
  * @returns {JSX.Element} The main trading page component.
@@ -118,6 +383,24 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
     const [assetAmount, setAssetAmount] = useState<string>('');
     const [tomanAmount, setTomanAmount] = useState<string>('');
     const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
+
+    const orderFlowSnapshot = useMemo(() => pickOrderFlowSnapshot(asset), [asset]);
+    const volumeUnit = volumeUnits[asset.category] ?? 'واحد';
+
+    const totalVolume = orderFlowSnapshot.totalVolume.buy + orderFlowSnapshot.totalVolume.sell;
+    const buyVolumePercent = totalVolume > 0 ? Math.round((orderFlowSnapshot.totalVolume.buy / totalVolume) * 100) : 50;
+    const sellVolumePercent = 100 - buyVolumePercent;
+
+    const netVolumeInfo = formatNetFlow(orderFlowSnapshot.totalVolume.buy - orderFlowSnapshot.totalVolume.sell, volumeUnit);
+
+    const retailNetInfo = formatNetFlow(orderFlowSnapshot.retailVolume.buy - orderFlowSnapshot.retailVolume.sell, volumeUnit);
+
+    const institutionalNetInfo = formatNetFlow(
+        orderFlowSnapshot.institutionalVolume.buy - orderFlowSnapshot.institutionalVolume.sell,
+        volumeUnit,
+    );
+
+    const queueNetMoneyInfo = formatNetMoney(orderFlowSnapshot.queue.buy.value - orderFlowSnapshot.queue.sell.value);
 
     const [showAdvanced, setShowAdvanced] = useState(false);
     const [takeProfit, setTakeProfit] = useState<string>('');
@@ -820,16 +1103,144 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
                     </div>
                 </aside>
                 <section className="order-2 space-y-6 lg:order-1">
-                    <div className="neo-surface neo-surface--muted rounded-3xl p-5 shadow-lg">
+                    <div className="neo-surface neo-surface--muted rounded-3xl p-5 shadow-lg space-y-6">
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                                <h2 className="text-lg font-bold text-[rgb(var(--neo-text-strong))]">روند قیمتی دارایی</h2>
-                                <p className="text-sm text-[rgb(var(--neo-text-secondary))]">نمایی از رفتار قیمت در بازه‌های مختلف</p>
+                                <h2 className="text-lg font-bold text-[rgb(var(--neo-text-strong))]">تحلیل جریان سفارشات</h2>
+                                <p className="text-sm text-[rgb(var(--neo-text-secondary))]">
+                                    تصویری از صف‌های خرید و فروش و رفتار حقیقی و حقوقی در امروز
+                                </p>
                             </div>
                             <span className="text-xs text-[rgb(var(--neo-text-secondary))]">داده‌ها صرفاً برای نمایش نمونه‌ای است</span>
                         </div>
-                        <div className="mt-4 h-72 sm:h-80 lg:h-[420px]">
-                            <PriceChart asset={asset} />
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
+                                <div className="flex items-center justify-between gap-3">
+                                    <span className="inline-flex items-center gap-2 text-sm font-bold text-[rgb(var(--neo-text-strong))]">
+                                        <span className="h-2.5 w-2.5 rounded-full bg-[rgb(var(--neo-accent))]" aria-hidden />
+                                        صف خرید
+                                    </span>
+                                    <span className="inline-flex items-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                        {toPersianFormatted(orderFlowSnapshot.queue.buy.orders)} سفارش
+                                    </span>
+                                </div>
+                                <div className="mt-3 space-y-2">
+                                    <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                        {formatVolume(orderFlowSnapshot.queue.buy.volume, volumeUnit)}
+                                    </p>
+                                    <p className="text-xs text-[rgb(var(--neo-text-secondary))]">
+                                        ارزش تقریبی: {formatMoney(orderFlowSnapshot.queue.buy.value)}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
+                                <div className="flex items-center justify-between gap-3">
+                                    <span className="inline-flex items-center gap-2 text-sm font-bold text-[rgb(var(--neo-text-strong))]">
+                                        <span className="h-2.5 w-2.5 rounded-full bg-[rgb(239,68,68)]" aria-hidden />
+                                        صف فروش
+                                    </span>
+                                    <span className="inline-flex items-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                        {toPersianFormatted(orderFlowSnapshot.queue.sell.orders)} سفارش
+                                    </span>
+                                </div>
+                                <div className="mt-3 space-y-2">
+                                    <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                        {formatVolume(orderFlowSnapshot.queue.sell.volume, volumeUnit)}
+                                    </p>
+                                    <p className="text-xs text-[rgb(var(--neo-text-secondary))]">
+                                        ارزش تقریبی: {formatMoney(orderFlowSnapshot.queue.sell.value)}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
+                                <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">حجم معاملات امروز</h4>
+                                <div className="mt-3 space-y-3">
+                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
+                                        <span>حجم خرید</span>
+                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                            {formatVolume(orderFlowSnapshot.totalVolume.buy, volumeUnit)}
+                                        </span>
+                                    </div>
+                                    <div className="h-2 rounded-full bg-[color:var(--neo-surface-muted-bg)]">
+                                        <div
+                                            className="h-full rounded-full bg-[rgb(var(--neo-accent))]"
+                                            style={{ width: `${buyVolumePercent}%` }}
+                                        />
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
+                                        <span>حجم فروش</span>
+                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                            {formatVolume(orderFlowSnapshot.totalVolume.sell, volumeUnit)}
+                                        </span>
+                                    </div>
+                                    <div className="h-2 rounded-full bg-[color:var(--neo-surface-muted-bg)]">
+                                        <div
+                                            className="h-full rounded-full bg-[rgb(239,68,68)]"
+                                            style={{ width: `${sellVolumePercent}%` }}
+                                        />
+                                    </div>
+                                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
+                                        <span className="text-[rgb(var(--neo-text-secondary))]">خالص جریان</span>
+                                        <span className={clsx('text-sm', toneClassName(netVolumeInfo.tone))}>{netVolumeInfo.label}</span>
+                                    </div>
+                                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
+                                        <span className="text-[rgb(var(--neo-text-secondary))]">خالص ارزش صف‌ها</span>
+                                        <span className={clsx('text-sm', toneClassName(queueNetMoneyInfo.tone))}>{queueNetMoneyInfo.label}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="grid gap-4 lg:grid-cols-2">
+                            <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
+                                <div className="flex items-center justify-between gap-3">
+                                    <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">رفتار حقیقی‌ها</h4>
+                                    <span className="inline-flex items-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                        سهامداران خرد
+                                    </span>
+                                </div>
+                                <div className="mt-3 space-y-3">
+                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
+                                        <span>حجم خرید</span>
+                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                            {formatVolume(orderFlowSnapshot.retailVolume.buy, volumeUnit)}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
+                                        <span>حجم فروش</span>
+                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                            {formatVolume(orderFlowSnapshot.retailVolume.sell, volumeUnit)}
+                                        </span>
+                                    </div>
+                                    <p className={clsx('text-xs font-semibold', toneClassName(retailNetInfo.tone))}>
+                                        خالص ورود حقیقی: <span className="text-sm">{retailNetInfo.label}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
+                                <div className="flex items-center justify-between gap-3">
+                                    <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">رفتار حقوقی‌ها</h4>
+                                    <span className="inline-flex items-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                        سرمایه‌گذاران عمده
+                                    </span>
+                                </div>
+                                <div className="mt-3 space-y-3">
+                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
+                                        <span>حجم خرید</span>
+                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                            {formatVolume(orderFlowSnapshot.institutionalVolume.buy, volumeUnit)}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
+                                        <span>حجم فروش</span>
+                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                            {formatVolume(orderFlowSnapshot.institutionalVolume.sell, volumeUnit)}
+                                        </span>
+                                    </div>
+                                    <p className={clsx('text-xs font-semibold', toneClassName(institutionalNetInfo.tone))}>
+                                        خالص ورود حقوقی: <span className="text-sm">{institutionalNetInfo.label}</span>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="neo-surface neo-surface--ghost rounded-3xl p-5 shadow space-y-4">
