@@ -41,7 +41,7 @@ const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timefr
             onClick={isClickable ? onClick : undefined}
             className={composeHomeCard(
                 clsx(
-                    'flex h-full flex-col gap-2 transition-transform hover:-translate-y-0.5',
+                    'flex h-full flex-col gap-3 transition-transform hover:-translate-y-0.5',
                     isClickable && 'cursor-pointer',
                 ),
                 tone,
@@ -50,7 +50,7 @@ const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timefr
         >
             <div className="flex items-center gap-2">
                 <span className="text-2xl">{item.icon}</span>
-                <h4 className="font-bold text-white text-sm">{item.name}</h4>
+                <h4 className="text-sm font-bold text-white">{item.name}</h4>
             </div>
             <div className="h-12 w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -74,31 +74,63 @@ const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timefr
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-            <div className="text-left">
-                <p className="font-semibold text-white text-sm">{performance.value}</p>
-                <p className={`font-bold text-sm ${isPositive ? 'text-neo-green' : 'text-red-500'}`}>
+            <div className="flex items-end justify-between">
+                <div className="space-y-1 text-left">
+                    <span className="text-xs font-medium text-white/70">آخرین مقدار</span>
+                    <p className="text-base font-semibold text-white">{performance.value}</p>
+                </div>
+                <span
+                    className={clsx(
+                        'inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold shadow-sm',
+                        isPositive ? 'bg-neo-green/15 text-neo-green' : 'bg-red-500/15 text-red-400',
+                    )}
+                >
                     {isPositive ? '▲' : '▼'} {toPersianDigits(performance.change.toFixed(2))}%
-                </p>
+                </span>
             </div>
             {details && (
-                <div className='mt-2 text-xs text-gray-400 flex flex-col gap-2'>
-                    <div className='flex flex-wrap gap-x-4 gap-y-1'>
-                        <span>حجم معاملات {details.volume}</span>
-                        <span>ارزش معاملات {details.value}</span>
-                    </div>
-                    <div>
-                        <div className='w-full h-2 rounded-full overflow-hidden bg-gray-600 flex'>
-                            <div className='bg-red-500 h-full' style={{ width: `${negativePercent}%` }}></div>
-                            <div className='bg-neo-green h-full' style={{ width: `${positivePercent}%` }}></div>
+                <div className="space-y-3 rounded-2xl border border-white/5 bg-white/5 p-3 text-xs text-white/70">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                        <div className="flex flex-col gap-1">
+                            <span className="text-[11px] text-white/50">حجم معاملات</span>
+                            <span className="text-sm font-semibold text-white">{details.volume}</span>
                         </div>
-                        <div className='flex justify-between mt-1'>
-                            <span>نمادهای منفی {toPersianDigits(details.negativeCount)}</span>
-                            <span>نمادهای مثبت {toPersianDigits(details.positiveCount)}</span>
+                        <div className="flex flex-col gap-1">
+                            <span className="text-[11px] text-white/50">ارزش معاملات</span>
+                            <span className="text-sm font-semibold text-white">{details.value}</span>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <span className="text-[11px] text-white/50">ارزش صف خرید</span>
+                            <span className="text-sm font-semibold text-white">{details.buyQueueValue}</span>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <span className="text-[11px] text-white/50">ارزش صف فروش</span>
+                            <span className="text-sm font-semibold text-white">{details.sellQueueValue}</span>
                         </div>
                     </div>
-                    <div className='flex justify-between'>
-                        <span>ارزش صف فروش {details.sellQueueValue}</span>
-                        <span>ارزش صف خرید {details.buyQueueValue}</span>
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between text-[11px]">
+                            <span className="inline-flex items-center gap-1 font-medium text-white">
+                                <span className="h-2 w-2 rounded-full bg-neo-green" aria-hidden />
+                                نمادهای مثبت {toPersianDigits(details.positiveCount)}
+                            </span>
+                            <span className="inline-flex items-center gap-1 font-medium text-red-400">
+                                <span className="h-2 w-2 rounded-full bg-red-500" aria-hidden />
+                                نمادهای منفی {toPersianDigits(details.negativeCount)}
+                            </span>
+                        </div>
+                        <div className="flex h-2 overflow-hidden rounded-full bg-white/10">
+                            <span
+                                className="h-full bg-neo-green"
+                                style={{ width: `${positivePercent}%` }}
+                                aria-hidden
+                            />
+                            <span
+                                className="h-full bg-red-500"
+                                style={{ width: `${negativePercent}%` }}
+                                aria-hidden
+                            />
+                        </div>
                     </div>
                 </div>
             )}
