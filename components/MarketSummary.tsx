@@ -181,12 +181,17 @@ const MarketSummary: React.FC<MarketSummaryProps> = ({ items, onItemClick, colum
                     </div>
                 </div>
             </div>
-            <div className={`grid gap-3 ${columns === 1 ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
+            <div
+                className={clsx(
+                    'neo-animate-grid grid gap-3',
+                    columns === 1 ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2',
+                )}
+            >
                 {items.map(item => (
                     <MarketSummaryCard
                         key={item.id}
                         item={item}
-                        timeframe={activeTimeframe} 
+                        timeframe={activeTimeframe}
                         onClick={onItemClick ? () => onItemClick(item) : undefined} 
                     />
                 ))}

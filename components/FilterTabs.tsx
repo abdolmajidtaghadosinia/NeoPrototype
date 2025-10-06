@@ -488,7 +488,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
     <div className="pb-3">
       <div
         ref={containerRef}
-        className="flex items-stretch gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:overflow-visible"
+        className="neo-animate-inline flex items-stretch gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:overflow-visible"
         role="tablist"
         aria-label="بخش‌های داشبورد"
       >

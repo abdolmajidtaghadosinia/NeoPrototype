@@ -124,6 +124,11 @@
         --technical-badge-border: rgba(255, 255, 255, 0.12);
         --technical-note-bg: rgba(12, 18, 28, 0.68);
         --technical-note-border: rgba(255, 255, 255, 0.12);
+        --neo-motion-duration-short: 0.24s;
+        --neo-motion-duration-medium: 0.45s;
+        --neo-motion-duration-long: 0.75s;
+        --neo-motion-ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+        --neo-motion-ease-soft: cubic-bezier(0.2, 0.8, 0.4, 1);
       }
 
       html,
@@ -306,6 +311,35 @@
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
       }
+      @keyframes neoFadeSlide {
+        0% {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        100% {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes neoElevateIn {
+        0% {
+          opacity: 0;
+          transform: translateY(16px) scale(0.97);
+        }
+        100% {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes neoPulseGlow {
+        0%,
+        100% {
+          box-shadow: var(--home-card-shadow);
+        }
+        50% {
+          box-shadow: 0 24px 64px -42px rgba(215, 254, 67, 0.25);
+        }
+      }
       .neo-surface {
         background: var(--neo-surface-bg);
         border: 1px solid var(--neo-surface-border);
@@ -314,6 +348,87 @@
         backdrop-filter: blur(18px);
         color: rgb(var(--neo-text-primary));
         transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease;
+      }
+
+      .neo-page-shell {
+        opacity: 0;
+        animation: neoFadeSlide var(--neo-motion-duration-medium) var(--neo-motion-ease-out) forwards;
+        animation-delay: var(--neo-animate-delay, 0.02s);
+      }
+
+      .neo-animate-stack > * {
+        --neo-animate-delay: 0s;
+      }
+      .neo-animate-stack > *:nth-child(1) { --neo-animate-delay: 0.02s; }
+      .neo-animate-stack > *:nth-child(2) { --neo-animate-delay: 0.08s; }
+      .neo-animate-stack > *:nth-child(3) { --neo-animate-delay: 0.14s; }
+      .neo-animate-stack > *:nth-child(4) { --neo-animate-delay: 0.2s; }
+      .neo-animate-stack > *:nth-child(5) { --neo-animate-delay: 0.26s; }
+      .neo-animate-stack > *:nth-child(6) { --neo-animate-delay: 0.32s; }
+      .neo-animate-stack > :where(:not(.neo-animate-surface):not(.neo-animate-home-card)) {
+        opacity: 0;
+        animation: neoFadeSlide var(--neo-motion-duration-medium) var(--neo-motion-ease-soft) forwards;
+        animation-delay: var(--neo-animate-delay, 0.02s);
+        will-change: transform, opacity;
+      }
+
+      .neo-animate-inline > * {
+        --neo-animate-delay: 0s;
+      }
+      .neo-animate-inline > *:nth-child(1) { --neo-animate-delay: 0.02s; }
+      .neo-animate-inline > *:nth-child(2) { --neo-animate-delay: 0.08s; }
+      .neo-animate-inline > *:nth-child(3) { --neo-animate-delay: 0.14s; }
+      .neo-animate-inline > *:nth-child(4) { --neo-animate-delay: 0.2s; }
+      .neo-animate-inline > *:nth-child(5) { --neo-animate-delay: 0.26s; }
+      .neo-animate-inline > *:nth-child(6) { --neo-animate-delay: 0.32s; }
+      .neo-animate-inline > :where(:not(.neo-animate-surface):not(.neo-animate-home-card)) {
+        opacity: 0;
+        animation: neoFadeSlide var(--neo-motion-duration-short) var(--neo-motion-ease-out) forwards;
+        animation-delay: var(--neo-animate-delay, 0.02s);
+        will-change: transform, opacity;
+      }
+
+      .neo-animate-grid > * {
+        --neo-animate-delay: 0s;
+      }
+      .neo-animate-grid > *:nth-child(1) { --neo-animate-delay: 0.02s; }
+      .neo-animate-grid > *:nth-child(2) { --neo-animate-delay: 0.09s; }
+      .neo-animate-grid > *:nth-child(3) { --neo-animate-delay: 0.16s; }
+      .neo-animate-grid > *:nth-child(4) { --neo-animate-delay: 0.23s; }
+      .neo-animate-grid > *:nth-child(5) { --neo-animate-delay: 0.3s; }
+      .neo-animate-grid > *:nth-child(6) { --neo-animate-delay: 0.37s; }
+
+      .neo-animate-surface,
+      .neo-animate-home-card {
+        opacity: 0;
+        animation: neoElevateIn var(--neo-motion-duration-medium) var(--neo-motion-ease-out) forwards;
+        animation-delay: var(--neo-animate-delay, 0.04s);
+        will-change: transform, opacity;
+      }
+
+      .neo-animate-home-card:hover {
+        animation-name: neoElevateIn;
+      }
+
+      .neo-animate-chip {
+        opacity: 0;
+        animation: neoFadeSlide var(--neo-motion-duration-short) var(--neo-motion-ease-out) forwards;
+        animation-delay: var(--neo-animate-delay, 0.02s);
+        will-change: transform, opacity;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .neo-page-shell,
+        .neo-animate-stack > *,
+        .neo-animate-inline > *,
+        .neo-animate-grid > *,
+        .neo-animate-surface,
+        .neo-animate-home-card,
+        .neo-animate-chip {
+          animation: none !important;
+          opacity: 1 !important;
+          transform: none !important;
+        }
       }
 
       .filter-tab-highlight {

@@ -2,10 +2,10 @@ import clsx from 'clsx';
 
 /** Base classes for a standard page container. */
 export const pageShell =
-  'space-y-8 pb-16 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
+  'neo-page-shell neo-animate-stack space-y-8 pb-16 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
 /** Base classes for a narrower page container. */
 export const pageShellNarrow =
-  'space-y-6 pb-12 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
+  'neo-page-shell neo-animate-stack space-y-6 pb-12 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
 /** Styling for a standard section title. */
 export const sectionTitle =
   'flex items-center justify-between gap-3 text-right text-lg font-bold sm:text-xl';
@@ -56,7 +56,13 @@ export const composeSurfaceClasses = (
   tone: SurfaceTone = 'base',
   padding: SurfacePadding = 'md',
   className?: string,
-) => clsx('text-right', toneClasses[tone] ?? toneClasses.base, paddingMap[padding], className);
+) =>
+  clsx(
+    'text-right neo-animate-surface',
+    toneClasses[tone] ?? toneClasses.base,
+    paddingMap[padding],
+    className,
+  );
 
 /**
  * Composes a string of CSS classes for a page shell container.
@@ -100,4 +106,10 @@ export const composeHomeCardClasses = (
   tone: HomeCardTone = 'default',
   padding: HomeCardPadding = 'md',
   className?: string,
-) => clsx('text-right', homeCardToneClasses[tone] ?? homeCardToneClasses.default, homeCardPaddingMap[padding], className);
+) =>
+  clsx(
+    'text-right neo-animate-home-card',
+    homeCardToneClasses[tone] ?? homeCardToneClasses.default,
+    homeCardPaddingMap[padding],
+    className,
+  );
