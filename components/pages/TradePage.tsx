@@ -401,6 +401,7 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
     );
 
     const queueNetMoneyInfo = formatNetMoney(orderFlowSnapshot.queue.buy.value - orderFlowSnapshot.queue.sell.value);
+    const totalQueueOrders = orderFlowSnapshot.queue.buy.orders + orderFlowSnapshot.queue.sell.orders;
 
     const [showAdvanced, setShowAdvanced] = useState(false);
     const [takeProfit, setTakeProfit] = useState<string>('');
@@ -1068,132 +1069,127 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
                             </div>
                             <span className="text-xs text-[rgb(var(--neo-text-secondary))]">داده‌ها صرفاً برای نمایش نمونه‌ای است</span>
                         </div>
-                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="space-y-4">
                             <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
                                 <div className="flex items-center justify-between gap-3">
-                                    <span className="inline-flex items-center gap-2 text-sm font-bold text-[rgb(var(--neo-text-strong))]">
-                                        <span className="h-2.5 w-2.5 rounded-full bg-[rgb(var(--neo-accent))]" aria-hidden />
-                                        صف خرید
-                                    </span>
+                                    <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">صف‌های فعال امروز</h4>
                                     <span className="inline-flex items-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
-                                        {toPersianFormatted(orderFlowSnapshot.queue.buy.orders)} سفارش
+                                        مجموع {toPersianFormatted(totalQueueOrders)} سفارش
                                     </span>
                                 </div>
-                                <div className="mt-3 space-y-2">
-                                    <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
-                                        {formatVolume(orderFlowSnapshot.queue.buy.volume, volumeUnit)}
-                                    </p>
-                                    <p className="text-xs text-[rgb(var(--neo-text-secondary))]">
-                                        ارزش تقریبی: {formatMoney(orderFlowSnapshot.queue.buy.value)}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
-                                <div className="flex items-center justify-between gap-3">
-                                    <span className="inline-flex items-center gap-2 text-sm font-bold text-[rgb(var(--neo-text-strong))]">
-                                        <span className="h-2.5 w-2.5 rounded-full bg-[rgb(239,68,68)]" aria-hidden />
-                                        صف فروش
-                                    </span>
-                                    <span className="inline-flex items-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
-                                        {toPersianFormatted(orderFlowSnapshot.queue.sell.orders)} سفارش
-                                    </span>
-                                </div>
-                                <div className="mt-3 space-y-2">
-                                    <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
-                                        {formatVolume(orderFlowSnapshot.queue.sell.volume, volumeUnit)}
-                                    </p>
-                                    <p className="text-xs text-[rgb(var(--neo-text-secondary))]">
-                                        ارزش تقریبی: {formatMoney(orderFlowSnapshot.queue.sell.value)}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
-                                <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">حجم معاملات امروز</h4>
-                                <div className="mt-3 space-y-3">
-                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
-                                        <span>حجم خرید</span>
-                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
-                                            {formatVolume(orderFlowSnapshot.totalVolume.buy, volumeUnit)}
-                                        </span>
+                                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                                    <div className="rounded-xl border border-[color:var(--neo-surface-border)] bg-transparent p-3">
+                                        <div className="flex items-center justify-between text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                            <span>صف خرید</span>
+                                            <span>{formatVolume(orderFlowSnapshot.queue.buy.volume, volumeUnit)}</span>
+                                        </div>
+                                        <p className="mt-2 text-xs text-[rgb(var(--neo-text-secondary))]">
+                                            ارزش تقریبی: {formatMoney(orderFlowSnapshot.queue.buy.value)}
+                                        </p>
+                                        <p className="mt-1 text-[10px] text-[rgb(var(--neo-text-secondary))]">
+                                            {toPersianFormatted(orderFlowSnapshot.queue.buy.orders)} سفارش در انتظار تکمیل
+                                        </p>
                                     </div>
+                                    <div className="rounded-xl border border-[color:var(--neo-surface-border)] bg-transparent p-3">
+                                        <div className="flex items-center justify-between text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                            <span>صف فروش</span>
+                                            <span>{formatVolume(orderFlowSnapshot.queue.sell.volume, volumeUnit)}</span>
+                                        </div>
+                                        <p className="mt-2 text-xs text-[rgb(var(--neo-text-secondary))]">
+                                            ارزش تقریبی: {formatMoney(orderFlowSnapshot.queue.sell.value)}
+                                        </p>
+                                        <p className="mt-1 text-[10px] text-[rgb(var(--neo-text-secondary))]">
+                                            {toPersianFormatted(orderFlowSnapshot.queue.sell.orders)} سفارش در انتظار تکمیل
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
+                                <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">حجم و ارزش معاملات امروز</h4>
+                                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                    <div className="space-y-1">
+                                        <p className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">حجم خرید</p>
+                                        <p className="text-sm font-bold text-[rgb(var(--neo-text-strong))]">
+                                            {formatVolume(orderFlowSnapshot.totalVolume.buy, volumeUnit)}
+                                        </p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">حجم فروش</p>
+                                        <p className="text-sm font-bold text-[rgb(var(--neo-text-strong))]">
+                                            {formatVolume(orderFlowSnapshot.totalVolume.sell, volumeUnit)}
+                                        </p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">خالص جریان</p>
+                                        <p className={clsx('text-sm font-semibold', toneClassName(netVolumeInfo.tone))}>{netVolumeInfo.label}</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">خالص ارزش صف‌ها</p>
+                                        <p className={clsx('text-sm font-semibold', toneClassName(queueNetMoneyInfo.tone))}>{queueNetMoneyInfo.label}</p>
+                                    </div>
+                                </div>
+                                <div className="mt-4 space-y-2">
                                     <div className="h-2 rounded-full bg-[color:var(--neo-surface-muted-bg)]">
                                         <div
                                             className="h-full rounded-full bg-[rgb(var(--neo-accent))]"
                                             style={{ width: `${buyVolumePercent}%` }}
                                         />
                                     </div>
-                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
-                                        <span>حجم فروش</span>
-                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
-                                            {formatVolume(orderFlowSnapshot.totalVolume.sell, volumeUnit)}
-                                        </span>
-                                    </div>
-                                    <div className="h-2 rounded-full bg-[color:var(--neo-surface-muted-bg)]">
-                                        <div
-                                            className="h-full rounded-full bg-[rgb(239,68,68)]"
-                                            style={{ width: `${sellVolumePercent}%` }}
-                                        />
-                                    </div>
-                                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
-                                        <span className="text-[rgb(var(--neo-text-secondary))]">خالص جریان</span>
-                                        <span className={clsx('text-sm', toneClassName(netVolumeInfo.tone))}>{netVolumeInfo.label}</span>
-                                    </div>
-                                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
-                                        <span className="text-[rgb(var(--neo-text-secondary))]">خالص ارزش صف‌ها</span>
-                                        <span className={clsx('text-sm', toneClassName(queueNetMoneyInfo.tone))}>{queueNetMoneyInfo.label}</span>
+                                    <div className="flex items-center justify-between text-[10px] font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                        <span>سهم خرید {toPersianFormatted(buyVolumePercent)}%</span>
+                                        <span>سهم فروش {toPersianFormatted(sellVolumePercent)}%</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="grid gap-4 lg:grid-cols-2">
                             <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
-                                <div className="flex items-center justify-between gap-3">
-                                    <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">رفتار حقیقی‌ها</h4>
-                                    <span className="inline-flex items-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
-                                        سهامداران خرد
-                                    </span>
-                                </div>
-                                <div className="mt-3 space-y-3">
-                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
-                                        <span>حجم خرید</span>
-                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
-                                            {formatVolume(orderFlowSnapshot.retailVolume.buy, volumeUnit)}
-                                        </span>
+                                <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">ترکیب بازیگران بازار</h4>
+                                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                    <div className="rounded-xl border border-[color:var(--neo-surface-border)] bg-transparent p-3 space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">حقیقی‌ها</span>
+                                            <span className="text-[10px] font-semibold text-[rgb(var(--neo-text-secondary))]">سهامداران خرد</span>
+                                        </div>
+                                        <div className="space-y-1 text-xs text-[rgb(var(--neo-text-secondary))]">
+                                            <div className="flex items-center justify-between">
+                                                <span>حجم خرید</span>
+                                                <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                                    {formatVolume(orderFlowSnapshot.retailVolume.buy, volumeUnit)}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <span>حجم فروش</span>
+                                                <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                                    {formatVolume(orderFlowSnapshot.retailVolume.sell, volumeUnit)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <p className={clsx('text-[10px] font-semibold', toneClassName(retailNetInfo.tone))}>
+                                            خالص ورود: <span className="text-sm">{retailNetInfo.label}</span>
+                                        </p>
                                     </div>
-                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
-                                        <span>حجم فروش</span>
-                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
-                                            {formatVolume(orderFlowSnapshot.retailVolume.sell, volumeUnit)}
-                                        </span>
+                                    <div className="rounded-xl border border-[color:var(--neo-surface-border)] bg-transparent p-3 space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">حقوقی‌ها</span>
+                                            <span className="text-[10px] font-semibold text-[rgb(var(--neo-text-secondary))]">سرمایه‌گذاران عمده</span>
+                                        </div>
+                                        <div className="space-y-1 text-xs text-[rgb(var(--neo-text-secondary))]">
+                                            <div className="flex items-center justify-between">
+                                                <span>حجم خرید</span>
+                                                <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                                    {formatVolume(orderFlowSnapshot.institutionalVolume.buy, volumeUnit)}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <span>حجم فروش</span>
+                                                <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                                    {formatVolume(orderFlowSnapshot.institutionalVolume.sell, volumeUnit)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <p className={clsx('text-[10px] font-semibold', toneClassName(institutionalNetInfo.tone))}>
+                                            خالص ورود: <span className="text-sm">{institutionalNetInfo.label}</span>
+                                        </p>
                                     </div>
-                                    <p className={clsx('text-xs font-semibold', toneClassName(retailNetInfo.tone))}>
-                                        خالص ورود حقیقی: <span className="text-sm">{retailNetInfo.label}</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 text-right">
-                                <div className="flex items-center justify-between gap-3">
-                                    <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">رفتار حقوقی‌ها</h4>
-                                    <span className="inline-flex items-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
-                                        سرمایه‌گذاران عمده
-                                    </span>
-                                </div>
-                                <div className="mt-3 space-y-3">
-                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
-                                        <span>حجم خرید</span>
-                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
-                                            {formatVolume(orderFlowSnapshot.institutionalVolume.buy, volumeUnit)}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center justify-between text-xs text-[rgb(var(--neo-text-secondary))]">
-                                        <span>حجم فروش</span>
-                                        <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
-                                            {formatVolume(orderFlowSnapshot.institutionalVolume.sell, volumeUnit)}
-                                        </span>
-                                    </div>
-                                    <p className={clsx('text-xs font-semibold', toneClassName(institutionalNetInfo.tone))}>
-                                        خالص ورود حقوقی: <span className="text-sm">{institutionalNetInfo.label}</span>
-                                    </p>
                                 </div>
                             </div>
                         </div>
