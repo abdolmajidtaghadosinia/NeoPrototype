@@ -46,7 +46,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       <div
         className={clsx(
           composePageShell(
-            'w-full max-w-[120rem] mx-auto px-3 sm:px-5 lg:px-8 xl:px-10 2xl:px-12',
+            'w-full max-w-[120rem] mx-auto pr-2 pl-3 sm:px-4 lg:px-8 xl:px-10 2xl:px-12',
           ),
           'pt-6 md:pt-8',
         )}
