@@ -312,7 +312,10 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
           </button>
         ))}
       </div>
-      <div ref={containerRef} className="flex-1" />
+      <div
+        ref={containerRef}
+        className="relative w-full h-full min-h-[18rem]"
+      />
     </div>
   );
 };
