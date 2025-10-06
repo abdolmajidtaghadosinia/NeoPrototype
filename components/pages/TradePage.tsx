@@ -1,10 +1,11 @@
 
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import clsx from 'clsx';
 import { MarketAsset } from '../../types';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { ChevronDownIcon } from '../icons/ChevronDownIcon';
-import TradeList, { TradeRecord } from '../TradeList';
+import type { TradeRecord } from '../TradeList';
 import { toEnglishDigits, parsePrice, toPersianFormatted } from '../formatters';
 import PriceChart from '../PriceChart';
 import { normalizeText } from '../../utils/normalizeText';
@@ -235,6 +236,27 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
             time: 'هفته پیش',
         },
     ];
+
+    const tradeSections = [
+        { id: 'ongoing', title: 'معاملات در حال انجام', trades: ongoingTrades },
+        { id: 'done', title: 'معاملات انجام شده', trades: completedTrades },
+        { id: 'canceled', title: 'معاملات کنسل شده', trades: canceledTrades },
+    ];
+
+    const tradeStatusStyles: Record<TradeRecord['status'], { label: string; badge: string }> = {
+        ongoing: {
+            label: 'در حال انجام',
+            badge: 'border border-amber-400/30 bg-amber-500/10 text-amber-400',
+        },
+        done: {
+            label: 'انجام شد',
+            badge: 'border border-[color:rgba(var(--neo-accent),0.35)] bg-[color:rgba(var(--neo-accent),0.18)] text-[rgb(var(--neo-accent))] shadow-[0_16px_32px_-28px_rgba(82,255,122,0.6)]',
+        },
+        canceled: {
+            label: 'کنسل شد',
+            badge: 'border border-rose-400/30 bg-rose-500/10 text-rose-400',
+        },
+    };
     
     const numericPrice = parseFloat(price) || 0;
     const numericTakeProfit = parseFloat(takeProfit) || 0;
@@ -257,7 +279,7 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
         }
         return 0;
     }, [effectivePrice, numericTakeProfit]);
-    
+
     const stopLossProfitPercent = useMemo(() => {
         if (effectivePrice > 0 && numericStopLoss > 0) {
             return ((numericStopLoss - effectivePrice) / effectivePrice) * 100;
@@ -277,6 +299,35 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
         return { completed, total, percent };
     }, [checklistState]);
 
+    const dailyChange = asset.performance?.daily?.change ?? 0;
+    const formattedDailyChange = `${dailyChange > 0 ? '+' : ''}${toPersianFormatted(Math.abs(dailyChange).toFixed(2))}%`;
+    const dailyChangeClass = dailyChange > 0
+        ? 'text-[rgb(var(--neo-accent))]'
+        : dailyChange < 0
+            ? 'text-rose-400'
+            : 'text-[rgb(var(--neo-text-secondary))]';
+
+    const orderActionLabel = action === 'buy' ? 'خرید' : 'فروش';
+    const settlementLabel = action === 'buy' ? 'مبلغ نهایی پرداختی' : 'مبلغ دریافتی پس از کارمزد';
+    const settlementValue = action === 'buy' ? totalCost : netProceeds;
+    const orderSummary = [
+        { label: 'ارزش سفارش', value: `${toPersianFormatted(tradeValue.toFixed(0))} تومان` },
+        { label: 'کارمزد تخمینی', value: `${toPersianFormatted(fee.toFixed(0))} تومان` },
+        { label: settlementLabel, value: `${toPersianFormatted(settlementValue.toFixed(0))} تومان` },
+    ];
+
+    const balanceSummary = action === 'buy'
+        ? [
+            { label: 'موجودی کل تومان', value: `${toPersianFormatted(userTomanBalance)} تومان` },
+            { label: 'موجودی قابل معامله', value: `${toPersianFormatted(userTradableTomanBalance)} تومان` },
+            { label: 'مانده پس از سفارش', value: `${toPersianFormatted(Math.max(remainingBalance, 0).toFixed(0))} تومان` },
+        ]
+        : [
+            { label: `دارایی ${asset.name}`, value: `${toPersianFormatted(userAssetBalance)} ${assetUnit}` },
+            { label: 'ارزش معامله به تومان', value: `${toPersianFormatted(tradeValue.toFixed(0))} تومان` },
+            { label: 'واحد باقی‌مانده', value: `${toPersianFormatted(Math.max(remainingBalance, 0))} ${assetUnit}` },
+        ];
+
     const handleAssetAmountChange = (value: string) => {
         const cleanValue = toEnglishDigits(value);
         setAssetAmount(cleanValue);
@@ -294,15 +345,15 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
             setAssetAmount('');
         }
     };
-    
+
     const handleSetPercentage = (percentage: number) => {
-       if (action === 'buy') {
-           const amount = userTradableTomanBalance * (percentage / 100);
-           handleTomanAmountChange(Math.floor(amount).toString());
-       } else { // sell
-           const amount = userAssetBalance * (percentage / 100);
-           handleAssetAmountChange(amount.toString());
-       }
+        if (action === 'buy') {
+            const amount = userTradableTomanBalance * (percentage / 100);
+            handleTomanAmountChange(Math.floor(amount).toString());
+        } else {
+            const amount = userAssetBalance * (percentage / 100);
+            handleAssetAmountChange(amount.toString());
+        }
     };
 
     useEffect(() => {
@@ -355,10 +406,8 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
             return;
         }
 
-        const actionText = action === 'buy' ? 'خرید' : 'فروش';
         const settlementAmount = action === 'buy' ? totalCost : netProceeds;
-        const settlementLabel = action === 'buy' ? 'مبلغ پرداختی نهایی' : 'مبلغ دریافتی پس از کارمزد';
-        let alertMessage = `سفارش ${actionText} برای ${toPersianFormatted(finalAssetAmount)} ${assetUnit} از ${asset.name} با ارزش تقریبی ${toPersianFormatted(tradeValue.toFixed(0))} تومان ثبت شد.\n${settlementLabel}: ${toPersianFormatted(settlementAmount.toFixed(0))} تومان.`;
+        let alertMessage = `سفارش ${orderActionLabel} برای ${toPersianFormatted(finalAssetAmount)} ${assetUnit} از ${asset.name} با ارزش تقریبی ${toPersianFormatted(tradeValue.toFixed(0))} تومان ثبت شد.\n${settlementLabel}: ${toPersianFormatted(settlementAmount.toFixed(0))} تومان.`;
 
         if (finalTakeProfit > 0) {
             alertMessage += `\nحد سود: ${toPersianFormatted(finalTakeProfit)} تومان`;
@@ -375,220 +424,348 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
         setTakeProfit('');
         setStopLoss('');
     };
-    
+
     const canSubmit = (parseFloat(assetAmount) || 0) > 0;
 
     return (
-        <div className="h-screen w-full bg-neo-dark-1 flex flex-col font-sans">
-            {/* Header */}
-            <header className="flex-shrink-0 bg-neo-dark-2 p-4 border-b border-gray-800">
-                <div className="flex items-center justify-between">
-                    <div className="w-8"></div>
-                    <div className="flex items-center gap-2">
-                        <h1 className="font-bold text-lg text-white">{asset.name}</h1>
-                        {typeof asset.icon === 'string' && asset.icon.startsWith('http') ?
-                            <img src={asset.icon} alt={asset.name} className="w-8 h-8 object-contain" /> :
-                            <span className="text-2xl w-8 h-8 flex items-center justify-center">{asset.icon}</span>
-                        }
+        <div className="min-h-screen bg-[var(--app-body-bg)] pb-12 text-[rgb(var(--neo-text-primary))]">
+            <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pt-6 sm:px-6 lg:px-8">
+            <header className="neo-surface rounded-3xl px-5 py-4 shadow-lg">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] shadow-sm">
+                                {typeof asset.icon === 'string' && asset.icon.startsWith('http') ? (
+                                    <img src={asset.icon} alt={asset.name} className="h-8 w-8 object-contain" />
+                                ) : (
+                                    <span className="text-2xl">{asset.icon}</span>
+                                )}
+                            </div>
+                            <div className="space-y-1 text-right">
+                                <span className="inline-flex items-center justify-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                    {asset.category}
+                                </span>
+                                <h1 className="text-xl font-bold text-[rgb(var(--neo-text-strong))] sm:text-2xl">{asset.name}</h1>
+                            </div>
+                        </div>
+                        <button
+                            onClick={onBack}
+                            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] text-[rgb(var(--neo-text-secondary))] transition hover:text-[rgb(var(--neo-text-strong))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]"
+                            aria-label="بازگشت"
+                        >
+                            <ArrowLeftIcon className="h-5 w-5" />
+                        </button>
                     </div>
-                    <button onClick={onBack} className="p-1 text-gray-300 hover:text-neo-green">
-                      <ArrowLeftIcon className="w-6 h-6" />
-                    </button>
+                    <div className="flex flex-wrap items-center gap-4 text-right text-sm sm:gap-6">
+                        <div className="space-y-1">
+                            <p className="text-[rgb(var(--neo-text-secondary))]">قیمت لحظه‌ای</p>
+                            <p className="text-lg font-bold text-[rgb(var(--neo-text-strong))]" style={{ direction: 'ltr' }}>
+                                {toPersianFormatted(initialPrice.toString())} تومان
+                            </p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[rgb(var(--neo-text-secondary))]">تغییر روز</p>
+                            <p className={clsx('text-lg font-bold', dailyChangeClass)}>{formattedDailyChange}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[rgb(var(--neo-text-secondary))]">نرخ مرجع</p>
+                            <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">{priceSourceInfo.sourceLabel}</p>
+                        </div>
+                        {priceSourceInfo.helperText && (
+                            <div className="rounded-2xl border border-dashed border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-4 py-2 text-xs leading-6 text-[rgb(var(--neo-text-secondary))]">
+                                {priceSourceInfo.helperText}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </header>
-
-            {/* Main Content */}
-            <main className="flex-grow flex flex-col md:flex-row gap-6 p-4">
-                <aside className="w-full md:w-96 p-4 overflow-y-auto">
-                  <div className="space-y-6">
-                    <h2 className="text-right font-bold text-white">سفارش فعلی</h2>
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,1fr)] xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,1fr)]">
+                <aside className="order-1 flex flex-col gap-6 lg:order-2">
                     {formFeedback && (
                         <div
                             ref={feedbackRef}
                             role="alert"
                             tabIndex={-1}
-                            className={`rounded-xl border px-3 py-3 text-right text-sm leading-6 shadow ${
+                            className={clsx(
+                                'neo-surface rounded-3xl px-5 py-4 text-sm leading-7 shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
                                 formFeedback.type === 'success'
-                                    ? 'border-neo-green/70 bg-neo-green/10 text-neo-green'
-                                    : 'border-red-500/60 bg-red-500/10 text-red-300'
-                            }`}
+                                    ? 'neo-surface--positive text-[rgb(var(--neo-text-strong))]'
+                                    : 'neo-surface--danger text-rose-100'
+                            )}
                         >
                             <p className="whitespace-pre-line">{formFeedback.message}</p>
                         </div>
                     )}
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="flex bg-neo-dark-3 p-1 rounded-xl">
-                        <button
-                            type="button"
-                            onClick={() => setAction('sell')}
-                            className={`w-1/2 py-2.5 text-center rounded-lg font-bold text-sm transition-colors ${action === 'sell' ? 'bg-red-500 text-white shadow-md' : 'text-gray-300'}`}>
-                            فروش
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setAction('buy')}
-                            className={`w-1/2 py-2.5 text-center rounded-lg font-bold text-sm transition-colors ${action === 'buy' ? 'bg-neo-green text-black shadow-md' : 'text-gray-300'}`}>
-                            خرید
-                        </button>
-                    </div>
-
-                    <div className="flex bg-neo-dark-3 p-1 rounded-xl shadow">
-                        <button
-                            type="button"
-                            onClick={() => setOrderType('limit')}
-                            className={`w-1/2 py-2 text-center rounded-lg text-sm font-bold transition-colors ${orderType === 'limit' ? 'bg-neo-dark-2 text-white' : 'text-gray-300'}`}>سفارش محدود</button>
-                        <button
-                            type="button"
-                            onClick={() => setOrderType('market')}
-                            className={`w-1/2 py-2 text-center rounded-lg text-sm font-bold transition-colors ${orderType === 'market' ? 'bg-neo-dark-2 text-white' : 'text-gray-300'}`}>سفارش بازار</button>
-                    </div>
-                    <p className="text-xs text-gray-500 text-right">
-                        سفارش محدود امکان تعیین قیمت دلخواه را می‌دهد؛ سفارش بازار با قیمت لحظه‌ای انجام می‌شود و مناسب اجرای سریع است.
-                    </p>
-
-                    <div className="space-y-3 bg-neo-dark-2 p-4 rounded-2xl shadow">
-                        {/* Price Input */}
-                        {orderType === 'limit' ? (
-                        <div>
-                            <label className="text-sm font-semibold text-gray-400 mb-2 block text-right">قیمت واحد</label>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    value={toPersianFormatted(price)}
-                                    onChange={e => setPrice(toEnglishDigits(e.target.value))}
-                                    className="w-full bg-neo-dark-3 p-3 rounded-lg text-lg font-bold text-white text-left focus:outline-none focus:ring-2 focus:ring-neo-green border-2 border-transparent"
-                                    style={{direction: 'ltr'}}
-                                />
-                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">تومان</span>
+                    <form onSubmit={handleSubmit} className="neo-surface rounded-3xl p-5 text-right shadow-lg space-y-6">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="space-y-1">
+                                <h2 className="text-lg font-bold text-[rgb(var(--neo-text-strong))] sm:text-xl">سفارش {orderActionLabel}</h2>
+                                <p className="text-sm text-[rgb(var(--neo-text-secondary))]">
+                                    مقادیر معامله را مشخص کنید و قبل از ارسال دوباره بررسی نمایید.
+                                </p>
                             </div>
-                            <p className="mt-2 text-xs text-gray-500 text-right leading-5">
-                                قیمت به تومان وارد می‌شود{priceSourceInfo.helperText ? `؛ نرخ لحظه‌ای از ${priceSourceInfo.sourceLabel} تبدیل شده است (${priceSourceInfo.helperText}).` : ' و با تغییر این مقدار می‌توانید سفارش محدود دلخواه خود را ثبت کنید.'}
-                            </p>
+                            <span className="inline-flex items-center justify-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                واحد دارایی: {assetUnit}
+                            </span>
                         </div>
-                        ) : (
-                        <div className="flex justify-between items-center bg-neo-dark-3 p-3 rounded-lg">
-                            <span className="text-sm text-gray-400">قیمت بازار</span>
-                            <span className="text-white font-bold" style={{direction:'ltr'}}>{toPersianFormatted(initialPrice.toString())} تومان</span>
-                        </div>
-                        )}
-
-                        {/* Asset Amount Input */}
-                        <div>
-                            <label className="text-sm font-semibold text-gray-400 mb-2 block text-right">مقدار</label>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    inputMode="decimal"
-                                    placeholder="۰"
-                                    value={assetAmount ? toPersianFormatted(assetAmount) : ''}
-                                    onChange={e => handleAssetAmountChange(e.target.value)}
-                                    className="w-full bg-neo-dark-3 p-3 rounded-lg text-lg font-bold text-white text-left focus:outline-none focus:ring-2 focus:ring-neo-green border-2 border-transparent"
-                                    style={{direction: 'ltr'}}
-                                />
-                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">{assetUnit}</span>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <div className="space-y-2">
+                                <span className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">جهت معامله</span>
+                                <div className="flex gap-2 rounded-2xl bg-[color:var(--neo-surface-ghost-bg)] p-1">
+                                    <button
+                                        type="button"
+                                        onClick={() => setAction('sell')}
+                                        className={clsx(
+                                            'flex-1 rounded-2xl px-4 py-2.5 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
+                                            action === 'sell'
+                                                ? 'border border-rose-400/30 bg-rose-500/15 text-rose-400 shadow-[0_16px_32px_-26px_rgba(244,63,94,0.65)]'
+                                                : 'text-[rgb(var(--neo-text-secondary))] hover:bg-[color:var(--neo-surface-muted-bg)]'
+                                        )}
+                                    >
+                                        فروش
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setAction('buy')}
+                                        className={clsx(
+                                            'flex-1 rounded-2xl px-4 py-2.5 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
+                                            action === 'buy'
+                                                ? 'border border-[color:rgba(var(--neo-accent),0.4)] bg-[rgb(var(--neo-accent))] text-[rgb(var(--neo-accent-ink))] shadow-[0_18px_38px_-28px_rgba(107,255,110,0.7)]'
+                                                : 'text-[rgb(var(--neo-text-secondary))] hover:bg-[color:var(--neo-surface-muted-bg)]'
+                                        )}
+                                    >
+                                        خرید
+                                    </button>
+                                </div>
                             </div>
-                            <p className="mt-2 text-xs text-gray-500 text-right leading-5">
-                                مقدار بر حسب واحد {assetUnit} وارد می‌شود و برای سفارش {action === 'buy' ? 'خرید' : 'فروش'} باید عددی مثبت درج کنید.
-                            </p>
-                        </div>
-
-                        {/* Toman Amount Input */}
-                         <div>
-                            <label className="text-sm font-semibold text-gray-400 mb-2 block text-right">مبلغ کل</label>
-                            <div className="relative">
-                                <input 
-                                    type="text"
-                                    inputMode="decimal"
-                                    placeholder="۰"
-                                    value={tomanAmount ? toPersianFormatted(tomanAmount) : ''}
-                                    onChange={e => handleTomanAmountChange(e.target.value)}
-                                    className="w-full bg-neo-dark-3 p-3 rounded-lg text-lg font-bold text-white text-left focus:outline-none focus:ring-2 focus:ring-neo-green border-2 border-transparent"
-                                    style={{direction: 'ltr'}}
-                                />
-                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">تومان</span>
+                            <div className="space-y-2">
+                                <span className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">نوع سفارش</span>
+                                <div className="flex gap-2 rounded-2xl bg-[color:var(--neo-surface-ghost-bg)] p-1">
+                                    <button
+                                        type="button"
+                                        onClick={() => setOrderType('limit')}
+                                        className={clsx(
+                                            'flex-1 rounded-2xl px-4 py-2.5 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
+                                            orderType === 'limit'
+                                                ? 'border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] text-[rgb(var(--neo-text-strong))]'
+                                                : 'text-[rgb(var(--neo-text-secondary))] hover:bg-[color:var(--neo-surface-muted-bg)]'
+                                        )}
+                                    >
+                                        سفارش محدود
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setOrderType('market')}
+                                        className={clsx(
+                                            'flex-1 rounded-2xl px-4 py-2.5 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
+                                            orderType === 'market'
+                                                ? 'border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-muted-bg)] text-[rgb(var(--neo-text-strong))]'
+                                                : 'text-[rgb(var(--neo-text-secondary))] hover:bg-[color:var(--neo-surface-muted-bg)]'
+                                        )}
+                                    >
+                                        سفارش بازار
+                                    </button>
+                                </div>
                             </div>
-                            <p className="mt-2 text-xs text-gray-500 text-right leading-5">
-                                مبلغ کل تخمینی سفارش به تومان است و کارمزد پس از محاسبه در خلاصه سفارش نمایش داده می‌شود.
-                            </p>
-                         </div>
-
-                        <div className="flex justify-between gap-2 pt-2">
-                            {[25, 50, 75, 100].map(p => (
-                                <button type="button" key={p} onClick={() => handleSetPercentage(p)} className="bg-neo-dark-3 text-xs font-bold text-gray-300 py-1.5 rounded-md flex-1 hover:bg-neo-dark-1 transition-colors">{toPersianFormatted(p)}%</button>
-                            ))}
                         </div>
-                        <p className="text-[11px] leading-5 text-gray-500 text-right">
-                            درصدها بر اساس {action === 'buy' ? 'موجودی قابل معامله تومانی' : `موجودی ${assetUnit} شما`} محاسبه می‌شوند.
+                        <p className="text-xs leading-6 text-[rgb(var(--neo-text-secondary))]">
+                            سفارش محدود امکان تعیین قیمت دلخواه را می‌دهد؛ سفارش بازار با قیمت لحظه‌ای انجام می‌شود و مناسب اجرای سریع است.
                         </p>
-                    </div>
-
-                    <div className="bg-neo-dark-2 p-4 rounded-2xl shadow space-y-2 text-gray-300 text-sm" aria-live="polite">
-                        <h3 className="text-right text-white font-semibold mb-2">خلاصه سفارش</h3>
-                        {priceSourceInfo.currency !== 'toman' && (
-                            <div className="flex justify-between text-xs text-gray-500">
-                                <span>مبنای تبدیل</span>
-                                <span className="text-right">{priceSourceInfo.helperText}</span>
+                        <div className="space-y-5">
+                            {orderType === 'limit' ? (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-[rgb(var(--neo-text-secondary))]">قیمت واحد (تومان)</label>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            value={toPersianFormatted(price)}
+                                            onChange={(e) => setPrice(toEnglishDigits(e.target.value))}
+                                            className="w-full rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-4 py-3 text-left text-lg font-bold text-[rgb(var(--neo-text-strong))] tracking-wide focus:border-[rgb(var(--neo-accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]"
+                                            style={{ direction: 'ltr' }}
+                                        />
+                                        <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                            تومان
+                                        </span>
+                                    </div>
+                                    <p className="text-xs leading-6 text-[rgb(var(--neo-text-secondary))]">
+                                        قیمت به تومان وارد می‌شود{priceSourceInfo.helperText ? `؛ نرخ لحظه‌ای از ${priceSourceInfo.sourceLabel} تبدیل شده است (${priceSourceInfo.helperText}).` : ' و با تغییر این مقدار می‌توانید سفارش محدود دلخواه خود را ثبت کنید.'}
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="flex items-center justify-between rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-4 py-3">
+                                    <span className="text-sm text-[rgb(var(--neo-text-secondary))]">قیمت بازار</span>
+                                    <span className="text-lg font-bold text-[rgb(var(--neo-text-strong))]" style={{ direction: 'ltr' }}>
+                                        {toPersianFormatted(initialPrice.toString())} تومان
+                                    </span>
+                                </div>
+                            )}
+                            <div className="space-y-2">
+                                <label className="text-sm font-semibold text-[rgb(var(--neo-text-secondary))]">مقدار ({assetUnit})</label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        inputMode="decimal"
+                                        placeholder="۰"
+                                        value={assetAmount ? toPersianFormatted(assetAmount) : ''}
+                                        onChange={(e) => handleAssetAmountChange(e.target.value)}
+                                        className="w-full rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-4 py-3 text-left text-lg font-bold text-[rgb(var(--neo-text-strong))] tracking-wide focus:border-[rgb(var(--neo-accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]"
+                                        style={{ direction: 'ltr' }}
+                                    />
+                                    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                        {assetUnit}
+                                    </span>
+                                </div>
+                                <p className="text-xs leading-6 text-[rgb(var(--neo-text-secondary))]">
+                                    مقدار بر حسب واحد {assetUnit} وارد می‌شود و برای سفارش {action === 'buy' ? 'خرید' : 'فروش'} باید عددی مثبت درج کنید.
+                                </p>
                             </div>
-                        )}
-                        <div className="flex justify-between">
-                            <span>ارزش معامله</span>
-                            <span>{toPersianFormatted(tradeValue.toFixed(0))} تومان</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span>کارمزد</span>
-                            <span>{toPersianFormatted(fee.toFixed(0))} تومان</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span>{action === 'buy' ? 'مبلغ پرداختی' : 'دریافتی پس از کارمزد'}</span>
-                            <span>{toPersianFormatted((action === 'buy' ? totalCost : netProceeds).toFixed(0))} تومان</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span>موجودی شما</span>
-                            <span>{action === 'buy' ? `${toPersianFormatted(userTomanBalance)} تومان` : `${toPersianFormatted(userAssetBalance)} ${assetUnit}`}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span>موجودی کیف پول قابل معامله (مبنای درصدها)</span>
-                            <span>{toPersianFormatted(userTradableTomanBalance)} تومان</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span>{action === 'buy' ? 'باقیمانده موجودی قابل معامله' : 'باقیمانده دارایی'}</span>
-                            <span>{action === 'buy' ? `${toPersianFormatted(Math.max(remainingBalance, 0).toFixed(0))} تومان` : `${toPersianFormatted(Math.max(remainingBalance, 0))} ${assetUnit}`}</span>
-                        </div>
-                        {isBalanceInsufficient && (
-                            <p className="rounded-xl border border-red-500/40 bg-red-500/10 px-3 py-2 text-right text-xs font-semibold text-red-300">
-                                {action === 'buy'
-                                    ? 'موجودی قابل معامله تومانی برای این سفارش کافی نیست. مبلغ سفارش یا درصدهای انتخابی را کاهش دهید.'
-                                    : `${asset.name} کافی برای فروش در کیف پول شما موجود نیست.`}
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="space-y-3 rounded-2xl border border-gray-800/70 bg-neo-dark-2/80 p-4 text-right text-sm text-gray-300 shadow">
-                        <h3 className="text-white font-semibold">چک‌لیست قبل از ارسال</h3>
-                        <div className="space-y-1">
-                            <div className="flex items-center justify-between text-[11px] text-gray-500">
-                                <span>پیشرفت آماده‌سازی</span>
-                                <span className="font-semibold text-gray-200">
-                                    {toPersianFormatted(checklistProgress.completed)} از {toPersianFormatted(checklistProgress.total)}
-                                </span>
-                            </div>
-                            <div className="h-1.5 w-full rounded-full bg-neo-dark-3">
-                                <div className="h-full rounded-full bg-neo-green transition-all" style={{ width: `${checklistProgress.percent}%` }} />
+                            <div className="space-y-2">
+                                <label className="text-sm font-semibold text-[rgb(var(--neo-text-secondary))]">مبلغ کل (تومان)</label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        inputMode="decimal"
+                                        placeholder="۰"
+                                        value={tomanAmount ? toPersianFormatted(tomanAmount) : ''}
+                                        onChange={(e) => handleTomanAmountChange(e.target.value)}
+                                        className="w-full rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-4 py-3 text-left text-lg font-bold text-[rgb(var(--neo-text-strong))] tracking-wide focus:border-[rgb(var(--neo-accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]"
+                                        style={{ direction: 'ltr' }}
+                                    />
+                                    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                        تومان
+                                    </span>
+                                </div>
+                                <div className="grid grid-cols-4 gap-2">
+                                    {[25, 50, 75, 100].map((p) => (
+                                        <button
+                                            type="button"
+                                            key={p}
+                                            onClick={() => handleSetPercentage(p)}
+                                            className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-transparent px-2 py-2 text-center text-xs font-bold text-[rgb(var(--neo-text-secondary))] transition hover:border-[rgb(var(--neo-accent))] hover:text-[rgb(var(--neo-accent))]"
+                                        >
+                                            {toPersianFormatted(p)}%
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
-                        <div className="space-y-2">
+                        <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4">
+                            <dl className="grid gap-3 sm:grid-cols-2">
+                                {orderSummary.map((item) => (
+                                    <div key={item.label} className="space-y-1">
+                                        <dt className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">{item.label}</dt>
+                                        <dd className="text-sm font-bold text-[rgb(var(--neo-text-strong))]">{item.value}</dd>
+                                    </div>
+                                ))}
+                            </dl>
+                        </div>
+                        <div className="rounded-2xl border border-dashed border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4">
+                            <button
+                                type="button"
+                                onClick={() => setShowAdvanced(!showAdvanced)}
+                                className="flex w-full items-center justify-between text-sm font-semibold text-[rgb(var(--neo-text-strong))]"
+                            >
+                                <span>تنظیم حد سود / ضرر (اختیاری)</span>
+                                <ChevronDownIcon className={clsx('h-5 w-5 transition-transform', showAdvanced ? 'rotate-180' : '')} />
+                            </button>
+                            {showAdvanced && (
+                                <div className="mt-4 space-y-4 border-t border-[color:var(--neo-divider-color)] pt-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-semibold text-[rgb(var(--neo-text-secondary))]">حد سود (تومان)</label>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                placeholder="قیمت فروش در سود"
+                                                value={takeProfit ? toPersianFormatted(takeProfit) : ''}
+                                                onChange={(e) => setTakeProfit(toEnglishDigits(e.target.value))}
+                                                className="w-full rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-4 py-3 text-left text-lg font-bold text-[rgb(var(--neo-text-strong))] tracking-wide focus:border-[rgb(var(--neo-accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]"
+                                                style={{ direction: 'ltr' }}
+                                            />
+                                            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                                تومان
+                                            </span>
+                                        </div>
+                                        {takeProfitProfitPercent > 0 && (
+                                            <p className="text-xs font-semibold text-[rgb(var(--neo-accent))]">
+                                                سود احتمالی: +{toPersianFormatted(takeProfitProfitPercent.toFixed(2))}%
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-semibold text-[rgb(var(--neo-text-secondary))]">حد ضرر (تومان)</label>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                placeholder="قیمت فروش در ضرر"
+                                                value={stopLoss ? toPersianFormatted(stopLoss) : ''}
+                                                onChange={(e) => setStopLoss(toEnglishDigits(e.target.value))}
+                                                className="w-full rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-4 py-3 text-left text-lg font-bold text-[rgb(var(--neo-text-strong))] tracking-wide focus:border-rose-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400/70"
+                                                style={{ direction: 'ltr' }}
+                                            />
+                                            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                                تومان
+                                            </span>
+                                        </div>
+                                        {stopLossProfitPercent < 0 && (
+                                            <p className="text-xs font-semibold text-rose-400">
+                                                زیان احتمالی: {toPersianFormatted(stopLossProfitPercent.toFixed(2))}%
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4">
+                            <dl className="grid gap-3 sm:grid-cols-2">
+                                {balanceSummary.map((item) => (
+                                    <div key={item.label} className="space-y-1">
+                                        <dt className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">{item.label}</dt>
+                                        <dd className="text-sm font-bold text-[rgb(var(--neo-text-strong))]">{item.value}</dd>
+                                    </div>
+                                ))}
+                            </dl>
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={!canSubmit}
+                            className={clsx(
+                                'w-full rounded-2xl px-4 py-3 text-lg font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
+                                canSubmit
+                                    ? action === 'buy'
+                                        ? 'bg-[rgb(var(--neo-accent))] text-[rgb(var(--neo-accent-ink))] shadow-[0_24px_48px_-28px_rgba(107,255,110,0.65)] hover:brightness-95'
+                                        : 'bg-gradient-to-l from-rose-500 to-rose-400 text-white shadow-[0_24px_48px_-28px_rgba(244,63,94,0.6)] hover:brightness-95'
+                                    : 'cursor-not-allowed bg-[color:var(--neo-surface-muted-bg)] text-[rgb(var(--neo-text-secondary))]'
+                            )}
+                        >
+                            {orderActionLabel}
+                        </button>
+                    </form>
+                    <div className="neo-surface neo-surface--ghost rounded-3xl p-5 shadow space-y-5">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-base font-bold text-[rgb(var(--neo-text-strong))]">چک‌لیست پیش از ارسال</h3>
+                            <span className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
+                                {toPersianFormatted(checklistProgress.completed)} از {toPersianFormatted(checklistProgress.total)}
+                            </span>
+                        </div>
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-[color:var(--neo-surface-muted-bg)]">
+                            <div
+                                className="h-full rounded-full bg-[rgb(var(--neo-accent))] transition-all"
+                                style={{ width: `${checklistProgress.percent}%` }}
+                            />
+                        </div>
+                        <div className="space-y-3">
                             {checklistItems.map((item) => (
                                 <label
                                     key={item.key}
-                                    className="flex flex-row-reverse items-center justify-between gap-3 rounded-xl bg-neo-dark-3/50 p-3"
+                                    className="flex flex-row-reverse items-center justify-between gap-3 rounded-2xl border border-[color:var(--neo-surface-border)] bg-transparent p-3 transition hover:border-[rgb(var(--neo-accent))]"
                                 >
                                     <div className="text-right">
-                                        <p className="font-semibold text-white text-sm">{item.label}</p>
-                                        <p className="text-xs text-gray-400 leading-5">{item.description}</p>
+                                        <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">{item.label}</p>
+                                        <p className="text-xs leading-6 text-[rgb(var(--neo-text-secondary))]">{item.description}</p>
                                     </div>
                                     <input
                                         type="checkbox"
-                                        className="h-4 w-4 rounded border-gray-600 bg-neo-dark-3 text-neo-green focus:ring-neo-green"
+                                        className="h-4 w-4 rounded border-[color:var(--neo-surface-border)] accent-[rgb(var(--neo-accent))]"
                                         checked={checklistState[item.key]}
                                         onChange={() => toggleChecklistItem(item.key)}
                                     />
@@ -596,90 +773,90 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
                             ))}
                         </div>
                     </div>
-
-                    <div className="bg-neo-dark-2 p-4 rounded-2xl shadow">
-                        <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="w-full flex justify-between items-center text-right font-semibold text-gray-300">
-                            <span>تنظیم حد سود / ضرر (اختیاری)</span>
-                            <ChevronDownIcon className={`w-5 h-5 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
-                        </button>
-                        {showAdvanced && (
-                            <div className="mt-4 pt-4 border-t border-gray-800 space-y-3">
-                                {/* Take Profit Input */}
-                                <div>
-                                    <label className="text-sm font-semibold text-green-500 mb-2 block text-right">حد سود</label>
-                                    <div className="relative">
-                                        <input 
-                                            type="text"
-                                            placeholder="قیمت فروش در سود"
-                                            value={takeProfit ? toPersianFormatted(takeProfit) : ''}
-                                            onChange={e => setTakeProfit(toEnglishDigits(e.target.value))}
-                                            className="w-full bg-neo-dark-3 p-3 rounded-lg text-lg font-bold text-white text-left focus:outline-none focus:ring-2 focus:ring-green-500 border-2 border-transparent"
-                                            style={{direction: 'ltr'}}
-                                        />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">تومان</span>
-                                    </div>
-                                    {takeProfitProfitPercent > 0 && (
-                                        <p className="text-xs text-green-500 font-semibold mt-1 text-right">
-                                            سود احتمالی: +{toPersianFormatted(takeProfitProfitPercent.toFixed(2))}%
-                                        </p>
-                                    )}
+                    <div className="neo-surface neo-surface--ghost rounded-3xl p-5 shadow space-y-5">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-base font-bold text-[rgb(var(--neo-text-strong))]">تاریخچه سفارشات</h3>
+                            <span className="text-xs text-[rgb(var(--neo-text-secondary))]">نمونه داده‌های اخیر</span>
+                        </div>
+                        <div className="space-y-4">
+                            {tradeSections.map((section) => (
+                                <div key={section.id} className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-secondary))]">{section.title}</h4>
+                                    <ul className="space-y-3">
+                                        {section.trades.length > 0 ? (
+                                            section.trades.map((trade) => {
+                                                const status = tradeStatusStyles[trade.status];
+                                                const total = toPersianFormatted((trade.amount * trade.price).toFixed(0));
+                                                return (
+                                                    <li key={trade.id}>
+                                                        <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 transition hover:border-[rgb(var(--neo-accent))]">
+                                                            <div className="flex items-center justify-between gap-3">
+                                                                <span className={clsx('inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold', status.badge)}>
+                                                                    {status.label}
+                                                                </span>
+                                                                <span className="text-xs text-[rgb(var(--neo-text-secondary))]">{trade.time}</span>
+                                                            </div>
+                                                            <div className="mt-3 space-y-1 text-right">
+                                                                <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
+                                                                    {trade.description || `${trade.type === 'buy' ? 'خرید' : 'فروش'} ${trade.asset}`}
+                                                                </p>
+                                                                <p className="text-xs text-[rgb(var(--neo-text-secondary))]">
+                                                                    {toPersianFormatted(trade.amount)} واحد • {toPersianFormatted(trade.price)} تومان ({total} تومان)
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                );
+                                            })
+                                        ) : (
+                                            <li className="rounded-2xl border border-dashed border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] py-4 text-center text-xs text-[rgb(var(--neo-text-secondary))]">
+                                                معامله‌ای ثبت نشده است
+                                            </li>
+                                        )}
+                                    </ul>
                                 </div>
-                                {/* Stop Loss Input */}
-                                <div>
-                                    <label className="text-sm font-semibold text-red-500 mb-2 block text-right">حد ضرر</label>
-                                    <div className="relative">
-                                        <input 
-                                            type="text"
-                                            placeholder="قیمت فروش در ضرر"
-                                            value={stopLoss ? toPersianFormatted(stopLoss) : ''}
-                                            onChange={e => setStopLoss(toEnglishDigits(e.target.value))}
-                                            className="w-full bg-neo-dark-3 p-3 rounded-lg text-lg font-bold text-white text-left focus:outline-none focus:ring-2 focus:ring-red-500 border-2 border-transparent"
-                                            style={{direction: 'ltr'}}
-                                        />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">تومان</span>
-                                    </div>
-                                    {stopLossProfitPercent < 0 && (
-                                        <p className="text-xs text-red-500 font-semibold mt-1 text-right">
-                                            زیان احتمالی: {toPersianFormatted(stopLossProfitPercent.toFixed(2))}%
-                                        </p>
-                                    )}
-                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </aside>
+                <section className="order-2 space-y-6 lg:order-1">
+                    <div className="neo-surface neo-surface--muted rounded-3xl p-5 shadow-lg">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <h2 className="text-lg font-bold text-[rgb(var(--neo-text-strong))]">روند قیمتی دارایی</h2>
+                                <p className="text-sm text-[rgb(var(--neo-text-secondary))]">نمایی از رفتار قیمت در بازه‌های مختلف</p>
                             </div>
-                        )}
+                            <span className="text-xs text-[rgb(var(--neo-text-secondary))]">داده‌ها صرفاً برای نمایش نمونه‌ای است</span>
+                        </div>
+                        <div className="mt-4 h-72 sm:h-80 lg:h-[420px]">
+                            <PriceChart asset={asset} />
+                        </div>
                     </div>
-                    
-                    <div className="bg-neo-dark-2 p-4 rounded-2xl text-right text-sm text-gray-400 space-y-1 shadow">
-                        <p>موجودی تومان: <span className="font-semibold text-white">{toPersianFormatted(userTomanBalance)} تومان</span></p>
-                        <p>موجودی قابل معامله کیف پول: <span className="font-semibold text-white">{toPersianFormatted(userTradableTomanBalance)} تومان</span></p>
-                        <p>موجودی {asset.name}: <span className="font-semibold text-white">{toPersianFormatted(userAssetBalance)} {assetUnit}</span></p>
-                    </div>
-                    
-                    <div className="pt-4">
-                        <button
-                            type="submit"
-                            disabled={!canSubmit}
-                            className={`w-full p-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105
-                            ${action === 'buy' ? 'bg-neo-green text-black hover:bg-opacity-90' : 'bg-red-500 hover:bg-red-600'}
-                            ${!canSubmit ? 'bg-neo-dark-3 text-gray-500 !transform-none !shadow-none cursor-not-allowed' : 'shadow-lg'}`}
-                        >
-                            {action === 'buy' ? 'خرید' : 'فروش'}
-                        </button>
-                    </div>
-                  </form>
-                  <div className="space-y-4">
-                    <TradeList title="معاملات در حال انجام" trades={ongoingTrades} />
-                    <TradeList title="معاملات انجام شده" trades={completedTrades} />
-                    <TradeList title="معاملات کنسل شده" trades={canceledTrades} />
-                  </div>
-                </div>
-              </aside>
-                <section className="flex-1 p-4">
-                    <div className="w-full h-80 md:h-[32rem] rounded-2xl border border-gray-800 bg-neo-dark-2">
-                        <PriceChart asset={asset} />
+                    <div className="neo-surface neo-surface--ghost rounded-3xl p-5 shadow space-y-4">
+                        <h3 className="text-base font-bold text-[rgb(var(--neo-text-strong))]">جزئیات نماد</h3>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <div className="space-y-1">
+                                <p className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">ارزش بازار</p>
+                                <p className="text-sm font-bold text-[rgb(var(--neo-text-strong))]">{asset.marketCap}</p>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">ارزش معاملات روز</p>
+                                <p className="text-sm font-bold text-[rgb(var(--neo-text-strong))]">{asset.volume24h}</p>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">موجودی در گردش</p>
+                                <p className="text-sm font-bold text-[rgb(var(--neo-text-strong))]">{asset.circulatingSupply}</p>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">پیشنهاد تحلیل</p>
+                                <p className="text-sm text-[rgb(var(--neo-text-secondary))]">برای تصمیم‌گیری دقیق، حد سود و ضرر را قبل از ارسال سفارش مشخص کنید.</p>
+                            </div>
+                        </div>
                     </div>
                 </section>
-            </main>
+            </div>
         </div>
+    </div>
     );
 };
 
