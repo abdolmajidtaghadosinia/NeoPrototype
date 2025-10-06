@@ -992,7 +992,6 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
 
       <div className="relative flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:flex-nowrap">
         <div className="flex min-w-0 flex-col gap-1.5">
-          <p className="text-sm text-gray-300/90 sm:text-base">نمای سریع بازارهای منتخب</p>
           <h3 className="text-xl font-extrabold text-white sm:text-2xl">بازارها در یک نگاه</h3>
         </div>
         <div className="flex w-full flex-col gap-2 text-sm text-gray-100 sm:w-full sm:flex-row sm:items-center sm:justify-end sm:gap-3 md:w-auto md:flex-nowrap">
