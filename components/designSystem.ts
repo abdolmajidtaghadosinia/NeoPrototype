@@ -73,6 +73,39 @@ export const composeSurfaceClasses = (
 export const composePageShell = (className?: string, variant: 'default' | 'narrow' = 'default') =>
   clsx(variant === 'narrow' ? pageShellNarrow : pageShell, className);
 
+const navBaseClasses =
+  'neo-nav-item flex w-full font-medium tracking-tight transition-all duration-200 ease-[var(--neo-motion-ease-soft)] hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--neo-nav-focus-ring)]';
+
+const navOrientationClasses: Record<'stacked' | 'inline', string> = {
+  stacked: 'flex-col items-center justify-center gap-2 rounded-2xl px-3 py-5 text-sm text-center',
+  inline: 'flex-row items-center justify-start gap-3 rounded-xl px-4 py-4 text-sm text-right',
+};
+
+const navActiveClasses =
+  'text-[rgb(var(--neo-nav-active-text))] bg-[color:var(--neo-nav-active-bg)] border border-[color:var(--neo-nav-active-border)] shadow-[var(--neo-nav-active-shadow)]';
+
+const navInactiveClasses =
+  'text-[rgb(var(--neo-nav-inactive))] border border-transparent hover:text-[rgb(var(--neo-nav-hover-text))] hover:bg-[color:var(--neo-nav-hover-bg)]';
+
+/**
+ * Returns button classes for vertical or horizontal navigation items.
+ * @param {'stacked' | 'inline'} [orientation='inline'] - Layout orientation of the nav item.
+ * @param {boolean} isActive - Whether the nav item represents the active route.
+ * @param {string} [className] - Additional classes to merge with the defaults.
+ * @returns {string} Combined class names for the nav item.
+ */
+export const composeNavItemClasses = (
+  orientation: 'stacked' | 'inline' = 'inline',
+  isActive: boolean,
+  className?: string,
+) =>
+  clsx(
+    navBaseClasses,
+    navOrientationClasses[orientation],
+    isActive ? navActiveClasses : navInactiveClasses,
+    className,
+  );
+
 const homeCardToneClasses = {
   default: 'home-card home-card--default',
   muted: 'home-card home-card--muted',

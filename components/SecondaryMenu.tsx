@@ -5,6 +5,7 @@ import { UserIcon } from './icons/UserIcon';
 import { MenuIcon } from './icons/MenuIcon';
 import { LogoutIcon } from './icons/LogoutIcon';
 import TradeList, { TradeRecord } from './TradeList';
+import { composeNavItemClasses } from './designSystem';
 
 const sampleTrades: TradeRecord[] = [
   { id: '1', type: 'buy', asset: 'فولاد', amount: 0, price: 0, status: 'ongoing', time: 'لحظاتی پیش' },
@@ -67,16 +68,16 @@ const SecondaryMenu: React.FC<SecondaryMenuProps> = ({
   };
 
   return (
-    <aside className="hidden md:flex fixed top-0 left-0 flex-col w-48 h-screen bg-neo-dark-2 border-r border-gray-800 py-6">
-      <div>
+    <aside className="hidden md:flex fixed top-0 left-0 flex-col w-48 h-screen bg-neo-dark-2 border-r border-gray-800 px-4 py-6">
+      <div className="flex flex-col gap-2">
         {menuItems.map((item) => (
           <button
             key={item.id}
+            type="button"
             aria-label={item.label}
+            aria-current={active === item.id ? 'page' : undefined}
             onClick={() => handleClick(item.id, item.onClick)}
-            className={`flex items-center justify-center w-full gap-3 py-4 text-sm transition-colors ${
-              active === item.id ? 'text-neo-green' : 'text-gray-400 hover:text-white'
-            }`}
+            className={composeNavItemClasses('inline', active === item.id)}
           >
             {item.icon}
             <span>{item.label}</span>
