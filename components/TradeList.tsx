@@ -31,18 +31,17 @@ interface TradeListProps {
 const statusMap = {
   ongoing: {
     text: 'در حال انجام',
-    badge: 'border border-amber-400/40 bg-amber-500/10 text-amber-400',
+    textClass: 'text-amber-500',
     dot: 'bg-amber-400',
   },
   done: {
     text: 'انجام شد',
-    badge:
-      'border border-[color:rgba(var(--neo-accent),0.35)] bg-[color:rgba(var(--neo-accent),0.18)] text-[rgb(var(--neo-accent))]',
+    textClass: 'text-[rgb(var(--neo-accent))]',
     dot: 'bg-[rgb(var(--neo-accent))]',
   },
   canceled: {
     text: 'کنسل شد',
-    badge: 'border border-rose-400/40 bg-rose-500/10 text-rose-400',
+    textClass: 'text-rose-500',
     dot: 'bg-rose-400',
   },
 } as const;
@@ -65,7 +64,7 @@ const TradeList: React.FC<TradeListProps> = ({
       : 'neo-surface neo-surface--ghost rounded-3xl p-5 text-right space-y-4';
   const listClass = variant === 'compact' ? 'space-y-2' : 'space-y-3';
   const itemButtonClass = clsx(
-    'group w-full min-w-0 rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] text-right transition hover:border-[rgb(var(--neo-accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
+    'group w-full min-w-0 rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-raised-bg)] text-right transition hover:border-[rgb(var(--neo-accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
     variant === 'compact' ? 'px-3 py-3' : 'px-4 py-4 rounded-3xl'
   );
   const moreButtonClass = 'text-xs font-semibold text-[rgb(var(--neo-accent))] hover:opacity-80';
@@ -90,21 +89,16 @@ const TradeList: React.FC<TradeListProps> = ({
               <li key={t.id}>
                 <button onClick={() => onSelectTrade?.(t)} className={itemButtonClass}>
                   <div className="flex flex-col items-end gap-2 text-right">
-                    <div className="flex flex-row-reverse items-center gap-2">
-                      <span className="text-[10px] text-[rgb(var(--neo-text-secondary))]">{t.time}</span>
-                      <span
-                        className={clsx(
-                          'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold transition-colors',
-                          status.badge
-                        )}
-                      >
+                    <div className="flex flex-row-reverse items-center gap-3">
+                      <div className="flex flex-row-reverse items-center gap-1 text-[11px]">
                         <span className={clsx('h-1.5 w-1.5 rounded-full', status.dot)} aria-hidden="true" />
-                        {status.text}
-                      </span>
+                        <span className={clsx('font-medium', status.textClass)}>{status.text}</span>
+                      </div>
+                      <span className="text-[10px] text-[rgb(var(--neo-text-secondary))]">{t.time}</span>
                     </div>
                     <p
                       className={clsx(
-                        'line-clamp-2 w-full text-[rgb(var(--neo-text-strong))] font-semibold',
+                        'line-clamp-1 w-full text-[rgb(var(--neo-text-strong))] font-semibold',
                         variant === 'compact' ? 'text-sm' : 'text-base'
                       )}
                     >
