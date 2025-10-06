@@ -173,7 +173,7 @@ describe('Page components render', () => {
       />
     );
     expect(screen.getByText(staticMarketData[0].name)).toBeInTheDocument();
-    expect(screen.getByText('معاملات در حال انجام')).toBeInTheDocument();
+    expect(screen.getByText('چک‌لیست پیش از ارسال')).toBeInTheDocument();
   });
 
   test('TradingIdeaPage renders', () => {

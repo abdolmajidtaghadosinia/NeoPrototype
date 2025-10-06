@@ -1056,51 +1056,6 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
                             ))}
                         </div>
                     </div>
-                    <div className="neo-surface neo-surface--ghost rounded-3xl p-5 shadow space-y-5">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-base font-bold text-[rgb(var(--neo-text-strong))]">تاریخچه سفارشات</h3>
-                            <span className="text-xs text-[rgb(var(--neo-text-secondary))]">نمونه داده‌های اخیر</span>
-                        </div>
-                        <div className="space-y-4">
-                            {tradeSections.map((section) => (
-                                <div key={section.id} className="space-y-3">
-                                    <h4 className="text-sm font-semibold text-[rgb(var(--neo-text-secondary))]">{section.title}</h4>
-                                    <ul className="space-y-3">
-                                        {section.trades.length > 0 ? (
-                                            section.trades.map((trade) => {
-                                                const status = tradeStatusStyles[trade.status];
-                                                const total = toPersianFormatted((trade.amount * trade.price).toFixed(0));
-                                                return (
-                                                    <li key={trade.id}>
-                                                        <div className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] p-4 transition hover:border-[rgb(var(--neo-accent))]">
-                                                            <div className="flex items-center justify-between gap-3">
-                                                                <span className={clsx('inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold', status.badge)}>
-                                                                    {status.label}
-                                                                </span>
-                                                                <span className="text-xs text-[rgb(var(--neo-text-secondary))]">{trade.time}</span>
-                                                            </div>
-                                                            <div className="mt-3 space-y-1 text-right">
-                                                                <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">
-                                                                    {trade.description || `${trade.type === 'buy' ? 'خرید' : 'فروش'} ${trade.asset}`}
-                                                                </p>
-                                                                <p className="text-xs text-[rgb(var(--neo-text-secondary))]">
-                                                                    {toPersianFormatted(trade.amount)} واحد • {toPersianFormatted(trade.price)} تومان ({total} تومان)
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                );
-                                            })
-                                        ) : (
-                                            <li className="rounded-2xl border border-dashed border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] py-4 text-center text-xs text-[rgb(var(--neo-text-secondary))]">
-                                                معامله‌ای ثبت نشده است
-                                            </li>
-                                        )}
-                                    </ul>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
                 </aside>
                 <section className="order-2 space-y-6 lg:order-1">
                     <div className="neo-surface neo-surface--muted rounded-3xl p-5 shadow-lg space-y-6">
