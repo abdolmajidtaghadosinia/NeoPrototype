@@ -89,12 +89,14 @@ const TradeList: React.FC<TradeListProps> = ({
               <li key={t.id}>
                 <button onClick={() => onSelectTrade?.(t)} className={itemButtonClass}>
                   <div className="flex flex-col items-end gap-2 text-right">
-                    <div className="flex w-full flex-row-reverse items-start justify-between gap-3">
-                      <div className="flex flex-row-reverse items-center gap-1 text-[10px] md:text-[11px]">
+                    <div className="flex w-full flex-col items-end gap-1 sm:flex-row sm:flex-row-reverse sm:items-center sm:justify-between sm:gap-3">
+                      <div className="flex flex-row-reverse items-center gap-1 whitespace-nowrap text-[10px] md:text-[11px]">
                         <span className={clsx('h-1.5 w-1.5 rounded-full', status.dot)} aria-hidden="true" />
                         <span className={clsx('font-medium', status.textClass)}>{status.text}</span>
                       </div>
-                      <span className="shrink-0 text-[10px] text-[rgb(var(--neo-text-tertiary))]">{t.time}</span>
+                      <span className="max-w-full text-right text-[10px] leading-tight text-[rgb(var(--neo-text-tertiary))] break-words sm:text-[11px]">
+                        {t.time}
+                      </span>
                     </div>
                     <p
                       className={clsx(
