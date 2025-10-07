@@ -62,10 +62,10 @@ const TradeList: React.FC<TradeListProps> = ({
     variant === 'compact'
       ? 'neo-surface neo-surface--ghost rounded-2xl p-3 text-right space-y-3'
       : 'neo-surface neo-surface--ghost rounded-3xl p-5 text-right space-y-4';
-  const listClass = variant === 'compact' ? 'space-y-2' : 'space-y-3';
+  const listClass = variant === 'compact' ? 'space-y-2.5' : 'space-y-3';
   const itemButtonClass = clsx(
     'group w-full min-w-0 rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-raised-bg)] text-right transition hover:border-[rgb(var(--neo-accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
-    variant === 'compact' ? 'px-3 py-3' : 'px-4 py-4 rounded-3xl'
+    variant === 'compact' ? 'px-3 py-3 rounded-2xl' : 'px-4 py-4 rounded-3xl'
   );
   const moreButtonClass = 'text-xs font-semibold text-[rgb(var(--neo-accent))] hover:opacity-80';
 
@@ -90,7 +90,7 @@ const TradeList: React.FC<TradeListProps> = ({
                 <button onClick={() => onSelectTrade?.(t)} className={itemButtonClass}>
                   <div className="flex flex-col items-end gap-2 text-right">
                     <div className="flex flex-row-reverse items-center gap-3">
-                      <div className="flex flex-row-reverse items-center gap-1 text-[11px]">
+                      <div className="flex flex-row-reverse items-center gap-1 text-[10px] md:text-[11px]">
                         <span className={clsx('h-1.5 w-1.5 rounded-full', status.dot)} aria-hidden="true" />
                         <span className={clsx('font-medium', status.textClass)}>{status.text}</span>
                       </div>
@@ -98,14 +98,19 @@ const TradeList: React.FC<TradeListProps> = ({
                     </div>
                     <p
                       className={clsx(
-                        'line-clamp-1 w-full text-[rgb(var(--neo-text-strong))] font-semibold',
-                        variant === 'compact' ? 'text-sm' : 'text-base'
+                        'line-clamp-2 w-full text-[rgb(var(--neo-text-strong))] font-semibold leading-relaxed',
+                        variant === 'compact' ? 'text-xs' : 'text-base'
                       )}
                     >
                       {desc}
                     </p>
                     {detailParts.length > 0 && (
-                      <p className="w-full text-[11px] text-[rgb(var(--neo-text-secondary))]">
+                      <p
+                        className={clsx(
+                          'w-full text-[rgb(var(--neo-text-secondary))]',
+                          variant === 'compact' ? 'text-[10px]' : 'text-xs'
+                        )}
+                      >
                         {detailParts.join(' • ')}
                       </p>
                     )}
