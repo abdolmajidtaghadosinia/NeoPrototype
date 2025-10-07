@@ -68,7 +68,7 @@ const SecondaryMenu: React.FC<SecondaryMenuProps> = ({
   };
 
   return (
-    <aside className="hidden md:flex fixed top-0 left-0 flex-col w-48 h-screen bg-neo-dark-2 border-r border-gray-800 px-4 py-6">
+    <aside className="hidden md:flex fixed top-0 left-0 flex-col w-56 h-screen bg-neo-dark-2 border-r border-gray-800 px-5 py-6">
       <div className="flex flex-col gap-2">
         {menuItems.map((item) => (
           <button
@@ -84,7 +84,7 @@ const SecondaryMenu: React.FC<SecondaryMenuProps> = ({
           </button>
         ))}
       </div>
-      <div className="mt-auto border-t border-gray-800 px-4 overflow-y-auto">
+      <div className="mt-auto border-t border-gray-800 px-2 overflow-y-auto">
         <TradeList trades={sampleTrades} limit={4} onSelectTrade={onTradeClick} variant="compact" />
       </div>
     </aside>
