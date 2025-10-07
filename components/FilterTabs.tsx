@@ -425,7 +425,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
     const { id, label, value, tone = 'neutral', icon, badge } = primaryHighlight;
 
     return (
-      <div className="flex w-full flex-col items-center gap-2">
+      <div className="flex w-full flex-col items-center gap-1.5">
         <span
           className={clsx(
             'flex items-center gap-1.5 text-sm font-semibold sm:text-base',
@@ -447,7 +447,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
         </span>
         <div
           key={id}
-          className={`flex w-full items-center justify-between gap-3 rounded-2xl px-3.5 py-2 text-sm font-semibold leading-tight ${baseHighlightClasses} ${highlightToneClasses[tone]}`}
+          className={`flex w-full items-center justify-between gap-2.5 rounded-2xl px-[0.65rem] py-[0.55rem] text-sm font-semibold leading-tight ${baseHighlightClasses} ${highlightToneClasses[tone]}`}
         >
           <div className="flex items-center gap-1.5 text-xs font-medium text-[rgb(var(--filter-highlight-subtext))] sm:text-sm">
             <span
@@ -485,10 +485,10 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
   };
 
   return (
-    <div className="pb-3">
+    <div className="pb-2.5">
       <div
         ref={containerRef}
-        className="neo-animate-inline flex items-stretch gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:overflow-visible"
+        className="neo-animate-inline flex items-stretch gap-1.5 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:overflow-visible"
         role="tablist"
         aria-label="بخش‌های داشبورد"
       >
@@ -513,7 +513,11 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
               onKeyDown={(event) => handleKeyDown(event, index)}
               className={`filter-tabs__button flex min-w-[10.5rem] flex-none items-center justify-center rounded-2xl border text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60 snap-center sm:text-base ${
                 isActive ? 'is-active' : ''
-              } ${highlightsForTab.length > 0 ? 'px-4 py-3' : 'px-4 py-2.5'} min-h-[3rem] sm:flex-1 sm:min-w-0`}
+              } ${
+                highlightsForTab.length > 0
+                  ? 'px-[0.75rem] py-[0.65rem]'
+                  : 'px-[0.75rem] py-[0.6rem]'
+              } min-h-[2.75rem] sm:flex-1 sm:min-w-0`}
             >
               {renderTabContent(tab, highlightsForTab, isActive)}
             </button>

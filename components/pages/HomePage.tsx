@@ -945,7 +945,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
     if (activeTab === 'داغ‌ترین‌ها') {
       return (
-        <div className="flex items-stretch gap-4 overflow-x-auto pb-2 scrollbar-hide sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible">
+        <div className="flex items-stretch gap-3 overflow-x-auto pb-2 scrollbar-hide sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible">
           {hotSpotlightItems.map((spotlight) => {
             const accent = hotSpotlightToneMap[spotlight.tone] ?? hotSpotlightToneMap.neutral;
 
@@ -953,7 +953,7 @@ const HomePage: React.FC<HomePageProps> = ({
               <article
                 key={spotlight.id}
                 className={homeCard(
-                  'relative flex min-w-[14rem] flex-1 flex-col justify-between gap-4 transition-all duration-300 ease-out hover:-translate-y-1 sm:min-w-0 sm:p-6',
+                  'relative flex min-w-[14rem] flex-1 flex-col justify-between gap-3 transition-all duration-300 ease-out hover:-translate-y-1 sm:min-w-0 sm:p-5',
                   accent.tone,
                   'md',
                 )}
@@ -961,14 +961,14 @@ const HomePage: React.FC<HomePageProps> = ({
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-sm font-semibold text-white md:text-base">{spotlight.title}</span>
                   {spotlight.tag && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold text-gray-100">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-gray-100">
                       {spotlight.tag}
                     </span>
                   )}
                 </div>
                 <p className="text-xs leading-6 text-gray-300">{spotlight.subtitle}</p>
                 <div className="mt-1 h-px w-full rounded-full bg-gradient-to-l from-transparent via-white/15 to-transparent" />
-                <div className="flex items-end justify-between gap-3 pt-1 text-sm text-gray-200">
+                <div className="flex items-end justify-between gap-2.5 pt-1 text-sm text-gray-200">
                   <span className={`text-2xl font-black tracking-tight ${accent.text}`}>
                     {formatSpotlightPercent(spotlight.change)}
                   </span>
@@ -992,7 +992,7 @@ const HomePage: React.FC<HomePageProps> = ({
     if (displayedStocks.length === 0) {
       if (isLoading) {
         return (
-          <div className={`${topStripMinHeight} flex items-stretch gap-4 overflow-x-auto pb-2 scrollbar-hide`}>
+          <div className={`${topStripMinHeight} flex items-stretch gap-3 overflow-x-auto pb-2 scrollbar-hide`}>
             {Array.from({ length: 4 }).map((_, index) => (
               <StockTickerSkeleton
                 key={index}
@@ -1011,7 +1011,7 @@ const HomePage: React.FC<HomePageProps> = ({
     }
 
     return (
-      <div className={`${topStripMinHeight} flex items-stretch gap-4 overflow-x-auto pb-2 scrollbar-hide`}>
+      <div className={`${topStripMinHeight} flex items-stretch gap-3 overflow-x-auto pb-2 scrollbar-hide`}>
         {displayedStocks.map((stock) => (
           <Suspense
             key={stock.id}
@@ -1031,13 +1031,13 @@ const HomePage: React.FC<HomePageProps> = ({
   };
 
   const renderDashboardContent = () => (
-    <div className="flex flex-col gap-6 sm:gap-7 lg:gap-8">
+    <div className="flex flex-col gap-5 sm:gap-6 lg:gap-6">
       {renderTopStripContent()}
-      <div className="flex flex-col gap-6 sm:gap-7 lg:grid lg:grid-cols-[minmax(0,280px),minmax(0,1fr)] lg:items-start lg:gap-7 xl:grid-cols-[minmax(0,320px),minmax(0,1fr)] xl:gap-9 2xl:grid-cols-[minmax(0,360px),minmax(0,1.1fr),minmax(0,360px)] 2xl:gap-10">
-        <div className="order-2 space-y-6 sm:space-y-7 lg:order-1 lg:col-start-1 lg:space-y-7 xl:order-2 xl:col-span-2 xl:col-start-1 xl:space-y-8 2xl:order-1 2xl:col-span-1 2xl:col-start-1 2xl:space-y-8">
+      <div className="flex flex-col gap-5 sm:gap-6 lg:grid lg:grid-cols-[minmax(0,280px),minmax(0,1fr)] lg:items-start lg:gap-6 xl:grid-cols-[minmax(0,320px),minmax(0,1fr)] xl:gap-8 2xl:grid-cols-[minmax(0,360px),minmax(0,1.1fr),minmax(0,360px)] 2xl:gap-8">
+        <div className="order-2 space-y-5 sm:space-y-6 lg:order-1 lg:col-start-1 lg:space-y-6 xl:order-2 xl:col-span-2 xl:col-start-1 xl:space-y-7 2xl:order-1 2xl:col-span-1 2xl:col-start-1 2xl:space-y-7">
           {renderLeftPanels()}
         </div>
-        <div className="order-1 space-y-6 sm:space-y-7 lg:col-start-2 lg:min-w-0 xl:order-1 xl:col-span-2 xl:col-start-1 xl:space-y-9 xl:min-w-0 2xl:order-2 2xl:col-span-1 2xl:col-start-2 2xl:space-y-9">
+        <div className="order-1 space-y-5 sm:space-y-6 lg:col-start-2 lg:min-w-0 xl:order-1 xl:col-span-2 xl:col-start-1 xl:space-y-8 xl:min-w-0 2xl:order-2 2xl:col-span-1 2xl:col-start-2 2xl:space-y-8">
           <div className="min-w-0">
             <Suspense fallback={<Skeleton className="h-[26rem] rounded-3xl" />}>
               <MarketOverview
@@ -1059,7 +1059,7 @@ const HomePage: React.FC<HomePageProps> = ({
             </Suspense>
           </div>
         </div>
-        <div className="order-3 space-y-6 sm:space-y-7 lg:col-span-2 lg:col-start-1 xl:order-3 xl:col-span-2 xl:col-start-1 xl:space-y-9 xl:min-w-0 2xl:order-3 2xl:col-span-1 2xl:col-start-3 2xl:space-y-10">
+        <div className="order-3 space-y-5 sm:space-y-6 lg:col-span-2 lg:col-start-1 xl:order-3 xl:col-span-2 xl:col-start-1 xl:space-y-8 xl:min-w-0 2xl:order-3 2xl:col-span-1 2xl:col-start-3 2xl:space-y-9">
           {renderRightPanels()}
         </div>
       </div>
