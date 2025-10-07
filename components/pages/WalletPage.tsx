@@ -10,6 +10,7 @@ import AssetCategories, { AssetCategory } from '../AssetCategories';
 import { toPersianDigits } from '../formatters';
 import TradeHistoryCard from '../TradeHistoryCard';
 import { composeSurfaceClasses } from '../designSystem';
+import RecommendedPortfolio from '../RecommendedPortfolio';
 
 const portfolioHistoryData = [
   { name: '۶ روز پیش', value: 31200000 },
@@ -45,6 +46,41 @@ const chartGridColor = 'rgba(148, 163, 184, 0.18)';
 const chartAreaGradientId = 'portfolioValueArea';
 const portfolioSurfaceClasses = composeSurfaceClasses('muted', 'lg', 'rounded-3xl space-y-5 transition-colors');
 
+const aiPortfolioRecommendations = [
+    {
+        id: 'value-stocks',
+        title: 'سهام ارزنده بنیادی',
+        targetAllocation: 42,
+        currentAllocation: 36,
+        insight: 'احتمال افزایش سود شرکت‌های صادرات‌محور در فصل پیش رو',
+        action: 'increase' as const,
+    },
+    {
+        id: 'gold-fund',
+        title: 'صندوق طلای آب‌شده',
+        targetAllocation: 24,
+        currentAllocation: 28,
+        insight: 'ثبات قیمت سکه در کانال فعلی؛ نگه‌داری بیش از حد نقدینگی را بلوکه می‌کند',
+        action: 'decrease' as const,
+    },
+    {
+        id: 'fixed-income',
+        title: 'اوراق مشارکت دولتی',
+        targetAllocation: 18,
+        currentAllocation: 15,
+        insight: 'بازده بدون ریسک ۲۱٪ می‌تواند نوسان پرتفو را کاهش دهد',
+        action: 'increase' as const,
+    },
+    {
+        id: 'growth-stocks',
+        title: 'سهام رشدی فناوری',
+        targetAllocation: 10,
+        currentAllocation: 9,
+        insight: 'الگوی صعودی حجم معاملات در نمادهای فناوری بازار پایه',
+        action: 'hold' as const,
+    },
+];
+
 const PortfolioTooltip: React.FC<TooltipProps<number, string>> = ({ active, payload, label }) => {
     if (!active || !payload || payload.length === 0) return null;
     const value = payload[0].value as number;
@@ -75,6 +111,8 @@ const WalletPage: React.FC<WalletPageProps> = ({ onSellClick, onLoanRequestClick
 
             <div className="space-y-6">
                 <AssetCategories totalValue={totalValue} categories={categories} />
+
+                <RecommendedPortfolio totalValue={totalValue} recommendations={aiPortfolioRecommendations} />
 
                 <button
                     onClick={onLoanRequestClick}
