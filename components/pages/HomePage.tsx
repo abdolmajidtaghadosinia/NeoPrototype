@@ -1031,13 +1031,13 @@ const HomePage: React.FC<HomePageProps> = ({
   };
 
   const renderDashboardContent = () => (
-    <div className="flex flex-col gap-5 sm:gap-6 lg:gap-6">
+    <div className="flex flex-col gap-4 sm:gap-5 lg:gap-5">
       {renderTopStripContent()}
-      <div className="flex flex-col gap-5 sm:gap-6 lg:grid lg:grid-cols-[minmax(0,280px),minmax(0,1fr)] lg:items-start lg:gap-6 xl:grid-cols-[minmax(0,320px),minmax(0,1fr)] xl:gap-8 2xl:grid-cols-[minmax(0,360px),minmax(0,1.1fr),minmax(0,360px)] 2xl:gap-8">
-        <div className="order-2 space-y-5 sm:space-y-6 lg:order-1 lg:col-start-1 lg:space-y-6 xl:order-2 xl:col-span-2 xl:col-start-1 xl:space-y-7 2xl:order-1 2xl:col-span-1 2xl:col-start-1 2xl:space-y-7">
+      <div className="flex flex-col gap-4 sm:gap-5 lg:grid lg:grid-cols-[minmax(0,280px),minmax(0,1fr)] lg:items-start lg:gap-5 xl:grid-cols-[minmax(0,320px),minmax(0,1fr)] xl:gap-7 2xl:grid-cols-[minmax(0,360px),minmax(0,1.1fr),minmax(0,360px)] 2xl:gap-7">
+        <div className="order-2 space-y-4 sm:space-y-5 lg:order-1 lg:col-start-1 lg:space-y-5 xl:order-2 xl:col-span-2 xl:col-start-1 xl:space-y-6 2xl:order-1 2xl:col-span-1 2xl:col-start-1 2xl:space-y-6">
           {renderLeftPanels()}
         </div>
-        <div className="order-1 space-y-5 sm:space-y-6 lg:col-start-2 lg:min-w-0 xl:order-1 xl:col-span-2 xl:col-start-1 xl:space-y-8 xl:min-w-0 2xl:order-2 2xl:col-span-1 2xl:col-start-2 2xl:space-y-8">
+        <div className="order-1 space-y-4 sm:space-y-5 lg:col-start-2 lg:min-w-0 xl:order-1 xl:col-span-2 xl:col-start-1 xl:space-y-6 xl:min-w-0 2xl:order-2 2xl:col-span-1 2xl:col-start-2 2xl:space-y-6">
           <div className="min-w-0">
             <Suspense fallback={<Skeleton className="h-[26rem] rounded-3xl" />}>
               <MarketOverview
@@ -1059,7 +1059,7 @@ const HomePage: React.FC<HomePageProps> = ({
             </Suspense>
           </div>
         </div>
-        <div className="order-3 space-y-5 sm:space-y-6 lg:col-span-2 lg:col-start-1 xl:order-3 xl:col-span-2 xl:col-start-1 xl:space-y-8 xl:min-w-0 2xl:order-3 2xl:col-span-1 2xl:col-start-3 2xl:space-y-9">
+        <div className="order-3 space-y-4 sm:space-y-5 lg:col-span-2 lg:col-start-1 xl:order-3 xl:col-span-2 xl:col-start-1 xl:space-y-6 xl:min-w-0 2xl:order-3 2xl:col-span-1 2xl:col-start-3 2xl:space-y-7">
           {renderRightPanels()}
         </div>
       </div>
@@ -1067,7 +1067,7 @@ const HomePage: React.FC<HomePageProps> = ({
   );
 
   return (
-    <Page as="main" spacing="lg" className="home-page pt-4">
+    <Page as="main" spacing="md" className="home-page space-y-5 pt-4 sm:space-y-6">
       <FilterTabs
         activeTab={activeTab}
         onTabChange={handleTabChange}
