@@ -192,6 +192,49 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
         return `${toPersianDigits(localeValue)}${priceUnitLabel ? ` ${priceUnitLabel}` : ''}`;
     };
 
+    const chartXAxisLabel = 'زمان';
+    const chartYAxisLabel = priceUnitLabel ? `قیمت (${priceUnitLabel})` : 'قیمت';
+
+    const formatChartLabel = useCallback(
+        (rawLabel: string | number) => {
+            const label = typeof rawLabel === 'number' ? rawLabel.toString() : rawLabel;
+            if (typeof label !== 'string' || !label.trim()) return '';
+            const timestamp = parseInt(label, 10);
+            if (Number.isNaN(timestamp) || timestamp <= 0) {
+                return '';
+            }
+
+            const m = moment(timestamp).locale('fa');
+            if (!m.isValid()) return '';
+
+            switch (timeframe) {
+                case 'daily':
+                    return toPersianDigits(m.format('HH:mm'));
+                case 'weekly':
+                case 'monthly':
+                    return toPersianDigits(m.format('jD jMMM'));
+                case 'yearly':
+                    return toPersianDigits(m.format('jMMM jYY'));
+                default:
+                    return toPersianDigits(m.format('jYYYY/jM/jD'));
+            }
+        },
+        [timeframe],
+    );
+
+    const formatPriceTick = useCallback(
+        (value: number) => {
+            if (typeof value !== 'number' || Number.isNaN(value)) {
+                return '';
+            }
+            const localized = value.toLocaleString('fa-IR', {
+                maximumFractionDigits: value >= 100 ? 0 : 1,
+            });
+            return toPersianDigits(localized);
+        },
+        [],
+    );
+
     const timeframes: { label: string; value: Timeframe }[] = [
         { label: 'روزانه', value: 'daily' },
         { label: 'هفتگی', value: 'weekly' },
@@ -314,7 +357,10 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                                 <div className="flex h-full items-center justify-center text-red-500">{chartError}</div>
                             ) : performance && performance.chartData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={performance.chartData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+                                    <AreaChart
+                                        data={performance.chartData}
+                                        margin={{ top: 5, right: 20, left: 0, bottom: 20 }}
+                                    >
                                         <defs>
                                             <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="5%" stopColor={chartColor} stopOpacity={0.4} />
@@ -322,7 +368,22 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#2C2C2E" vertical={false} />
-                                        <XAxis dataKey="name" hide />
+                                        <XAxis
+                                            dataKey="name"
+                                            tickFormatter={formatChartLabel}
+                                            tickLine={false}
+                                            axisLine={{ stroke: '#3F3F46' }}
+                                            tick={{ fill: '#D4D4D8', fontSize: 12 }}
+                                            interval="preserveStartEnd"
+                                            minTickGap={16}
+                                            label={{
+                                                value: chartXAxisLabel,
+                                                position: 'insideBottom',
+                                                offset: -10,
+                                                fill: '#9CA3AF',
+                                                fontSize: 12,
+                                            }}
+                                        />
                                         <Tooltip
                                             contentStyle={{
                                                 backgroundColor: 'rgba(28, 28, 30, 0.9)',
@@ -337,27 +398,9 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                                             labelStyle={{ color: '#fff' }}
                                             itemStyle={{ color: '#fff' }}
                                             labelFormatter={(label: string) => {
-                                                if (typeof label !== 'string' || !label.trim()) return 'تاریخ نامعتبر';
-                                                const timestamp = parseInt(label, 10);
-                                                if (Number.isNaN(timestamp) || timestamp <= 0) {
-                                                    return 'تاریخ نامعتبر';
-                                                }
-
                                                 try {
-                                                    const m = moment(timestamp).locale('fa');
-                                                    if (!m.isValid()) return 'تاریخ نامعتبر';
-
-                                                    switch (timeframe) {
-                                                        case 'daily':
-                                                            return m.format('jD jMMMM، HH:mm');
-                                                        case 'weekly':
-                                                        case 'monthly':
-                                                            return m.format('jD jMMMM');
-                                                        case 'yearly':
-                                                            return m.format('jMMMM jYYYY');
-                                                        default:
-                                                            return m.format('jYYYY/jM/jD');
-                                                    }
+                                                    const formatted = formatChartLabel(label);
+                                                    return formatted || 'تاریخ نامعتبر';
                                                 } catch (e) {
                                                     console.error('Error in date formatting:', e);
                                                     return 'خطا در تاریخ';
@@ -365,7 +408,23 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                                             }}
                                             cursor={{ stroke: accentColor, strokeWidth: 1 }}
                                         />
-                                        <YAxis hide domain={['dataMin', 'dataMax']} />
+                                        <YAxis
+                                            domain={['dataMin', 'dataMax']}
+                                            tickFormatter={formatPriceTick}
+                                            orientation="right"
+                                            tickLine={false}
+                                            axisLine={{ stroke: '#3F3F46' }}
+                                            tick={{ fill: '#D4D4D8', fontSize: 12 }}
+                                            width={70}
+                                            label={{
+                                                value: chartYAxisLabel,
+                                                angle: -90,
+                                                position: 'insideRight',
+                                                offset: 10,
+                                                fill: '#9CA3AF',
+                                                fontSize: 12,
+                                            }}
+                                        />
                                         <Area type="linear" dataKey="value" stroke={chartColor} strokeWidth={3} fill="url(#chart-gradient)" fillOpacity={1} />
                                     </AreaChart>
                                 </ResponsiveContainer>
