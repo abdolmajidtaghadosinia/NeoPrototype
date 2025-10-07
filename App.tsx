@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy, useMemo } from 'react';
 import { GoogleGenAI } from '@google/genai';
 
 import Header from './components/Header';
@@ -179,6 +179,25 @@ const App: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
   const isLoading = false;
   const error: string | null = null;
+
+  const secondaryActiveItem = useMemo(() => {
+    if (view.page === 'profile') {
+      if (view.payload.section === 'settings') {
+        return 'settings';
+      }
+      return 'profile';
+    }
+    if (view.page === 'alerts') {
+      return 'alerts';
+    }
+    if (view.page === 'loan') {
+      return 'wallet';
+    }
+    if (view.page === 'main' && view.tab === 'wallet') {
+      return 'wallet';
+    }
+    return null;
+  }, [view]);
 
   useEffect(() => {
     if (typeof document === 'undefined') {
@@ -727,6 +746,7 @@ const App: React.FC = () => {
       activeTab={activeTab}
       onTabChange={(tab) => navigateTo({ page: 'main', tab })}
       showBottomNav={view.page === 'main'}
+      secondaryActiveItem={secondaryActiveItem}
       onProfile={() => navigateTo({ page: 'profile', payload: { user } })}
       onAlerts={() => navigateTo({ page: 'alerts' })}
       onWallet={() => navigateTo({ page: 'main', tab: 'wallet' })}

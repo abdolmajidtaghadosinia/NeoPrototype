@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { BellIcon } from './icons/BellIcon';
 import { WalletSolidIcon } from './icons/WalletSolidIcon';
 import { UserIcon } from './icons/UserIcon';
@@ -32,7 +32,10 @@ const sampleTrades: TradeRecord[] = [
   },
 ];
 
+type SecondaryMenuItem = 'profile' | 'alerts' | 'wallet' | 'settings' | 'logout';
+
 interface SecondaryMenuProps {
+  activeItem?: SecondaryMenuItem | null;
   onProfile?: () => void;
   onAlerts?: () => void;
   onWallet?: () => void;
@@ -42,6 +45,7 @@ interface SecondaryMenuProps {
 }
 
 const SecondaryMenu: React.FC<SecondaryMenuProps> = ({
+  activeItem,
   onProfile,
   onAlerts,
   onWallet,
@@ -49,9 +53,22 @@ const SecondaryMenu: React.FC<SecondaryMenuProps> = ({
   onLogout,
   onTradeClick,
 }) => {
-  const [active, setActive] = useState<string>('profile');
+  const [active, setActive] = useState<SecondaryMenuItem | null>(activeItem ?? null);
 
-  const menuItems = useMemo(
+  useEffect(() => {
+    if (activeItem !== undefined) {
+      setActive(activeItem ?? null);
+    }
+  }, [activeItem]);
+
+  const menuItems = useMemo<
+    ReadonlyArray<{
+      id: SecondaryMenuItem;
+      label: string;
+      icon: React.ReactNode;
+      onClick?: () => void;
+    }>
+  >(
     () => [
       { id: 'profile', label: 'پروفایل', icon: <UserIcon className="w-7 h-7" />, onClick: onProfile },
       { id: 'alerts', label: 'اعلان‌ها', icon: <BellIcon className="w-7 h-7" />, onClick: onAlerts },
@@ -62,7 +79,7 @@ const SecondaryMenu: React.FC<SecondaryMenuProps> = ({
     [onProfile, onAlerts, onWallet, onSettings, onLogout]
   );
 
-  const handleClick = (id: string, onClick?: () => void) => {
+  const handleClick = (id: SecondaryMenuItem, onClick?: () => void) => {
     setActive(id);
     onClick?.();
   };
