@@ -1,12 +1,12 @@
 import React, { memo, useState } from 'react';
 import SurfaceCard from './layout/SurfaceCard';
-import { metricDescription } from './designSystem';
+import { composeSurfaceClasses, metricDescription } from './designSystem';
 
 const PremiumSection: React.FC = () => {
   const [showInstructions, setShowInstructions] = useState(false);
 
   return (
-    <SurfaceCard tone="muted" padding="lg" className="rounded-3xl space-y-5">
+    <SurfaceCard tone="muted" padding="lg" className="space-y-5">
       <header className="space-y-2 text-right">
         <h3 className="text-lg font-bold text-[rgb(var(--neo-text-strong))]">اشتراک پرمیوم</h3>
         <p className={metricDescription}>
@@ -15,11 +15,23 @@ const PremiumSection: React.FC = () => {
       </header>
 
       <div className="grid gap-3 text-sm text-[rgb(var(--neo-text-secondary))] sm:grid-cols-2">
-        <div className="rounded-2xl border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-bg)] px-4 py-3">
+        <div
+          className={composeSurfaceClasses(
+            'ghost',
+            'sm',
+            'space-y-2 text-xs sm:text-sm text-[rgb(var(--neo-text-secondary))]'
+          )}
+        >
           <p className="font-semibold text-[rgb(var(--neo-text-strong))]">آزمایش رایگان ۷ روزه</p>
           <p className="mt-1 text-xs text-[rgb(var(--neo-text-muted))]">در صورت لغو اشتراک قبل از پایان دوره هیچ هزینه‌ای پرداخت نمی‌کنید.</p>
         </div>
-        <div className="rounded-2xl border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-bg)] px-4 py-3">
+        <div
+          className={composeSurfaceClasses(
+            'ghost',
+            'sm',
+            'space-y-2 text-xs sm:text-sm text-[rgb(var(--neo-text-secondary))]'
+          )}
+        >
           <p className="font-semibold text-[rgb(var(--neo-text-strong))]">گزارش‌های روزانه پرتفوی</p>
           <p className="mt-1 text-xs text-[rgb(var(--neo-text-muted))]">هر روز صبح خلاصه وضعیت دارایی‌ها و پیشنهادهای برتر را دریافت کنید.</p>
         </div>

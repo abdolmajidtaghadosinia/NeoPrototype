@@ -60,7 +60,26 @@
         --neo-chip-bg: rgba(255, 255, 255, 0.04);
         --neo-chip-border: rgba(255, 255, 255, 0.08);
         --neo-chip-color: rgba(209, 213, 219, 1);
-        --neo-divider-color: rgba(255, 255, 255, 0.06);
+        --neo-radius-sm: 0.85rem;
+        --neo-radius-md: 1.1rem;
+        --neo-radius-lg: 1.4rem;
+        --neo-radius-xl: 1.75rem;
+        --neo-frame-bg: rgba(17, 17, 17, 0.82);
+        --neo-frame-border: rgba(255, 255, 255, 0.08);
+        --neo-frame-border-strong: rgba(255, 255, 255, 0.14);
+        --neo-frame-border-subtle: rgba(255, 255, 255, 0.05);
+        --neo-frame-shadow: 0 34px 88px -48px rgba(0, 0, 0, 0.82);
+        --neo-frame-shadow-soft: 0 24px 64px -46px rgba(0, 0, 0, 0.58);
+        --neo-frame-divider: rgba(255, 255, 255, 0.07);
+        --neo-frame-divider-strong: rgba(255, 255, 255, 0.12);
+        --neo-frame-ghost-bg: rgba(17, 17, 17, 0.54);
+        --neo-field-bg: rgba(17, 17, 17, 0.68);
+        --neo-field-border: rgba(255, 255, 255, 0.1);
+        --neo-field-border-hover: rgba(215, 254, 67, 0.55);
+        --neo-field-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        --neo-field-focus-ring: 0 0 0 3px rgba(215, 254, 67, 0.2);
+        --neo-field-placeholder: rgba(226, 232, 240, 0.55);
+        --neo-divider-color: var(--neo-frame-divider);
         --app-body-bg: linear-gradient(180deg, #05070c, #0a0c12);
         --app-body-bg-animated: linear-gradient(-45deg, #05070c, #0a0c12, #1a1a1a, #0a0c12);
         --app-body-animation: gradientShift 60s linear infinite;
@@ -245,7 +264,26 @@
         --neo-chip-bg: rgba(15, 23, 42, 0.08);
         --neo-chip-border: rgba(15, 23, 42, 0.12);
         --neo-chip-color: rgba(30, 41, 59, 0.88);
-        --neo-divider-color: rgba(148, 163, 184, 0.3);
+        --neo-radius-sm: 0.85rem;
+        --neo-radius-md: 1.1rem;
+        --neo-radius-lg: 1.4rem;
+        --neo-radius-xl: 1.75rem;
+        --neo-frame-bg: rgba(255, 255, 255, 0.96);
+        --neo-frame-border: rgba(15, 23, 42, 0.08);
+        --neo-frame-border-strong: rgba(15, 23, 42, 0.16);
+        --neo-frame-border-subtle: rgba(148, 163, 184, 0.2);
+        --neo-frame-shadow: 0 38px 96px -54px rgba(30, 64, 175, 0.26);
+        --neo-frame-shadow-soft: 0 26px 64px -48px rgba(148, 163, 184, 0.22);
+        --neo-frame-divider: rgba(148, 163, 184, 0.28);
+        --neo-frame-divider-strong: rgba(100, 116, 139, 0.35);
+        --neo-frame-ghost-bg: rgba(248, 250, 255, 0.86);
+        --neo-field-bg: rgba(255, 255, 255, 0.95);
+        --neo-field-border: rgba(148, 163, 184, 0.32);
+        --neo-field-border-hover: rgba(40, 161, 104, 0.45);
+        --neo-field-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+        --neo-field-focus-ring: 0 0 0 3px rgba(40, 161, 104, 0.16);
+        --neo-field-placeholder: rgba(100, 116, 139, 0.7);
+        --neo-divider-color: var(--neo-frame-divider);
         --app-body-bg: linear-gradient(180deg, #f5f7ff, #eef2ff);
         --app-body-bg-animated: linear-gradient(-45deg, #f5f7ff, #ffffff, #eef2ff, #ffffff);
         --app-body-animation: none;
@@ -357,10 +395,10 @@
         }
       }
       .neo-surface {
-        background: var(--neo-surface-bg);
-        border: 1px solid var(--neo-surface-border);
-        border-radius: 1.75rem;
-        box-shadow: var(--neo-surface-shadow);
+        background: var(--neo-frame-bg);
+        border: 1px solid var(--neo-frame-border);
+        border-radius: var(--neo-radius-xl);
+        box-shadow: var(--neo-frame-shadow);
         backdrop-filter: blur(18px);
         color: rgb(var(--neo-text-primary));
         transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease;
@@ -455,13 +493,13 @@
       }
       .neo-surface--muted {
         background: var(--neo-surface-muted-bg);
-        border-color: var(--neo-surface-muted-border);
-        box-shadow: var(--neo-surface-muted-shadow);
+        border-color: var(--neo-frame-border);
+        box-shadow: var(--neo-frame-shadow-soft);
       }
       .neo-surface--ghost {
-        background: var(--neo-surface-ghost-bg);
-        border-color: var(--neo-surface-ghost-border);
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+        background: var(--neo-frame-ghost-bg);
+        border-color: var(--neo-frame-border-subtle);
+        box-shadow: var(--neo-frame-shadow-soft);
       }
       .neo-surface--elevated {
         box-shadow: 0 36px 80px -38px rgba(0, 0, 0, 0.42);
@@ -491,7 +529,28 @@
         gap: 1.5rem;
       }
       .neo-divider {
-        border-color: var(--neo-divider-color);
+        border-color: var(--neo-frame-divider);
+      }
+      .neo-divider-strong {
+        border-color: var(--neo-frame-divider-strong);
+      }
+      .neo-radius-sm {
+        border-radius: var(--neo-radius-sm);
+      }
+      .neo-radius-md {
+        border-radius: var(--neo-radius-md);
+      }
+      .neo-radius-lg {
+        border-radius: var(--neo-radius-lg);
+      }
+      .neo-radius-xl {
+        border-radius: var(--neo-radius-xl);
+      }
+      .neo-shadow-soft {
+        box-shadow: var(--neo-frame-shadow-soft);
+      }
+      .neo-shadow-strong {
+        box-shadow: var(--neo-frame-shadow);
       }
       .neo-chip {
         display: inline-flex;
@@ -506,6 +565,134 @@
         color: rgb(var(--neo-chip-color));
         background: var(--neo-chip-bg);
         transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      }
+      .neo-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid var(--neo-frame-border-subtle);
+        background: var(--neo-frame-ghost-bg);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: rgb(var(--neo-text-secondary));
+        transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .neo-badge--ghost {
+        background: var(--neo-frame-ghost-bg);
+      }
+      .neo-badge--strong {
+        background: rgba(var(--neo-accent), 0.12);
+        border-color: rgba(var(--neo-accent), 0.45);
+        color: rgb(var(--neo-accent-ink));
+      }
+      .neo-field {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: var(--neo-radius-lg);
+        border: 1px solid var(--neo-field-border);
+        background: var(--neo-field-bg);
+        color: rgb(var(--neo-text-strong));
+        font-size: 0.95rem;
+        box-shadow: var(--neo-field-shadow);
+        transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      }
+      .neo-field--sm {
+        padding: 0.6rem 0.85rem;
+        font-size: 0.85rem;
+      }
+      .neo-field--lg {
+        padding: 0.9rem 1.25rem;
+        font-size: 1rem;
+      }
+      .neo-field--pill {
+        border-radius: 999px;
+        padding-inline: 1.3rem;
+      }
+      .neo-field--textarea {
+        min-height: 7rem;
+        resize: vertical;
+      }
+      .neo-field:focus {
+        outline: none;
+        border-color: var(--neo-field-border-hover);
+        box-shadow: var(--neo-field-focus-ring);
+      }
+      .neo-field::placeholder {
+        color: var(--neo-field-placeholder);
+      }
+      .neo-field:disabled {
+        background: rgba(148, 163, 184, 0.15);
+        cursor: not-allowed;
+        opacity: 0.85;
+      }
+      .neo-progress-track {
+        width: 100%;
+        border-radius: var(--neo-radius-sm);
+        background: var(--neo-frame-divider);
+        overflow: hidden;
+      }
+      .neo-progress-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: rgb(var(--neo-accent));
+        transition: width 0.4s ease;
+      }
+      .neo-outline-dashed {
+        border-radius: var(--neo-radius-xl);
+        border: 1px dashed var(--neo-frame-border);
+        background: var(--neo-frame-ghost-bg);
+        box-shadow: var(--neo-frame-shadow-soft);
+      }
+      .neo-icon-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 999px;
+        border: 1px solid var(--neo-frame-border-subtle);
+        background: var(--neo-frame-ghost-bg);
+        color: rgb(var(--neo-text-secondary));
+        transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+      }
+      .neo-icon-button:hover {
+        color: rgb(var(--neo-accent));
+        border-color: rgba(var(--neo-accent), 0.5);
+        box-shadow: var(--neo-frame-shadow-soft);
+      }
+      .neo-pill-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        border-radius: 999px;
+        border: 1px solid var(--neo-frame-border-subtle);
+        padding: 0.6rem 1.4rem;
+        font-weight: 600;
+        font-size: 0.92rem;
+        color: rgb(var(--neo-text-secondary));
+        background: var(--neo-frame-ghost-bg);
+        transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+      }
+      .neo-pill-button:hover {
+        color: rgb(var(--neo-accent));
+        border-color: rgba(var(--neo-accent), 0.5);
+        box-shadow: var(--neo-frame-shadow-soft);
+      }
+      .neo-outline-button {
+        border-radius: var(--neo-radius-lg);
+        border: 1px solid var(--neo-frame-border);
+        background: var(--neo-frame-bg);
+        box-shadow: var(--neo-frame-shadow-soft);
+        transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      }
+      .neo-outline-button:hover,
+      .neo-outline-button:focus-visible {
+        border-color: rgba(var(--neo-accent), 0.55);
+        box-shadow: var(--neo-frame-shadow);
       }
       a {
         color: inherit;
@@ -524,7 +711,7 @@
         position: relative;
         background: var(--home-card-bg);
         border: 1px solid var(--home-card-border);
-        border-radius: 1.75rem;
+        border-radius: var(--neo-radius-xl);
         box-shadow: var(--home-card-shadow);
         backdrop-filter: blur(22px);
         overflow: hidden;

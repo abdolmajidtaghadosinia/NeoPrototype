@@ -13,7 +13,7 @@ import SupportSection from '../SupportSection';
 import PremiumSection from '../PremiumSection';
 import SurfaceCard from '../layout/SurfaceCard';
 import Page from '../layout/Page';
-import { metricDescription, metricTitle } from '../designSystem';
+import { composeSurfaceClasses, metricDescription, metricTitle } from '../designSystem';
 
 /**
  * Props for the ProfilePage component.
@@ -98,19 +98,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
     <Page
       title="پروفایل کاربری"
       actions={(
-        <button
-          onClick={onBack}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-ghost-bg)] text-[rgb(var(--neo-text-secondary))] transition hover:text-[rgb(var(--neo-accent))]"
-          aria-label="بازگشت"
-          type="button"
-        >
+        <button onClick={onBack} className="neo-icon-button" aria-label="بازگشت" type="button">
           <ArrowLeftIcon className="h-6 w-6" />
         </button>
       )}
       spacing="lg"
     >
       <div className="grid gap-6 xl:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
-        <SurfaceCard tone="elevated" padding="lg" className="rounded-3xl space-y-6">
+        <SurfaceCard tone="elevated" padding="lg" className="space-y-6">
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-right xl:flex-col xl:items-end">
             <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full ring-4 ring-[color:rgba(var(--neo-accent),0.15)] shadow-[var(--neo-surface-shadow)]">
               <img src={user.picture} alt="User Profile" className="h-full w-full object-cover" />
@@ -124,7 +119,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
                 {quickFacts.map((fact) => (
                   <div
                     key={fact.label}
-                    className="flex items-center justify-end gap-3 rounded-2xl border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-ghost-bg)] px-3 py-3 text-right"
+                    className={composeSurfaceClasses(
+                      'ghost',
+                      'sm',
+                      'flex items-center justify-end gap-3 text-right'
+                    )}
                   >
                     <div>
                       <p className="text-xs font-medium text-[rgb(var(--neo-text-muted))]">{fact.label}</p>
@@ -137,13 +136,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
             </div>
           </div>
           <div className="flex flex-wrap justify-end gap-3">
-            <button className="rounded-full border border-[color:var(--neo-divider-color)] px-4 py-2 text-sm font-semibold text-[rgb(var(--neo-text-secondary))] transition hover:text-[rgb(var(--neo-accent))]" type="button">
+            <button className="neo-pill-button" type="button">
               مدیریت پروفایل
             </button>
-            <button className="rounded-full border border-[color:var(--neo-divider-color)] px-4 py-2 text-sm font-semibold text-[rgb(var(--neo-text-secondary))] transition hover:text-[rgb(var(--neo-accent))]" type="button">
+            <button className="neo-pill-button" type="button">
               تنظیمات امنیتی
             </button>
-            <button className="rounded-full border border-[color:var(--neo-divider-color)] px-4 py-2 text-sm font-semibold text-[rgb(var(--neo-text-secondary))] transition hover:text-[rgb(var(--neo-accent))]" type="button">
+            <button className="neo-pill-button" type="button">
               ارسال درخواست پشتیبانی
             </button>
           </div>
@@ -156,18 +155,24 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2" ref={settingsRef}>
-        <SurfaceCard tone="muted" padding="lg" className="rounded-3xl space-y-5">
+        <SurfaceCard tone="muted" padding="lg" className="space-y-5">
           <header className="flex items-center justify-between gap-3">
             <div className="space-y-1 text-right">
               <h3 className="text-lg font-bold text-[rgb(var(--neo-text-strong))]">تنظیمات حساب</h3>
               <p className={metricDescription}>تنظیمات اصلی حساب کاربری، امنیت و اعلان‌ها</p>
             </div>
           </header>
-          <div className="divide-y divide-[color:var(--neo-divider-color)] rounded-2xl border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-bg)]">
+          <div
+            className={composeSurfaceClasses(
+              'ghost',
+              'none',
+              'divide-y divide-[color:var(--neo-divider-color)] overflow-hidden'
+            )}
+          >
             {menuItems.map((item) => (
               <button
                 key={item.text}
-                className="flex w-full items-stretch justify-between gap-4 p-5 text-right transition hover:bg-[color:var(--neo-surface-ghost-bg)]"
+                className="flex w-full items-stretch justify-between gap-4 px-5 py-4 text-right transition hover:bg-[color:var(--neo-frame-ghost-bg)]"
                 type="button"
               >
                 <div className="flex flex-1 items-start justify-end gap-4">
@@ -175,7 +180,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
                     <p className="text-base font-semibold text-[rgb(var(--neo-text-strong))]">{item.text}</p>
                     <p className="text-sm leading-relaxed text-[rgb(var(--neo-text-secondary))]">{item.description}</p>
                   </div>
-                  <div className="rounded-xl border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-ghost-bg)] p-2">
+                  <div
+                    className={composeSurfaceClasses(
+                      'ghost',
+                      'sm',
+                      'flex h-11 w-11 items-center justify-center !p-0'
+                    )}
+                  >
                     {item.icon}
                   </div>
                 </div>
@@ -183,7 +194,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
               </button>
             ))}
           </div>
-          <div className="flex items-center justify-between rounded-2xl bg-[color:var(--neo-surface-ghost-bg)] px-5 py-4">
+          <div
+            className={composeSurfaceClasses(
+              'ghost',
+              'sm',
+              'flex items-center justify-between px-5 py-4'
+            )}
+          >
             <div className="space-y-1 text-right">
               <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">خروج از حساب کاربری</p>
               <p className="text-xs text-[rgb(var(--neo-text-secondary))]">برای امنیت بیشتر پس از پایان کار خود خارج شوید.</p>

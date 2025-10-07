@@ -60,11 +60,11 @@ const TradeList: React.FC<TradeListProps> = ({
 
   const containerClass =
     variant === 'compact'
-      ? 'neo-surface neo-surface--ghost rounded-2xl p-4 text-right space-y-4'
-      : 'neo-surface neo-surface--ghost rounded-3xl p-5 text-right space-y-4';
+      ? 'neo-surface neo-surface--ghost neo-shadow-soft rounded-2xl p-4 text-right space-y-4'
+      : 'neo-surface neo-surface--ghost neo-shadow-soft rounded-3xl p-5 text-right space-y-4';
   const listClass = variant === 'compact' ? 'space-y-3' : 'space-y-3.5';
   const itemButtonClass = clsx(
-    'group w-full min-w-0 rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-raised-bg)] text-right transition hover:border-[rgb(var(--neo-accent))] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
+    'group w-full min-w-0 neo-outline-button neo-surface--ghost text-right transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--neo-accent))]',
     variant === 'compact' ? 'px-4 py-3.5 rounded-2xl' : 'px-4 py-4 rounded-3xl'
   );
   const moreButtonClass = 'text-xs font-semibold text-[rgb(var(--neo-accent))] hover:opacity-80';
@@ -134,7 +134,7 @@ const TradeList: React.FC<TradeListProps> = ({
             );
           })
         ) : (
-          <li className="rounded-xl border border-dashed border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] py-3 text-center text-xs text-[rgb(var(--neo-text-secondary))]">
+          <li className="neo-outline-dashed py-3 text-center text-xs text-[rgb(var(--neo-text-secondary))]">
             معامله‌ای نیست
           </li>
         )}

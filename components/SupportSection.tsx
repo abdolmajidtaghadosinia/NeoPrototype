@@ -2,7 +2,14 @@ import React, { useState, useRef, useEffect, memo } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import SurfaceCard from './layout/SurfaceCard';
 import { Message } from '../types';
-import { metricDescription } from './designSystem';
+import {
+  composeSurfaceClasses,
+  dividerSubtle,
+  fieldBase,
+  fieldPill,
+  fieldTextarea,
+  metricDescription,
+} from './designSystem';
 
 interface SupportTicket {
   id: string;
@@ -79,7 +86,7 @@ const SupportSection: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <SurfaceCard tone="muted" padding="lg" className="rounded-3xl space-y-5">
+      <SurfaceCard tone="muted" padding="lg" className="space-y-5">
         <header className="space-y-1 text-right">
           <h3 className="text-lg font-bold text-[rgb(var(--neo-text-strong))]">پشتیبانی تیکتی</h3>
           <p className={metricDescription}>مشکلات خود را با تیم پشتیبانی در میان بگذارید و روند رسیدگی را دنبال کنید.</p>
@@ -90,17 +97,17 @@ const SupportSection: React.FC = () => {
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             placeholder="موضوع"
-            className="w-full rounded-2xl border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-bg)] px-4 py-3 text-sm text-[rgb(var(--neo-text-strong))] placeholder:text-[rgb(var(--neo-text-muted))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--neo-accent))]/40"
+            className={`${fieldBase} text-sm`}
           />
           <textarea
             value={ticketText}
             onChange={(e) => setTicketText(e.target.value)}
             placeholder="شرح مشکل"
-            className="h-28 w-full rounded-2xl border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-bg)] px-4 py-3 text-sm text-[rgb(var(--neo-text-strong))] placeholder:text-[rgb(var(--neo-text-muted))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--neo-accent))]/40"
+            className={`${fieldTextarea} text-sm`}
           />
           <button
             type="submit"
-            className="w-full rounded-full bg-[rgb(var(--neo-accent))] py-2.5 text-sm font-bold text-[rgb(var(--neo-accent-ink))] transition hover:brightness-105"
+            className="w-full rounded-[var(--neo-radius-lg)] bg-[rgb(var(--neo-accent))] py-2.5 text-sm font-bold text-[rgb(var(--neo-accent-ink))] transition hover:brightness-105"
           >
             ارسال تیکت
           </button>
@@ -109,7 +116,10 @@ const SupportSection: React.FC = () => {
         {tickets.length > 0 && (
           <ul className="space-y-2 text-right">
             {tickets.map((t) => (
-              <li key={t.id} className="rounded-2xl border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-ghost-bg)] px-4 py-3">
+              <li
+                key={t.id}
+                className={composeSurfaceClasses('ghost', 'sm', 'space-y-1 text-right')}
+              >
                 <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">{t.subject}</p>
                 <p className="mt-1 text-xs text-[rgb(var(--neo-text-secondary))]">{t.message}</p>
                 <p className="mt-1 text-[11px] text-[rgb(var(--neo-text-muted))]">وضعیت: {t.status === 'open' ? 'باز' : 'بسته'}</p>
@@ -119,12 +129,14 @@ const SupportSection: React.FC = () => {
         )}
       </SurfaceCard>
 
-      <SurfaceCard tone="muted" padding="lg" className="rounded-3xl space-y-5">
+      <SurfaceCard tone="muted" padding="lg" className="space-y-5">
         <header className="space-y-1 text-right">
           <h3 className="text-lg font-bold text-[rgb(var(--neo-text-strong))]">پشتیبانی هوشمند</h3>
           <p className={metricDescription}>سوالات سریع خود را از دستیار هوشمند بپرسید و پاسخ آنی دریافت کنید.</p>
         </header>
-        <div className="flex h-80 flex-col rounded-3xl border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-bg)]">
+        <div
+          className={composeSurfaceClasses('base', 'none', 'flex h-80 flex-col overflow-hidden')}
+        >
           <div className="neo-animate-stack flex-1 space-y-4 overflow-y-auto px-4 py-4">
             {messages.map((msg, index) => (
               <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -148,14 +160,14 @@ const SupportSection: React.FC = () => {
             )}
             <div ref={endRef} />
           </div>
-          <form onSubmit={handleChatSubmit} className="border-t border-[color:var(--neo-divider-color)] px-4 py-3">
+          <form onSubmit={handleChatSubmit} className={`${dividerSubtle} px-4 py-3`}>
             <div className="relative flex items-center">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="سوال خود را بپرسید"
-                className="w-full rounded-full border border-[color:var(--neo-divider-color)] bg-[color:var(--neo-surface-bg)] py-2.5 pr-4 pl-12 text-sm text-[rgb(var(--neo-text-strong))] placeholder:text-[rgb(var(--neo-text-muted))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--neo-accent))]/40"
+                className={`${fieldPill} py-2.5 pr-4 pl-12 text-sm`}
                 disabled={isLoading}
               />
               <button

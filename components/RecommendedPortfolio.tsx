@@ -16,7 +16,7 @@ interface RecommendedPortfolioProps {
     recommendations: RecommendationItem[];
 }
 
-const surfaceClasses = composeSurfaceClasses('muted', 'lg', 'rounded-3xl space-y-5');
+const surfaceClasses = composeSurfaceClasses('muted', 'lg', 'space-y-5');
 
 const actionLabels: Record<RecommendationItem['action'], string> = {
     increase: 'افزایش وزن',
@@ -38,7 +38,7 @@ const RecommendedPortfolio: React.FC<RecommendedPortfolioProps> = ({ totalValue,
                     <p className="text-xs font-semibold tracking-wide text-[rgb(var(--neo-text-secondary))]">پیشنهاد هوش مصنوعی</p>
                     <h2 className="mt-1 text-lg font-bold text-[rgb(var(--neo-text-strong))] sm:text-xl">پورتفوی پیشنهادی امروز</h2>
                 </div>
-                <span className="shrink-0 rounded-full border border-[rgba(var(--neo-accent-ink),0.25)] bg-[rgba(var(--neo-accent),0.08)] px-4 py-1 text-xs font-semibold text-[rgb(var(--neo-accent-ink))]">
+                <span className="neo-badge neo-badge--strong shrink-0 text-xs">
                     ارزش کل: {toPersianDigits(totalValue.toLocaleString())} تومان
                 </span>
             </div>
@@ -51,14 +51,18 @@ const RecommendedPortfolio: React.FC<RecommendedPortfolioProps> = ({ totalValue,
                 {recommendations.map((item) => (
                     <article
                         key={item.id}
-                        className="rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-4 py-3 shadow-[var(--neo-surface-shadow)] transition-transform duration-200 hover:-translate-y-0.5"
+                        className={composeSurfaceClasses(
+                            'ghost',
+                            'sm',
+                            'space-y-3 px-4 py-3 transition-transform duration-200 hover:-translate-y-0.5'
+                        )}
                     >
                         <div className="flex flex-wrap items-center justify-between gap-2">
                             <div className="flex flex-col">
                                 <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">{item.title}</span>
                                 <span className="text-xs text-[rgb(var(--neo-text-tertiary))]">{item.insight}</span>
                             </div>
-                            <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${actionAccent[item.action]}`}>
+                            <span className={`neo-badge text-xs ${actionAccent[item.action]}`}>
                                 <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />
                                 {actionLabels[item.action]}
                             </span>

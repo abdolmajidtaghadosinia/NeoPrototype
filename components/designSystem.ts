@@ -21,6 +21,20 @@ export const chipNeutral =
   'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-semibold text-[rgb(var(--neo-chip-color))] border-[var(--neo-chip-border)] bg-[var(--neo-chip-bg)]';
 /** Styling for a muted horizontal divider. */
 export const dividerMuted = 'border-t border-[color:var(--neo-divider-color)]';
+/** Styling for a soft divider that matches the unified frame color. */
+export const dividerSubtle = 'border-t neo-divider';
+/** Styling for a stronger divider line. */
+export const dividerStrong = 'border-t neo-divider-strong';
+/** Base styling for input fields aligned with the design system. */
+export const fieldBase = 'neo-field text-[rgb(var(--neo-text-strong))]';
+/** Smaller field styling for compact controls. */
+export const fieldSm = 'neo-field neo-field--sm text-[rgb(var(--neo-text-strong))]';
+/** Larger field styling for prominent inputs. */
+export const fieldLg = 'neo-field neo-field--lg text-[rgb(var(--neo-text-strong))]';
+/** Pill-shaped field styling, typically for chat or search inputs. */
+export const fieldPill = 'neo-field neo-field--pill text-[rgb(var(--neo-text-strong))]';
+/** Textarea styling aligned with the new field tokens. */
+export const fieldTextarea = 'neo-field neo-field--textarea text-[rgb(var(--neo-text-strong))]';
 
 const toneClasses: Record<string, string> = {
   base: 'neo-surface',
@@ -77,8 +91,10 @@ const navBaseClasses =
   'neo-nav-item flex w-full font-medium tracking-tight transition-all duration-200 ease-[var(--neo-motion-ease-soft)] hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--neo-nav-focus-ring)]';
 
 const navOrientationClasses: Record<'stacked' | 'inline', string> = {
-  stacked: 'flex-col items-center justify-center gap-2 rounded-2xl px-3 py-5 text-sm text-center',
-  inline: 'flex-row items-center justify-start gap-3 rounded-xl px-4 py-4 text-sm text-right',
+  stacked:
+    'flex-col items-center justify-center gap-2 rounded-[var(--neo-radius-lg)] px-3 py-5 text-sm text-center',
+  inline:
+    'flex-row items-center justify-start gap-3 rounded-[var(--neo-radius-md)] px-4 py-4 text-sm text-right',
 };
 
 const navActiveClasses =
