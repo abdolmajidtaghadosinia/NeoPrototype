@@ -148,11 +148,11 @@ const MarketSummary: React.FC<MarketSummaryProps> = ({ items, onItemClick, colum
     const [activeTimeframe, setActiveTimeframe] = useState<Timeframe>('daily');
     const timeframeSelectId = useId();
     const timeframeLabelId = `${timeframeSelectId}-label`;
-    const timeframes: { label: string; value: Timeframe; hint: string }[] = [
-        { label: 'روزانه', value: 'daily', hint: '۲۴ ساعت اخیر' },
-        { label: 'هفتگی', value: 'weekly', hint: '۷ روز اخیر' },
-        { label: 'ماهانه', value: 'monthly', hint: '۳۰ روز اخیر' },
-        { label: 'سالیانه', value: 'yearly', hint: '۱۲ ماه اخیر' },
+    const timeframes: { label: string; value: Timeframe }[] = [
+        { label: 'روزانه', value: 'daily' },
+        { label: 'هفتگی', value: 'weekly' },
+        { label: 'ماهانه', value: 'monthly' },
+        { label: 'سالیانه', value: 'yearly' },
     ];
 
     return (
@@ -160,7 +160,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = ({ items, onItemClick, colum
             <div className="space-y-3">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="text-xl font-bold text-white">خلاصه وضعیت بازارها</h2>
-                    <div className="relative w-full sm:w-64">
+                    <div className="relative w-full sm:w-48">
                         <label id={timeframeLabelId} htmlFor={timeframeSelectId} className="sr-only">
                             انتخاب بازه زمانی خلاصه بازار
                         </label>
@@ -173,7 +173,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = ({ items, onItemClick, colum
                         >
                             {timeframes.map((tf) => (
                                 <option key={tf.value} value={tf.value} className="text-gray-900">
-                                    {`${tf.label} — ${tf.hint}`}
+                                    {tf.label}
                                 </option>
                             ))}
                         </select>
