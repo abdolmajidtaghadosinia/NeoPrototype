@@ -236,8 +236,8 @@ const hotSpotlightToneMap: Record<HighlightTone, { text: string; chip: string; t
     tone: 'positive',
   },
   down: {
-    text: 'text-rose-400',
-    chip: 'border border-rose-400/40 bg-rose-500/10 text-rose-100',
+    text: 'text-rose-600 dark:text-rose-300',
+    chip: 'border border-rose-300/60 bg-rose-100 text-rose-700 dark:border-rose-400/40 dark:bg-rose-500/10 dark:text-rose-100',
     tone: 'negative',
   },
   neutral: {
