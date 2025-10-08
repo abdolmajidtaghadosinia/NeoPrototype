@@ -128,10 +128,27 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
   onActiveTabIdChange,
 }) => {
   const tabs = [
-    { name: 'ایده‌ها', icon: <StarIcon className="h-5 w-5" /> },
-    { name: 'داغ‌ترین‌ها', icon: null, badge: 'NEW' },
-    { name: 'پورتفوی من', icon: <ChartPieIcon className="h-5 w-5" /> },
-    { name: 'نمای بازار', icon: <ChartBarIcon className="h-5 w-5" /> },
+    {
+      name: 'ایده‌ها',
+      icon: <StarIcon className="h-5 w-5" />,
+      description: 'ایده‌های تحلیلی منتخب بر اساس روند بازار',
+    },
+    {
+      name: 'داغ‌ترین‌ها',
+      icon: null,
+      badge: 'NEW',
+      description: 'نمادهای پربازده و پرتقاضا در ساعات اخیر',
+    },
+    {
+      name: 'پورتفوی من',
+      icon: <ChartPieIcon className="h-5 w-5" />,
+      description: 'نمای کلی از ارزش و بازده پرتفو شخصی شما',
+    },
+    {
+      name: 'نمای بازار',
+      icon: <ChartBarIcon className="h-5 w-5" />,
+      description: 'وضعیت شاخص‌ها و صنایع منتخب بازار سرمایه',
+    },
   ];
 
   const idPrefix = useId();
@@ -369,7 +386,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
   }, [ensureActiveTabVisible]);
 
   const renderTabContent = (
-    tab: { name: string; icon?: React.ReactNode; badge?: string | null },
+    tab: { name: string; icon?: React.ReactNode; badge?: string | null; description?: string },
     highlights: TabHighlight[],
     isActive: boolean,
   ) => {
@@ -377,27 +394,40 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
       ? 'text-[rgb(var(--tabs-active-text))]'
       : 'text-[rgb(var(--filter-highlight-text))]';
 
-    if (highlights.length === 0) {
-      return (
+    const header = (
+      <div className="flex items-center justify-between gap-2">
         <span
           className={clsx(
-            'flex items-center justify-center gap-2 text-sm font-medium sm:text-base',
+            'flex items-center gap-1.5 text-sm font-semibold sm:text-base',
             labelColorClass,
           )}
         >
           <span>{tab.name.trim()}</span>
           {tab.icon}
-          {tab.badge && (
-            <span
-              className={clsx(
-                'rounded-md bg-[color:var(--filter-highlight-chip-strong-bg)] px-2 py-0.5 text-xs font-bold',
-                labelColorClass,
-              )}
-            >
-              {tab.badge}
-            </span>
-          )}
         </span>
+        {tab.badge && (
+          <span
+            className={clsx(
+              'rounded-md bg-[color:var(--filter-highlight-chip-strong-bg)] px-2 py-0.5 text-xs font-bold',
+              labelColorClass,
+            )}
+          >
+            {tab.badge}
+          </span>
+        )}
+      </div>
+    );
+
+    if (highlights.length === 0) {
+      return (
+        <div className="flex h-full w-full flex-col justify-between gap-3 text-right">
+          {header}
+          {tab.description && (
+            <p className="text-xs leading-5 text-[rgb(var(--filter-highlight-subtext))] sm:text-sm">
+              {tab.description}
+            </p>
+          )}
+        </div>
       );
     }
 
@@ -405,66 +435,44 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
 
     if (!primaryHighlight) {
       return (
-        <span className={clsx('flex items-center justify-center gap-1.5', labelColorClass)}>
-          <span>{tab.name.trim()}</span>
-          {tab.icon}
-          {tab.badge && (
-            <span
-              className={clsx(
-                'rounded-md bg-[color:var(--filter-highlight-chip-strong-bg)] px-1.5 py-0.5 text-[10px] font-bold',
-                labelColorClass,
-              )}
-            >
-              {tab.badge}
-            </span>
+        <div className="flex h-full w-full flex-col justify-between gap-3 text-right">
+          {header}
+          {tab.description && (
+            <p className="text-xs leading-5 text-[rgb(var(--filter-highlight-subtext))] sm:text-sm">
+              {tab.description}
+            </p>
           )}
-        </span>
+        </div>
       );
     }
 
     const { id, label, value, tone = 'neutral', icon, badge } = primaryHighlight;
 
     return (
-      <div className="flex w-full flex-col items-center gap-1.5">
-        <span
-          className={clsx(
-            'flex items-center gap-1.5 text-sm font-semibold sm:text-base',
-            labelColorClass,
-          )}
-        >
-          {tab.icon}
-          <span>{tab.name.trim()}</span>
-          {tab.badge && (
-            <span
-              className={clsx(
-                'rounded-md bg-[color:var(--filter-highlight-chip-strong-bg)] px-2 py-0.5 text-xs font-bold',
-                labelColorClass,
-              )}
-            >
-              {tab.badge}
-            </span>
-          )}
-        </span>
+      <div className="flex h-full w-full flex-col justify-between gap-3 text-right">
+        {header}
         <div
           key={id}
-          className={`flex w-full items-center justify-between gap-2.5 rounded-2xl px-[0.65rem] py-[0.55rem] text-sm font-semibold leading-tight ${baseHighlightClasses} ${highlightToneClasses[tone]}`}
+          className={clsx(
+            'flex min-h-[3.25rem] items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-sm font-semibold leading-tight',
+            baseHighlightClasses,
+            highlightToneClasses[tone],
+          )}
         >
-          <div className="flex items-center gap-1.5 text-xs font-medium text-[rgb(var(--filter-highlight-subtext))] sm:text-sm">
-            <span
-              className={`h-2 w-2 rounded-full ${highlightToneDotClasses[tone]}`}
-            />
+          <div className="flex min-w-0 items-center gap-1.5 text-[0.72rem] font-medium text-[rgb(var(--filter-highlight-subtext))] sm:text-xs">
+            <span className={`h-2 w-2 rounded-full ${highlightToneDotClasses[tone]}`} />
             {label && (
-              <span className="filter-tab-highlight__label max-w-[7.5rem] truncate text-[rgb(var(--filter-highlight-text))] sm:max-w-[9rem]">
+              <span className="filter-tab-highlight__label max-w-[8.5rem] truncate text-[rgb(var(--filter-highlight-text))] sm:max-w-[10rem]">
                 {label}
               </span>
             )}
             {badge && (
-              <span className="rounded-full bg-[color:var(--filter-highlight-chip-subtle-bg)] px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-[rgb(var(--filter-highlight-text))]">
+              <span className="rounded-full bg-[color:var(--filter-highlight-chip-subtle-bg)] px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-[rgb(var(--filter-highlight-text))]">
                 {badge}
               </span>
             )}
           </div>
-          <div className="flex items-center gap-1.5 text-base font-bold text-[rgb(var(--filter-highlight-text))]">
+          <div className="flex items-center gap-1.5 text-base font-bold text-[rgb(var(--filter-highlight-text))] sm:text-lg">
             {icon && (
               <span className="flex items-center text-sm text-[rgb(var(--filter-highlight-text))] opacity-90">
                 {icon}
@@ -472,7 +480,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
             )}
             <span
               className={clsx(
-                'filter-tab-highlight__value max-w-[8rem] truncate text-right tracking-tight',
+                'filter-tab-highlight__value max-w-[8.5rem] truncate text-right tracking-tight sm:max-w-[10rem]',
                 highlightValueToneClasses[tone],
               )}
             >
@@ -488,7 +496,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
     <div className="pb-2.5">
       <div
         ref={containerRef}
-        className="neo-animate-inline flex items-stretch gap-1.5 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:overflow-visible"
+        className="neo-animate-inline flex items-stretch gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:justify-between sm:gap-3 sm:overflow-visible md:grid md:grid-cols-2 md:gap-3 md:[&>*]:min-w-0 lg:grid-cols-4"
         role="tablist"
         aria-label="بخش‌های داشبورد"
       >
@@ -511,13 +519,11 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
               tabIndex={isActive ? 0 : -1}
               onClick={() => onTabChange(tab.name)}
               onKeyDown={(event) => handleKeyDown(event, index)}
-              className={`filter-tabs__button flex min-w-[10.5rem] flex-none items-center justify-center rounded-2xl border text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60 snap-center sm:text-base ${
-                isActive ? 'is-active' : ''
-              } ${
-                highlightsForTab.length > 0
-                  ? 'px-[0.75rem] py-[0.65rem]'
-                  : 'px-[0.75rem] py-[0.6rem]'
-              } min-h-[2.75rem] sm:flex-1 sm:min-w-0`}
+              className={clsx(
+                'filter-tabs__button group relative flex h-full min-w-[11.5rem] flex-none flex-col items-stretch justify-between rounded-3xl border px-4 py-3 text-right text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60 snap-center sm:min-w-[13rem] sm:text-base md:w-full md:min-w-0',
+                isActive && 'is-active',
+                highlightsForTab.length > 0 ? 'min-h-[7.5rem]' : 'min-h-[6.5rem]',
+              )}
             >
               {renderTabContent(tab, highlightsForTab, isActive)}
             </button>
