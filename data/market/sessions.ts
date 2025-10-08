@@ -1,0 +1,48 @@
+import type { MarketSession } from '@/types';
+
+export const globalMarketSessions: MarketSession[] = [
+  {
+    id: 'tse',
+    market: 'بورس تهران',
+    city: 'تهران',
+    timezone: 'IRST',
+    status: 'open',
+    openTime: '۰۹:۰۰',
+    closeTime: '۱۲:۳۰',
+    localTime: '۱۱:۱۵',
+    note: 'حجم معاملات امروز ۱۸٪ بالاتر از میانگین هفتگی است.',
+  },
+  {
+    id: 'forex-london',
+    market: 'فارکس لندن',
+    city: 'لندن',
+    timezone: 'BST',
+    status: 'pre',
+    openTime: '۱۰:۳۰',
+    closeTime: '۱۹:۳۰',
+    localTime: '۰۸:۴۵',
+    note: 'پیش‌گشایش با تمرکز بر داده‌های تورمی بریتانیا.',
+  },
+  {
+    id: 'nyse',
+    market: 'بورس نیویورک',
+    city: 'نیویورک',
+    timezone: 'EDT',
+    status: 'closed',
+    openTime: '۱۷:۰۰',
+    closeTime: '۰۰:۳۰',
+    localTime: '۰۳:۱۵',
+    note: 'بازار بسته است؛ قراردادهای آتی رشد ۰.۳٪ داشته‌اند.',
+  },
+  {
+    id: 'tse-japan',
+    market: 'توکیو',
+    city: 'توکیو',
+    timezone: 'JST',
+    status: 'post',
+    openTime: '۰۴:۳۰',
+    closeTime: '۱۰:۰۰',
+    localTime: '۱۹:۱۵',
+    note: 'جلسه امروز با افت ۰.۶٪ شاخص نیکی پایان یافت.',
+  },
+];
