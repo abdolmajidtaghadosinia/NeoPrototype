@@ -103,9 +103,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
         </button>
       )}
       spacing="lg"
+      className="overflow-x-hidden"
     >
       <div className="grid gap-6 xl:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
-        <SurfaceCard tone="elevated" padding="lg" className="space-y-6">
+        <SurfaceCard tone="elevated" padding="lg" className="space-y-6 max-w-full overflow-hidden">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between xl:flex-col xl:items-end">
             <div className="flex flex-col items-center gap-4 text-center lg:flex-row lg:items-center lg:gap-6 lg:text-right xl:flex-col xl:items-end">
               <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full ring-4 ring-[color:rgba(var(--neo-accent),0.15)] shadow-[var(--neo-surface-shadow)] sm:h-28 sm:w-28">

@@ -23,7 +23,13 @@ const LoanStatusCard: React.FC<LoanStatusCardProps> = ({ loan }) => {
   const remainingAmount = loan.totalAmount - loan.paidAmount;
 
   return (
-    <div className={composeSurfaceClasses('ghost', 'md', 'min-w-[240px] space-y-4 neo-shadow-soft')}>
+    <div
+      className={composeSurfaceClasses(
+        'ghost',
+        'md',
+        'w-full space-y-4 neo-shadow-soft sm:min-w-[240px]'
+      )}
+    >
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-[rgb(var(--neo-text-strong))]">
           <span className="text-xl leading-none">{loan.icon}</span>
@@ -97,7 +103,7 @@ const FinancialHealthSection: React.FC<FinancialHealthSectionProps> = ({ user })
       </header>
 
       {hasLoans ? (
-        <div className="neo-animate-inline flex gap-4 overflow-x-auto pb-2">
+        <div className="neo-animate-inline flex flex-col gap-4 sm:flex-row sm:gap-4 sm:overflow-x-auto sm:pb-2">
           {user.loans.map((loan) => (
             <LoanStatusCard key={loan.id} loan={loan} />
           ))}
