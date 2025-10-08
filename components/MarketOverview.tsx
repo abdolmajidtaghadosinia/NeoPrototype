@@ -82,11 +82,11 @@ const timeframeDescriptions: Record<MarketOverviewTimeframe, string> = {
   yearly: '۱۲ ماه اخیر',
 };
 
-const timeframeOptions: { value: MarketOverviewTimeframe; label: string; hint: string }[] = [
-  { value: 'daily', label: timeframeLabels.daily, hint: timeframeDescriptions.daily },
-  { value: 'weekly', label: timeframeLabels.weekly, hint: timeframeDescriptions.weekly },
-  { value: 'monthly', label: timeframeLabels.monthly, hint: timeframeDescriptions.monthly },
-  { value: 'yearly', label: timeframeLabels.yearly, hint: timeframeDescriptions.yearly },
+const timeframeOptions: { value: MarketOverviewTimeframe; label: string }[] = [
+  { value: 'daily', label: timeframeLabels.daily },
+  { value: 'weekly', label: timeframeLabels.weekly },
+  { value: 'monthly', label: timeframeLabels.monthly },
+  { value: 'yearly', label: timeframeLabels.yearly },
 ];
 
 interface MarketOverviewSections {
@@ -990,53 +990,27 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
       <div className="absolute -top-32 -left-24 h-64 w-64 rounded-full bg-neo-green/10 blur-3xl" />
       <div className="absolute -bottom-40 -right-24 h-72 w-72 rounded-full bg-neo-green/5 blur-3xl" />
 
-      <div className="relative flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:flex-nowrap">
-        <div className="flex min-w-0 flex-col gap-1.5">
-          <h3 className="text-xl font-extrabold text-white sm:text-2xl">بازارها در یک نگاه</h3>
-        </div>
-        <div className="flex w-full flex-col gap-2 text-sm text-gray-100 sm:w-full sm:flex-row sm:items-center sm:justify-end sm:gap-3 md:w-auto md:flex-nowrap">
-          <div className="flex items-center gap-2 text-sm text-gray-100">
-            <span className="h-2.5 w-2.5 rounded-full bg-neo-green animate-pulse" />
-            <span className="font-medium">به‌روزرسانی زنده</span>
-          </div>
-          {onQuickTradeClick && (
-            <button
-              onClick={onQuickTradeClick}
-              className="w-full rounded-full bg-neo-green px-5 py-2.5 text-sm font-bold text-[rgb(var(--tabs-active-text))] shadow-lg shadow-neo-green/20 transition-transform hover:-translate-y-0.5 sm:w-auto sm:py-2 sm:text-base"
-            >
-              معامله سریع
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-4" role="presentation">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between md:flex-nowrap">
-          <div id={timeframeLabelId} className="min-w-0 text-sm font-medium text-gray-300 sm:flex-1 sm:text-base">
-            بازه زمانی: <span className="font-semibold text-white">{timeframeLabels[selectedTimeframe]}</span>
-            <span className="mx-1 text-gray-500">•</span>
-            <span className="text-gray-100/80">{timeframeDescriptions[selectedTimeframe]}</span>
-          </div>
-          <div className="relative w-full sm:w-full md:w-60">
-            <label htmlFor={timeframeSelectId} className="sr-only">
-              انتخاب بازه زمانی بازار
-            </label>
-            <select
-              id={timeframeSelectId}
-              aria-labelledby={timeframeLabelId}
-              aria-controls={timeframePanelId}
-              value={selectedTimeframe}
-              onChange={(event) => setSelectedTimeframe(event.target.value as MarketOverviewTimeframe)}
-              className="w-full appearance-none rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-right text-sm font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60"
-            >
-              {timeframeOptions.map((option) => (
-                <option key={option.value} value={option.value} className="text-gray-900">
-                  {`${option.label} — ${option.hint}`}
-                </option>
-              ))}
-            </select>
-            <ChevronDownIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-200" />
-          </div>
+      <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="text-xl font-extrabold text-white sm:text-2xl">بازارها در یک نگاه</h3>
+        <div className="relative w-full sm:w-64">
+          <label htmlFor={timeframeSelectId} id={timeframeLabelId} className="sr-only">
+            انتخاب بازه زمانی بازار
+          </label>
+          <select
+            id={timeframeSelectId}
+            aria-labelledby={timeframeLabelId}
+            aria-controls={timeframePanelId}
+            value={selectedTimeframe}
+            onChange={(event) => setSelectedTimeframe(event.target.value as MarketOverviewTimeframe)}
+            className="w-full appearance-none rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-right text-sm font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60"
+          >
+            {timeframeOptions.map((option) => (
+              <option key={option.value} value={option.value} className="text-gray-900">
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDownIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-200" />
         </div>
       </div>
 
