@@ -2,6 +2,21 @@ import type { MarketMapSector } from '@/types';
 
 export const marketMapData: MarketMapSector[] = [
   {
+    name: 'شاخص‌سازان بورس',
+    stocks: [
+      { id: 'fars', name: 'فارس', change: 8.65, size: 'xl' },
+      { id: 'fameli', name: 'فملی', change: 15.27, size: 'xl' },
+      { id: 'foolad', name: 'فولاد', change: 5.02, size: 'lg' },
+      { id: 'kegol', name: 'کگل', change: 8.19, size: 'lg' },
+      { id: 'kchad', name: 'کچاد', change: 10.03, size: 'lg' },
+      { id: 'tapico', name: 'تاپیکو', change: 6.51, size: 'lg' },
+      { id: 'shepna', name: 'شپنا', change: 7.08, size: 'lg' },
+      { id: 'midco', name: 'میدکو', change: 1.52, size: 'md' },
+      { id: 'vghadir', name: 'وغدیر', change: -1.8, size: 'md' },
+      { id: 'shbandar', name: 'شبندر', change: -4.16, size: 'md' },
+    ],
+  },
+  {
     name: 'صندوق قابل معامله',
     stocks: [
       { id: 'yaghoot', name: 'یاقوت', change: 33.47, size: 'xl' },

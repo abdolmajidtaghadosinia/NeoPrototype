@@ -3,6 +3,132 @@ import { generateChartData } from '../utils';
 
 export const fundAssets: MarketAsset[] = [
     {
+        id: 'zarfam', name: 'زرفام (صندوق طلا زرفام)', icon: '🪙', price: '۸۳٬۱۷۹ ریال',
+        aliases: ['زرفام', 'صندوق طلا زرفام'],
+        description: 'صندوق کالایی زرفام با سرمایه‌گذاری در گواهی سپرده سکه و معاملات آتی، پوشش مطمئنی برای نوسانات طلای داخلی فراهم می‌کند.',
+        marketCap: '۱.۹ هزار میلیارد تومان', volume24h: '۲۲۰ میلیارد تومان', circulatingSupply: '۲۳۰ میلیون واحد',
+        performance: {
+            daily: { change: 0.21, chartData: generateChartData(83179, 24, 0.01, 'daily') },
+            weekly: { change: 1.07, chartData: generateChartData(82000, 7, 0.015, 'weekly') },
+            monthly: { change: 4.73, chartData: generateChartData(79000, 30, 0.02, 'monthly') },
+            yearly: { change: 5.53, chartData: generateChartData(75000, 12, 0.03, 'yearly') }
+        },
+        extendedReturns: { three: 14.88, six: 19.52, nine: 6.23, twelve: 5.53 },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'kahroba', name: 'کهربا (صندوق طلا کهربا)', icon: '🔶', price: '۱۰۸٬۲۸۱ ریال',
+        aliases: ['کهربا', 'صندوق طلا کهربا'],
+        description: 'صندوق طلا کهربا با تمرکز بر قراردادهای سلف و گواهی سپرده، بازدهی بالایی در دوره‌های میان‌مدت به ثبت رسانده است.',
+        marketCap: '۲.۴۵ هزار میلیارد تومان', volume24h: '۳۱۰ میلیارد تومان', circulatingSupply: '۲۷۰ میلیون واحد',
+        performance: {
+            daily: { change: 0.34, chartData: generateChartData(108281, 24, 0.012, 'daily') },
+            weekly: { change: 1.69, chartData: generateChartData(105000, 7, 0.018, 'weekly') },
+            monthly: { change: 7.55, chartData: generateChartData(100000, 30, 0.025, 'monthly') },
+            yearly: { change: 17.57, chartData: generateChartData(91000, 12, 0.035, 'yearly') }
+        },
+        extendedReturns: { three: 24.42, six: 27.66, nine: 15.62, twelve: 17.57 },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'lotus-gold', name: 'پشتوانه طلای لوتوس', icon: '🥇', price: '۸۰۳٬۶۷۷ ریال',
+        aliases: ['لوتوس طلا', 'پشتوانه طلای لوتوس'],
+        description: 'صندوق کالایی پشتوانه طلای لوتوس با سبدی از گواهی سپرده سکه و اوراق خزانه، گزینه‌ای محبوب برای پوشش ریسک تورم است.',
+        marketCap: '۳.۸ هزار میلیارد تومان', volume24h: '۴۵۰ میلیارد تومان', circulatingSupply: '۱۴۰ میلیون واحد',
+        performance: {
+            daily: { change: 0.25, chartData: generateChartData(803677, 24, 0.012, 'daily') },
+            weekly: { change: 1.26, chartData: generateChartData(780000, 7, 0.017, 'weekly') },
+            monthly: { change: 5.59, chartData: generateChartData(730000, 30, 0.022, 'monthly') },
+            yearly: { change: 11.98, chartData: generateChartData(700000, 12, 0.032, 'yearly') }
+        },
+        extendedReturns: { three: 17.73, six: 22.45, nine: 10.33, twelve: 11.98 },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'mesghal', name: 'مثقال (صندوق طلا مثقال)', icon: '⚖️', price: '۹۰٬۵۳۹ ریال',
+        aliases: ['مثقال', 'صندوق طلا مثقال'],
+        description: 'صندوق مثقال با استراتژی مدیریت فعال و پوشش آتی‌ها، نقدشوندگی بالا و بازدهی پایدار را هدف گرفته است.',
+        marketCap: '۲.۱ هزار میلیارد تومان', volume24h: '۲۴۰ میلیارد تومان', circulatingSupply: '۲۲۰ میلیون واحد',
+        performance: {
+            daily: { change: 0.26, chartData: generateChartData(90539, 24, 0.011, 'daily') },
+            weekly: { change: 1.31, chartData: generateChartData(89000, 7, 0.017, 'weekly') },
+            monthly: { change: 5.82, chartData: generateChartData(86000, 30, 0.022, 'monthly') },
+            yearly: { change: 9.3, chartData: generateChartData(82000, 12, 0.03, 'yearly') }
+        },
+        extendedReturns: { three: 18.48, six: 24.35, nine: 11.37, twelve: 9.3 },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'ganj', name: 'گنج (صندوق طلا گنجینه طلا)', icon: '💰', price: '۹۵٬۹۹۸ ریال',
+        aliases: ['گنج', 'صندوق گنجینه طلا'],
+        description: 'صندوق گنج با تمرکز بر ابزارهای مشتقه طلا، رشد چشمگیر ۶ و ۹ ماهه را برای سرمایه‌گذاران به همراه داشته است.',
+        marketCap: '۲.۸ هزار میلیارد تومان', volume24h: '۳۶۰ میلیارد تومان', circulatingSupply: '۲۴۰ میلیون واحد',
+        performance: {
+            daily: { change: 0.36, chartData: generateChartData(95998, 24, 0.013, 'daily') },
+            weekly: { change: 1.8, chartData: generateChartData(94000, 7, 0.019, 'weekly') },
+            monthly: { change: 8.04, chartData: generateChartData(90000, 30, 0.025, 'monthly') },
+            yearly: { change: 21.61, chartData: generateChartData(83000, 12, 0.035, 'yearly') }
+        },
+        extendedReturns: { three: 26.1, six: 32.74, nine: 19.31, twelve: 21.61 },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'gohar-gold', name: 'گوهر (صندوق طلای کیان)', icon: '🔶', price: '۵۳۸٬۰۴۰ ریال',
+        aliases: ['گوهر', 'صندوق طلای کیان'],
+        description: 'صندوق گوهر با ترکیب سپرده‌های طلا و سکه کیان، گزینه‌ای مناسب برای سرمایه‌گذاران بلندمدت محسوب می‌شود.',
+        marketCap: '۲.۹ هزار میلیارد تومان', volume24h: '۳۳۰ میلیارد تومان', circulatingSupply: '۱۱۰ میلیون واحد',
+        performance: {
+            daily: { change: 0.22, chartData: generateChartData(538040, 24, 0.011, 'daily') },
+            weekly: { change: 1.1, chartData: generateChartData(520000, 7, 0.016, 'weekly') },
+            monthly: { change: 4.85, chartData: generateChartData(500000, 30, 0.021, 'monthly') },
+            yearly: { change: 13.05, chartData: generateChartData(470000, 12, 0.03, 'yearly') }
+        },
+        extendedReturns: { three: 15.26, six: 20.72, nine: 7.92, twelve: 13.05 },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'alton', name: 'آلتون (صندوق طلای زر)', icon: '🟡', price: '۳۵٬۸۷۰ ریال',
+        aliases: ['آلتون', 'صندوق زر'],
+        description: 'صندوق آلتون با تمرکز بر اوراق مبتنی بر طلا و استراتژی پوشش ریسک، بازدهی باثباتی در دوره‌های میان‌مدت ارائه داده است.',
+        marketCap: '۱.۲ هزار میلیارد تومان', volume24h: '۱۸۰ میلیارد تومان', circulatingSupply: '۳۱۰ میلیون واحد',
+        performance: {
+            daily: { change: 0.33, chartData: generateChartData(35870, 24, 0.012, 'daily') },
+            weekly: { change: 1.65, chartData: generateChartData(34500, 7, 0.018, 'weekly') },
+            monthly: { change: 7.35, chartData: generateChartData(33000, 30, 0.024, 'monthly') },
+            yearly: { change: 14.57, chartData: generateChartData(30500, 12, 0.032, 'yearly') }
+        },
+        extendedReturns: { three: 23.71, six: 24.64, nine: 10.91, twelve: 14.57 },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'nafis', name: 'نفیس (صندوق طلای نفیس)', icon: '🧿', price: '۶۵٬۱۹۵ ریال',
+        aliases: ['نفیس', 'صندوق طلای نفیس'],
+        description: 'صندوق نفیس با ترکیب گواهی سپرده و قراردادهای آتی، رویکردی متعادل برای بهره‌گیری از نوسانات طلا ارائه می‌دهد.',
+        marketCap: '۱.۶ هزار میلیارد تومان', volume24h: '۲۶۰ میلیارد تومان', circulatingSupply: '۳۴۰ میلیون واحد',
+        performance: {
+            daily: { change: 0.25, chartData: generateChartData(65195, 24, 0.011, 'daily') },
+            weekly: { change: 1.23, chartData: generateChartData(64000, 7, 0.017, 'weekly') },
+            monthly: { change: 5.45, chartData: generateChartData(61000, 30, 0.022, 'monthly') },
+            yearly: { change: 19.22, chartData: generateChartData(56000, 12, 0.033, 'yearly') }
+        },
+        extendedReturns: { three: 17.27, six: 19.51, nine: 11.5, twelve: 19.22 },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'zarafshan', name: 'زر افشان امید ایرانیان', icon: '✨', price: '۴۸۷٬۹۸۰ ریال',
+        aliases: ['زر افشان', 'صندوق زر افشان امید ایرانیان'],
+        description: 'صندوق زر افشان با تمرکز بر سکه طلا و قراردادهای مشتقه، ابزاری مناسب برای سرمایه‌گذاران محافظه‌کار است.',
+        marketCap: '۲.۳ هزار میلیارد تومان', volume24h: '۲۸۰ میلیارد تومان', circulatingSupply: '۱۲۰ میلیون واحد',
+        performance: {
+            daily: { change: 0.23, chartData: generateChartData(487980, 24, 0.011, 'daily') },
+            weekly: { change: 1.18, chartData: generateChartData(470000, 7, 0.016, 'weekly') },
+            monthly: { change: 5.2, chartData: generateChartData(445000, 30, 0.021, 'monthly') },
+            yearly: { change: 13.66, chartData: generateChartData(420000, 12, 0.03, 'yearly') }
+        },
+        extendedReturns: { three: 16.42, six: 21.18, nine: 7.95, twelve: 13.66 },
+        category: 'صندوق‌ها'
+    },
+    {
         id: 'yaghoot', name: 'صندوق طلا یاقوت', icon: '💎', price: '۳۴,۸۰۰ ریال',
         aliases: ['یاقوت', 'صندوق یاقوت'],
         description: 'صندوق سرمایه‌گذاری طلا یاقوت با پشتوانه سکه و گواهی سپرده به دنبال ارائه بازدهی نزدیک به بازار طلای داخلی است.',
@@ -159,16 +285,17 @@ export const fundAssets: MarketAsset[] = [
         category: 'صندوق‌ها'
     },
     {
-        id: 'ayar', name: 'صندوق طلا عیار', icon: '💰', price: '۱۵,۳۲۰ ریال',
-        aliases: ['عیار', 'صندوق طلا', 'طلا عیار'],
-        description: 'صندوق سرمایه‌گذاری طلا با پشتوانه سکه طلا که امکان سرمایه‌گذاری در طلا را با مبالغ کم فراهم می‌کند.',
-        marketCap: '۲ هزار میلیارد تومان', volume24h: '۵۰ میلیارد تومان', circulatingSupply: '۱.۳ میلیارد واحد',
+        id: 'ayar', name: 'صندوق طلا عیار', icon: '💰', price: '۳۰۸٬۸۵۹ ریال',
+        aliases: ['عیار', 'صندوق طلا عیار'],
+        description: 'صندوق طلا عیار با ترکیب اوراق سکه و قراردادهای آتی، بازدهی متوازنی در افق‌های ۳ تا ۱۲ ماهه ارائه می‌کند.',
+        marketCap: '۵.۲ هزار میلیارد تومان', volume24h: '۴۲۰ میلیارد تومان', circulatingSupply: '۱۰۰ میلیون واحد',
         performance: {
-            daily: { change: 0.8, chartData: generateChartData(15200, 24, 0.01, 'daily') },
-            weekly: { change: 1.2, chartData: generateChartData(15100, 7, 0.02, 'weekly') },
-            monthly: { change: 2.5, chartData: generateChartData(14900, 30, 0.04, 'monthly') },
-            yearly: { change: 22.0, chartData: generateChartData(12500, 12, 0.06, 'yearly') }
+            daily: { change: 0.3, chartData: generateChartData(308859, 24, 0.012, 'daily') },
+            weekly: { change: 1.52, chartData: generateChartData(300000, 7, 0.017, 'weekly') },
+            monthly: { change: 6.78, chartData: generateChartData(285000, 30, 0.022, 'monthly') },
+            yearly: { change: 14.1, chartData: generateChartData(270000, 12, 0.03, 'yearly') }
         },
+        extendedReturns: { three: 21.74, six: 27.26, nine: 12.01, twelve: 14.1 },
         category: 'صندوق‌ها'
     },
      {

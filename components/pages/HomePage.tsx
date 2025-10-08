@@ -203,29 +203,29 @@ interface HotSpotlight {
 
 const hotSpotlightItems: HotSpotlight[] = [
   {
-    id: 'growth-leader',
-    title: 'پیشتاز رشد',
-    subtitle: 'صندوق اهرمی شتاب در ۲۴ ساعت اخیر',
-    asset: 'صندوق اهرمی شتاب',
-    change: 3.5,
+    id: 'index-leader',
+    title: 'رهبر شاخص',
+    subtitle: 'فارس امروز با رشد ۸٫۶۵٪ در صدر نمادهای شاخص‌ساز قرار گرفت.',
+    asset: 'فارس',
+    change: 8.65,
     tone: 'up',
+  },
+  {
+    id: 'gold-fund',
+    title: 'طلایی‌ترین صندوق',
+    subtitle: 'گنج در بازه شش‌ماهه ۳۲٫۷۴٪ بازدهی داشته است.',
+    asset: 'گنج',
+    change: 32.74,
+    tone: 'up',
+    tag: '۶ ماهه',
   },
   {
     id: 'sell-pressure',
-    title: 'بیشترین فشار فروش',
-    subtitle: 'BNB نیازمند پایش دقیق است.',
-    asset: 'BNB',
-    change: -2.8,
+    title: 'نیازمند پایش',
+    subtitle: 'شبندر پس از افت ۴٫۱۶٪ امروز زیر ذره‌بین قرار دارد.',
+    asset: 'شبندر',
+    change: -4.16,
     tone: 'down',
-  },
-  {
-    id: 'commodity-leader',
-    title: 'رهبر بازار کالایی',
-    subtitle: 'بازار کالایی در روزانه اخیر',
-    asset: 'زعفران نگین',
-    change: 2.3,
-    tone: 'up',
-    tag: 'امروز',
   },
 ];
 
@@ -255,6 +255,123 @@ const hotSpotlightToneMap: Record<HighlightTone, { text: string; chip: string; t
     chip: 'border border-amber-400/45 bg-amber-500/10 text-amber-200',
     tone: 'alert',
   },
+};
+
+interface IndexMakerDefinition {
+  id: string;
+  symbol: string;
+  company: string;
+  industry: string;
+}
+
+type IndexMakerMetrics = {
+  daily: number;
+  weekly: number;
+  monthly: number;
+  yearly: number;
+};
+
+interface GoldFundDefinition {
+  id: string;
+  name: string;
+  focus: string;
+}
+
+type GoldFundReturns = {
+  three: number;
+  six: number;
+  nine: number;
+  twelve: number;
+};
+
+const indexMakerDefinitions: IndexMakerDefinition[] = [
+  {
+    id: 'fars',
+    symbol: 'فارس',
+    company: 'صنایع پتروشیمی خلیج فارس',
+    industry: 'پتروشیمی',
+  },
+  {
+    id: 'foolad',
+    symbol: 'فولاد',
+    company: 'فولاد مبارکه اصفهان',
+    industry: 'فولاد',
+  },
+  {
+    id: 'fameli',
+    symbol: 'فملی',
+    company: 'ملی صنایع مس ایران',
+    industry: 'فلزات اساسی',
+  },
+  {
+    id: 'kegol',
+    symbol: 'کگل',
+    company: 'معدنی و صنعتی گل‌گهر',
+    industry: 'سنگ آهن',
+  },
+  {
+    id: 'tapico',
+    symbol: 'تاپیکو',
+    company: 'سرمایه‌گذاری نفت و گاز و پتروشیمی تأمین',
+    industry: 'هلدینگ پتروشیمی',
+  },
+  {
+    id: 'shepna',
+    symbol: 'شپنا',
+    company: 'پالایش نفت اصفهان',
+    industry: 'پالایشی',
+  },
+  {
+    id: 'kchad',
+    symbol: 'کچاد',
+    company: 'معدنی و صنعتی چادرملو',
+    industry: 'سنگ آهن',
+  },
+  {
+    id: 'midco',
+    symbol: 'میدکو',
+    company: 'توسعه معادن و صنایع معدنی خاورمیانه',
+    industry: 'هلدینگ معدنی',
+  },
+  {
+    id: 'vghadir',
+    symbol: 'وغدیر',
+    company: 'سرمایه‌گذاری غدیر',
+    industry: 'هلدینگ سرمایه‌گذاری',
+  },
+  {
+    id: 'shbandar',
+    symbol: 'شبندر',
+    company: 'پالایش نفت بندرعباس',
+    industry: 'پالایشی',
+  },
+];
+
+const goldFundDefinitions: GoldFundDefinition[] = [
+  { id: 'zarfam', name: 'زرفام', focus: 'صندوق طلا' },
+  { id: 'kahroba', name: 'کهربا', focus: 'صندوق طلا' },
+  { id: 'lotus-gold', name: 'لوتوس', focus: 'صندوق کالایی طلا' },
+  { id: 'mesghal', name: 'مثقال', focus: 'صندوق طلا' },
+  { id: 'ganj', name: 'گنج', focus: 'صندوق طلا' },
+  { id: 'gohar-gold', name: 'گوهر', focus: 'صندوق طلا' },
+  { id: 'alton', name: 'آلتون', focus: 'صندوق طلا' },
+  { id: 'nafis', name: 'نفیس', focus: 'صندوق طلا' },
+  { id: 'zarafshan', name: 'زر افشان', focus: 'صندوق طلا' },
+  { id: 'ayar', name: 'عیار', focus: 'صندوق طلا' },
+];
+
+const indexTimeframeLabels: Record<keyof IndexMakerDefinition['metrics'], string> = {
+  daily: 'روزانه',
+  weekly: 'هفتگی',
+  monthly: 'ماهانه',
+  yearly: 'سالیانه',
+};
+
+const goldReturnLabels: Record<keyof GoldFundDefinition['returns'], string> = {
+  three: '۳ ماهه',
+  six: '۶ ماهه',
+  nine: '۹ ماهه',
+  twelve: '۱۲ ماهه',
 };
 
 // Consolidated market events for the sidebar feed
@@ -292,6 +409,14 @@ const HomePage: React.FC<HomePageProps> = ({
     const formatted = `${prefix}${magnitude.toFixed(magnitude >= 1 ? 1 : 2)}`;
     return `${toPersianDigits(formatted)}٪`;
   }, []);
+
+  const getChangeChipClasses = useCallback(
+    (value: number) =>
+      value >= 0
+        ? 'border border-neo-green/35 bg-neo-green/10 text-neo-green'
+        : 'border border-rose-400/45 bg-rose-500/10 text-rose-100',
+    [],
+  );
 
   const portfolioReturnInsights = useMemo<PortfolioReturnInsight[]>(
     () => [
@@ -338,6 +463,58 @@ const HomePage: React.FC<HomePageProps> = ({
       },
     ],
     []
+  );
+
+  const indexMakerHighlights = useMemo(
+    () =>
+      indexMakerDefinitions
+        .map((definition) => {
+          const asset = marketAssets.find((item) => item.id === definition.id);
+          if (!asset) {
+            return null;
+          }
+
+          const metrics: IndexMakerMetrics = {
+            daily: asset.performance?.daily?.change ?? 0,
+            weekly: asset.performance?.weekly?.change ?? 0,
+            monthly: asset.performance?.monthly?.change ?? 0,
+            yearly: asset.performance?.yearly?.change ?? 0,
+          };
+
+          return { ...definition, asset, metrics };
+        })
+        .filter(
+          (
+            value,
+          ): value is IndexMakerDefinition & { asset: MarketAsset; metrics: IndexMakerMetrics } => Boolean(value),
+        ),
+    [marketAssets],
+  );
+
+  const goldFundHighlights = useMemo(
+    () =>
+      goldFundDefinitions
+        .map((definition) => {
+          const asset = marketAssets.find((item) => item.id === definition.id);
+          if (!asset) {
+            return null;
+          }
+
+          const returns = asset.extendedReturns ?? {
+            three: asset.performance?.daily?.change ?? 0,
+            six: asset.performance?.weekly?.change ?? 0,
+            nine: asset.performance?.monthly?.change ?? 0,
+            twelve: asset.performance?.yearly?.change ?? 0,
+          };
+
+          return { ...definition, asset, returns };
+        })
+        .filter(
+          (
+            value,
+          ): value is GoldFundDefinition & { asset: MarketAsset; returns: GoldFundReturns } => Boolean(value),
+        ),
+    [marketAssets],
   );
 
   const ideaTabHighlights = useMemo<TabHighlight[]>(() => {
@@ -701,13 +878,132 @@ const HomePage: React.FC<HomePageProps> = ({
     </>
   );
 
+  const handleAssetQuickView = useCallback(
+    (asset: MarketAsset) => {
+      onStockSelect({
+        id: asset.id,
+        name: asset.name,
+        value: asset.price,
+        status: asset.performance.daily.change >= 0 ? 'up' : 'down',
+        change: `${asset.performance.daily.change >= 0 ? '+' : ''}${asset.performance.daily.change.toFixed(2)}%`,
+        chartData: asset.performance.daily.chartData ?? [],
+      });
+    },
+    [onStockSelect],
+  );
+
   const renderRightPanels = () => (
     <>
+      {indexMakerHighlights.length > 0 && (
+        <div className={homeCard('sm:p-5 space-y-4', 'default', 'md')}>
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-sm font-semibold text-white md:text-base">شاخص‌سازان برتر</h3>
+            <span className="text-[11px] text-gray-400">به‌روزرسانی ۱۶ مهر ۱۴۰۴</span>
+          </div>
+          <div className="space-y-3">
+            {indexMakerHighlights.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handleAssetQuickView(item.asset)}
+                className={clsx(
+                  'flex w-full flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-right transition-all duration-300 hover:-translate-y-0.5 hover:border-neo-green/40 hover:bg-white/10',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60',
+                )}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex flex-col items-end gap-1">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                      {typeof item.asset.icon === 'string' ? (
+                        <span className="text-base leading-none">{item.asset.icon}</span>
+                      ) : (
+                        item.asset.icon
+                      )}
+                      <span>{item.company}</span>
+                    </div>
+                    <span className="text-[11px] text-gray-400">{item.industry}</span>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-semibold text-white">{item.asset.price}</div>
+                    <div className={`text-xs ${item.metrics.daily >= 0 ? 'text-neo-green' : 'text-rose-300'}`}>
+                      {formatSpotlightPercent(item.metrics.daily)}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-wrap justify-end gap-1.5 text-[11px]">
+                  {(Object.entries(item.metrics) as [keyof IndexMakerDefinition['metrics'], number][]).map(([key, value]) => (
+                    <span
+                      key={`${item.id}-${key}`}
+                      className={clsx(
+                        'inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-semibold',
+                        getChangeChipClasses(value),
+                      )}
+                    >
+                      <span>{indexTimeframeLabels[key]}</span>
+                      <span>{formatSpotlightPercent(value)}</span>
+                    </span>
+                  ))}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       <Suspense fallback={<Skeleton className="h-[26rem] rounded-3xl" />}>
         <div className={homeCard('sm:p-5 w-full min-w-0', 'default', 'md')}>
           <MarketSummary items={marketSummaryItems} onItemClick={onMarketSummarySelect} columns={1} />
         </div>
       </Suspense>
+      {goldFundHighlights.length > 0 && (
+        <div className={homeCard('sm:p-5 space-y-4', 'muted', 'sm')}>
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-sm font-semibold text-white md:text-base">صندوق‌های طلایی پربازده</h3>
+            <span className="text-[11px] text-gray-400">آمار ۱۶ مهر ۱۴۰۴</span>
+          </div>
+          <div className="space-y-3">
+            {goldFundHighlights.map((fund) => (
+              <button
+                key={fund.id}
+                type="button"
+                onClick={() => handleAssetQuickView(fund.asset)}
+                className={clsx(
+                  'flex w-full flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-right transition-all duration-300 hover:-translate-y-0.5 hover:border-neo-green/40 hover:bg-white/10',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60',
+                )}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                    {typeof fund.asset.icon === 'string' ? (
+                      <span className="text-base leading-none">{fund.asset.icon}</span>
+                    ) : (
+                      fund.asset.icon
+                    )}
+                    <span>{fund.name}</span>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-semibold text-white">{fund.asset.price}</div>
+                    <div className="text-[11px] text-gray-400">{fund.focus}</div>
+                  </div>
+                </div>
+                <div className="flex flex-wrap justify-end gap-1.5 text-[11px]">
+                  {(Object.entries(fund.returns) as [keyof GoldFundDefinition['returns'], number][]).map(([key, value]) => (
+                    <span
+                      key={`${fund.id}-${key}`}
+                      className={clsx(
+                        'inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-semibold',
+                        getChangeChipClasses(value),
+                      )}
+                    >
+                      <span>{goldReturnLabels[key]}</span>
+                      <span>{formatSpotlightPercent(value)}</span>
+                    </span>
+                  ))}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       <TechnicalSummaryPanel signals={marketTechnicalSummary} className="mt-0" />
     </>
   );

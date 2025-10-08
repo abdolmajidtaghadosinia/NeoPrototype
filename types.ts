@@ -62,6 +62,12 @@ export interface MarketAsset {
     monthly: PerformanceData;
     yearly: PerformanceData;
   };
+  extendedReturns?: {
+    three: number;
+    six: number;
+    nine: number;
+    twelve: number;
+  };
   rsi?: number;
 }
 
