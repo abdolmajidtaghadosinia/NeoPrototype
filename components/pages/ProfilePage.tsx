@@ -106,16 +106,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
     >
       <div className="grid gap-6 xl:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
         <SurfaceCard tone="elevated" padding="lg" className="space-y-6">
-          <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-right xl:flex-col xl:items-end">
-            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full ring-4 ring-[color:rgba(var(--neo-accent),0.15)] shadow-[var(--neo-surface-shadow)]">
+          <div className="flex flex-col items-stretch gap-6 text-right sm:flex-row sm:items-center sm:justify-between xl:flex-col xl:items-end">
+            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full ring-4 ring-[color:rgba(var(--neo-accent),0.15)] shadow-[var(--neo-surface-shadow)] sm:h-28 sm:w-28">
               <img src={user.picture} alt="User Profile" className="h-full w-full object-cover" />
             </div>
-            <div className="space-y-4 text-right sm:flex-1 xl:w-full">
+            <div className="flex w-full flex-col gap-4 text-right sm:flex-1 xl:w-full">
               <div className="space-y-1">
-                <h2 className="text-2xl font-bold text-[rgb(var(--neo-text-strong))]">{user.name}</h2>
-                <p className="text-sm text-[rgb(var(--neo-text-secondary))]">{user.email}</p>
+                <h2 className="text-xl font-bold text-[rgb(var(--neo-text-strong))] sm:text-2xl">{user.name}</h2>
+                <p className="text-sm text-[rgb(var(--neo-text-secondary))] sm:text-[0.95rem]">{user.email}</p>
               </div>
-              <div className="grid grid-cols-2 gap-3 text-right text-sm">
+              <div className="grid grid-cols-1 gap-3 text-right text-sm sm:grid-cols-2">
                 {quickFacts.map((fact) => (
                   <div
                     key={fact.label}
@@ -135,14 +135,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap justify-end gap-3">
-            <button className="neo-pill-button" type="button">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:flex-wrap sm:justify-end">
+            <button className="neo-pill-button w-full sm:w-auto" type="button">
               مدیریت پروفایل
             </button>
-            <button className="neo-pill-button" type="button">
+            <button className="neo-pill-button w-full sm:w-auto" type="button">
               تنظیمات امنیتی
             </button>
-            <button className="neo-pill-button" type="button">
+            <button className="neo-pill-button w-full sm:w-auto" type="button">
               ارسال درخواست پشتیبانی
             </button>
           </div>
