@@ -24,6 +24,8 @@ interface TradeListProps {
   onSelectTrade?: (trade: TradeRecord) => void;
   /** visual density variant */
   variant?: 'default' | 'compact';
+  /** toggles rendering of the relative time metadata */
+  showTime?: boolean;
   /** optional className override for the container */
   className?: string;
 }
@@ -52,6 +54,7 @@ const TradeList: React.FC<TradeListProps> = ({
   limit = 3,
   onSelectTrade,
   variant = 'default',
+  showTime = true,
   className,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -94,9 +97,11 @@ const TradeList: React.FC<TradeListProps> = ({
                         <span className={clsx('h-1.5 w-1.5 rounded-full', status.dot)} aria-hidden="true" />
                         <span className={clsx('font-medium', status.textClass)}>{status.text}</span>
                       </div>
-                      <span className="max-w-full text-right text-[10px] leading-tight text-[rgb(var(--neo-text-tertiary))] break-words sm:text-[11px]">
-                        {t.time}
-                      </span>
+                      {showTime && t.time && (
+                        <span className="max-w-full text-right text-[10px] leading-tight text-[rgb(var(--neo-text-tertiary))] break-words sm:text-[11px]">
+                          {t.time}
+                        </span>
+                      )}
                     </div>
                     <p
                       className={clsx(

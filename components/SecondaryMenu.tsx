@@ -102,7 +102,13 @@ const SecondaryMenu: React.FC<SecondaryMenuProps> = ({
         ))}
       </div>
       <div className="mt-auto border-t border-gray-800 px-2 overflow-y-auto">
-        <TradeList trades={sampleTrades} limit={4} onSelectTrade={onTradeClick} variant="compact" />
+        <TradeList
+          trades={sampleTrades}
+          limit={4}
+          onSelectTrade={onTradeClick}
+          variant="compact"
+          showTime={false}
+        />
       </div>
     </aside>
   );
