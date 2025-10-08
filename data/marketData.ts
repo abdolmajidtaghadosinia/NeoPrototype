@@ -603,43 +603,43 @@ export const marketMapData: MarketMapSector[] = [
     {
         name: 'صندوق قابل معامله',
         stocks: [
-            { name: 'یاقوت', change: 33.47, size: 'xl' },
-            { name: 'افران', change: 34.07, size: 'xl' },
-            { name: 'فیروزا', change: 34.37, size: 'xl' },
-            { name: 'کارا', change: 33.97, size: 'lg' },
-            { name: 'ماهور', change: 34.54, size: 'lg' },
-            { name: 'ارکیده', change: 34.74, size: 'lg' },
-            { name: 'موج', change: 33.77, size: 'lg' },
-            { name: 'کمند', change: 2.26, size: 'md' },
-            { name: 'کلید', change: 5.50, size: 'md' },
-            { name: 'پارند', change: 2.17, size: 'md' },
-            { name: 'اهرم', change: 8.62, size: 'lg' },
-            { name: 'همای', change: -0.09, size: 'md' },
-            { name: 'کیان', change: 33.81, size: 'lg' },
+            { id: 'yaghoot', name: 'یاقوت', change: 33.47, size: 'xl' },
+            { id: 'afran', name: 'افران', change: 34.07, size: 'xl' },
+            { id: 'firooza', name: 'فیروزا', change: 34.37, size: 'xl' },
+            { id: 'kara', name: 'کارا', change: 33.97, size: 'lg' },
+            { id: 'mahoor', name: 'ماهور', change: 34.54, size: 'lg' },
+            { id: 'orkideh', name: 'ارکیده', change: 34.74, size: 'lg' },
+            { id: 'moj', name: 'موج', change: 33.77, size: 'lg' },
+            { id: 'kamand', name: 'کمند', change: 2.26, size: 'md' },
+            { id: 'kelid', name: 'کلید', change: 5.5, size: 'md' },
+            { id: 'parand', name: 'پارند', change: 2.17, size: 'md' },
+            { id: 'ahram', name: 'اهرم', change: 8.62, size: 'lg' },
+            { id: 'homay', name: 'همای', change: -0.09, size: 'md' },
+            { id: 'kian', name: 'کیان', change: 33.81, size: 'lg' },
         ],
     },
     {
         name: 'بانکی',
         stocks: [
-            { name: 'وبملت', change: 73.88, size: 'xl' },
-            { name: 'وتجارت', change: 21.74, size: 'lg' },
-            { name: 'وبصادر', change: 13.37, size: 'md' },
+            { id: 'webmelat', name: 'وبملت', change: 73.88, size: 'xl' },
+            { id: 'tejarat', name: 'وتجارت', change: 21.74, size: 'lg' },
+            { id: 'saderat', name: 'وبصادر', change: 13.37, size: 'md' },
         ],
     },
     {
         name: 'فلزات',
         stocks: [
-            { name: 'فملی', change: 24.97, size: 'lg' },
-            { name: 'فولاد', change: -16.58, size: 'lg' },
-            { name: 'ذوب', change: 10.24, size: 'md' },
+            { id: 'fameli', name: 'فملی', change: 24.97, size: 'lg' },
+            { id: 'foolad', name: 'فولاد', change: -16.58, size: 'lg' },
+            { id: 'zoob', name: 'ذوب', change: 10.24, size: 'md' },
         ],
     },
     {
         name: 'خودرویی',
         stocks: [
-            { name: 'خودرو', change: 37.15, size: 'xl' },
-            { name: 'خساپا', change: 35.97, size: 'lg' },
-            { name: 'خگستر', change: -3.36, size: 'md' },
+            { id: 'khodro', name: 'خودرو', change: 37.15, size: 'xl' },
+            { id: 'khsaipa', name: 'خساپا', change: 35.97, size: 'lg' },
+            { id: 'khgostar', name: 'خگستر', change: -3.36, size: 'md' },
         ],
     },
 ];
@@ -781,7 +781,228 @@ export const staticMarketData: MarketAsset[] = [
         },
         category: 'بورس'
     },
+    {
+        id: 'tejarat', name: 'وتجارت (بانک تجارت)', icon: '🏦', price: '۱,۸۹۰ ریال',
+        aliases: ['وتجارت', 'بانک تجارت'],
+        description: 'بانک تجارت یکی از بانک‌های بزرگ تجاری ایران است که شبکه گسترده‌ای از شعب را در سراسر کشور اداره می‌کند.',
+        marketCap: '۱۱۰ هزار میلیارد ریال', volume24h: '۶۲۰ میلیارد ریال', circulatingSupply: '۵۸ میلیارد سهم',
+        performance: {
+            daily: { change: 21.74, chartData: generateChartData(1890, 24, 0.05, 'daily') },
+            weekly: { change: 18.2, chartData: generateChartData(1750, 7, 0.06, 'weekly') },
+            monthly: { change: 35.4, chartData: generateChartData(1620, 30, 0.08, 'monthly') },
+            yearly: { change: 82.0, chartData: generateChartData(1180, 12, 0.12, 'yearly') }
+        },
+        category: 'بورس'
+    },
+    {
+        id: 'saderat', name: 'وبصادر (بانک صادرات ایران)', icon: '🏛️', price: '۱,۵۲۰ ریال',
+        aliases: ['وبصادر', 'بانک صادرات'],
+        description: 'بانک صادرات ایران از قدیمی‌ترین بانک‌های کشور است و خدمات ارزی و ریالی گسترده‌ای ارائه می‌دهد.',
+        marketCap: '۹۵ هزار میلیارد ریال', volume24h: '۴۴۰ میلیارد ریال', circulatingSupply: '۶۵ میلیارد سهم',
+        performance: {
+            daily: { change: 13.37, chartData: generateChartData(1520, 24, 0.035, 'daily') },
+            weekly: { change: 10.4, chartData: generateChartData(1450, 7, 0.05, 'weekly') },
+            monthly: { change: 22.8, chartData: generateChartData(1340, 30, 0.07, 'monthly') },
+            yearly: { change: 64.0, chartData: generateChartData(980, 12, 0.11, 'yearly') }
+        },
+        category: 'بورس'
+    },
+    {
+        id: 'zoob', name: 'ذوب (ذوب آهن اصفهان)', icon: '🔥', price: '۲,۸۴۰ ریال',
+        aliases: ['ذوب', 'ذوب آهن'],
+        description: 'شرکت ذوب آهن اصفهان تولیدکننده محصولات فولادی طویل و ریل راه‌آهن در ایران است.',
+        marketCap: '۹۰ هزار میلیارد ریال', volume24h: '۵۸۰ میلیارد ریال', circulatingSupply: '۳۲ میلیارد سهم',
+        performance: {
+            daily: { change: 10.24, chartData: generateChartData(2840, 24, 0.028, 'daily') },
+            weekly: { change: 6.5, chartData: generateChartData(2700, 7, 0.04, 'weekly') },
+            monthly: { change: 14.2, chartData: generateChartData(2550, 30, 0.06, 'monthly') },
+            yearly: { change: 48.0, chartData: generateChartData(2000, 12, 0.1, 'yearly') }
+        },
+        category: 'بورس'
+    },
+    {
+        id: 'khsaipa', name: 'خساپا (سایپا)', icon: '🚙', price: '۱,۸۶۰ ریال',
+        aliases: ['خساپا', 'سایپا'],
+        description: 'شرکت خودروسازی سایپا دومین خودروساز بزرگ ایران است و محصولات متنوع سواری و تجاری عرضه می‌کند.',
+        marketCap: '۱۳۰ هزار میلیارد ریال', volume24h: '۸۱۰ میلیارد ریال', circulatingSupply: '۷۰ میلیارد سهم',
+        performance: {
+            daily: { change: 35.97, chartData: generateChartData(1860, 24, 0.06, 'daily') },
+            weekly: { change: 28.5, chartData: generateChartData(1700, 7, 0.07, 'weekly') },
+            monthly: { change: 41.2, chartData: generateChartData(1550, 30, 0.09, 'monthly') },
+            yearly: { change: 95.0, chartData: generateChartData(1100, 12, 0.14, 'yearly') }
+        },
+        category: 'بورس'
+    },
+    {
+        id: 'khgostar', name: 'خگستر (گسترش سرمایه‌گذاری ایران خودرو)', icon: '🧩', price: '۶,۷۲۰ ریال',
+        aliases: ['خگستر', 'سرمایه‌گذاری ایران خودرو'],
+        description: 'شرکت گسترش سرمایه‌گذاری ایران خودرو بازوی سرمایه‌گذاری و مالی گروه ایران خودرو است.',
+        marketCap: '۷۵ هزار میلیارد ریال', volume24h: '۳۹۰ میلیارد ریال', circulatingSupply: '۱۱ میلیارد سهم',
+        performance: {
+            daily: { change: -3.36, chartData: generateChartData(6720, 24, 0.025, 'daily') },
+            weekly: { change: 2.5, chartData: generateChartData(6600, 7, 0.04, 'weekly') },
+            monthly: { change: 7.8, chartData: generateChartData(6400, 30, 0.06, 'monthly') },
+            yearly: { change: 38.0, chartData: generateChartData(5200, 12, 0.1, 'yearly') }
+        },
+        category: 'بورس'
+    },
     // صندوق‌ها
+    {
+        id: 'yaghoot', name: 'صندوق طلا یاقوت', icon: '💎', price: '۳۴,۸۰۰ ریال',
+        aliases: ['یاقوت', 'صندوق یاقوت'],
+        description: 'صندوق سرمایه‌گذاری طلا یاقوت با پشتوانه سکه و گواهی سپرده به دنبال ارائه بازدهی نزدیک به بازار طلای داخلی است.',
+        marketCap: '۱.۸ هزار میلیارد تومان', volume24h: '۱۴۰ میلیارد تومان', circulatingSupply: '۵۲۰ میلیون واحد',
+        performance: {
+            daily: { change: 33.47, chartData: generateChartData(34800, 24, 0.05, 'daily') },
+            weekly: { change: 45.1, chartData: generateChartData(32000, 7, 0.07, 'weekly') },
+            monthly: { change: 62.3, chartData: generateChartData(29500, 30, 0.09, 'monthly') },
+            yearly: { change: 128.0, chartData: generateChartData(21000, 12, 0.14, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'afran', name: 'صندوق طلا افران', icon: '🧭', price: '۳۵,۲۰۰ ریال',
+        aliases: ['افران', 'صندوق افران'],
+        description: 'صندوق طلا افران روی گواهی سپرده سکه و اوراق مبتنی بر طلا سرمایه‌گذاری می‌کند و مدیریت فعالی دارد.',
+        marketCap: '۱.۵ هزار میلیارد تومان', volume24h: '۱۱۰ میلیارد تومان', circulatingSupply: '۴۴۰ میلیون واحد',
+        performance: {
+            daily: { change: 34.07, chartData: generateChartData(35200, 24, 0.05, 'daily') },
+            weekly: { change: 46.4, chartData: generateChartData(32400, 7, 0.07, 'weekly') },
+            monthly: { change: 59.8, chartData: generateChartData(30100, 30, 0.09, 'monthly') },
+            yearly: { change: 120.0, chartData: generateChartData(21800, 12, 0.14, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'firooza', name: 'صندوق طلا فیروزا', icon: '🔷', price: '۳۵,۵۰۰ ریال',
+        aliases: ['فیروزا', 'صندوق فیروزا'],
+        description: 'صندوق فیروزا یکی از صندوق‌های طلا با نقدشوندگی بالا و تمرکز بر مدیریت فعال ریسک‌های بازار است.',
+        marketCap: '۱.۶ هزار میلیارد تومان', volume24h: '۱۲۰ میلیارد تومان', circulatingSupply: '۴۶۰ میلیون واحد',
+        performance: {
+            daily: { change: 34.37, chartData: generateChartData(35500, 24, 0.05, 'daily') },
+            weekly: { change: 47.0, chartData: generateChartData(32700, 7, 0.07, 'weekly') },
+            monthly: { change: 61.5, chartData: generateChartData(30400, 30, 0.09, 'monthly') },
+            yearly: { change: 122.0, chartData: generateChartData(22000, 12, 0.14, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'kara', name: 'صندوق سهامی کارا', icon: '🛠️', price: '۲۷,۶۰۰ ریال',
+        aliases: ['کارا', 'ETF کارا'],
+        description: 'صندوق سهامی کارا با تمرکز بر صنایع تولیدی و صادراتی مدیریت می‌شود و استراتژی فعال دارد.',
+        marketCap: '۹۸۰ میلیارد تومان', volume24h: '۸۵ میلیارد تومان', circulatingSupply: '۳۵۵ میلیون واحد',
+        performance: {
+            daily: { change: 33.97, chartData: generateChartData(27600, 24, 0.045, 'daily') },
+            weekly: { change: 29.4, chartData: generateChartData(25500, 7, 0.06, 'weekly') },
+            monthly: { change: 48.6, chartData: generateChartData(23600, 30, 0.08, 'monthly') },
+            yearly: { change: 90.0, chartData: generateChartData(18000, 12, 0.12, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'mahoor', name: 'صندوق سهامی ماهور', icon: '🎼', price: '۲۶,۹۰۰ ریال',
+        aliases: ['ماهور', 'ETF ماهور'],
+        description: 'صندوق ماهور ترکیبی از سهام بنیادی و صندوق‌های کالایی را برای ایجاد تعادل ریسک و بازده نگه‌داری می‌کند.',
+        marketCap: '۹۲۰ میلیارد تومان', volume24h: '۷۲ میلیارد تومان', circulatingSupply: '۳۴۰ میلیون واحد',
+        performance: {
+            daily: { change: 34.54, chartData: generateChartData(26900, 24, 0.045, 'daily') },
+            weekly: { change: 31.2, chartData: generateChartData(24800, 7, 0.06, 'weekly') },
+            monthly: { change: 50.4, chartData: generateChartData(22900, 30, 0.08, 'monthly') },
+            yearly: { change: 94.0, chartData: generateChartData(17600, 12, 0.12, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'orkideh', name: 'صندوق سهامی ارکیده', icon: '🌸', price: '۲۸,۴۰۰ ریال',
+        aliases: ['ارکیده', 'ETF ارکیده'],
+        description: 'صندوق ارکیده بر سهام شرکت‌های رشد محور بازار سرمایه ایران تمرکز دارد.',
+        marketCap: '۸۸۰ میلیارد تومان', volume24h: '۶۵ میلیارد تومان', circulatingSupply: '۳۱۰ میلیون واحد',
+        performance: {
+            daily: { change: 34.74, chartData: generateChartData(28400, 24, 0.045, 'daily') },
+            weekly: { change: 30.5, chartData: generateChartData(26200, 7, 0.06, 'weekly') },
+            monthly: { change: 49.1, chartData: generateChartData(24100, 30, 0.08, 'monthly') },
+            yearly: { change: 88.0, chartData: generateChartData(18200, 12, 0.12, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'moj', name: 'صندوق سهامی موج', icon: '🌊', price: '۲۵,۸۰۰ ریال',
+        aliases: ['موج', 'ETF موج'],
+        description: 'صندوق موج با تمرکز بر صنایع صادرات‌محور و دارایی‌های با نقدشوندگی بالا مدیریت می‌شود.',
+        marketCap: '۸۴۰ میلیارد تومان', volume24h: '۶۰ میلیارد تومان', circulatingSupply: '۳۲۰ میلیون واحد',
+        performance: {
+            daily: { change: 33.77, chartData: generateChartData(25800, 24, 0.045, 'daily') },
+            weekly: { change: 27.8, chartData: generateChartData(23800, 7, 0.06, 'weekly') },
+            monthly: { change: 46.2, chartData: generateChartData(22000, 30, 0.08, 'monthly') },
+            yearly: { change: 85.0, chartData: generateChartData(17000, 12, 0.12, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'kelid', name: 'صندوق درآمد ثابت کلید', icon: '🔑', price: '۲۲,۵۰۰ ریال',
+        aliases: ['کلید', 'صندوق کلید'],
+        description: 'صندوق درآمد ثابت کلید با ترکیب اوراق دولتی و شرکتی تلاش می‌کند سودی پایدار بالاتر از سپرده بانکی ارائه دهد.',
+        marketCap: '۱.۲ هزار میلیارد تومان', volume24h: '۵۵ میلیارد تومان', circulatingSupply: '۴۱۰ میلیون واحد',
+        performance: {
+            daily: { change: 5.5, chartData: generateChartData(22500, 24, 0.01, 'daily') },
+            weekly: { change: 7.2, chartData: generateChartData(22200, 7, 0.015, 'weekly') },
+            monthly: { change: 12.8, chartData: generateChartData(21900, 30, 0.02, 'monthly') },
+            yearly: { change: 32.0, chartData: generateChartData(20000, 12, 0.04, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'parand', name: 'صندوق درآمد ثابت پارند', icon: '🪶', price: '۲۱,۸۰۰ ریال',
+        aliases: ['پارند', 'صندوق پارند'],
+        description: 'صندوق پارند روی اوراق بدهی کوتاه‌مدت و سپرده‌های بانکی تمرکز دارد و گزینه‌ای مطمئن برای سرمایه‌گذاران محتاط است.',
+        marketCap: '۹۶۰ میلیارد تومان', volume24h: '۴۰ میلیارد تومان', circulatingSupply: '۳۸۰ میلیون واحد',
+        performance: {
+            daily: { change: 2.17, chartData: generateChartData(21800, 24, 0.008, 'daily') },
+            weekly: { change: 3.8, chartData: generateChartData(21600, 7, 0.012, 'weekly') },
+            monthly: { change: 7.5, chartData: generateChartData(21300, 30, 0.018, 'monthly') },
+            yearly: { change: 24.0, chartData: generateChartData(19800, 12, 0.03, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'ahram', name: 'صندوق اهرمی اهرم', icon: '⚙️', price: '۳۱,۰۰۰ ریال',
+        aliases: ['اهرم', 'صندوق اهرم'],
+        description: 'صندوق اهرمی با استفاده از اوراق تبعی و اعتبار، بازدهی صندوق‌های سهامی را با ریسک بالاتر هدف‌گذاری می‌کند.',
+        marketCap: '۷۶۰ میلیارد تومان', volume24h: '۶۵ میلیارد تومان', circulatingSupply: '۲۴۵ میلیون واحد',
+        performance: {
+            daily: { change: 8.62, chartData: generateChartData(31000, 24, 0.035, 'daily') },
+            weekly: { change: 12.4, chartData: generateChartData(29600, 7, 0.05, 'weekly') },
+            monthly: { change: 28.5, chartData: generateChartData(27500, 30, 0.07, 'monthly') },
+            yearly: { change: 70.0, chartData: generateChartData(21000, 12, 0.11, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'homay', name: 'صندوق درآمد ثابت همای', icon: '🕊️', price: '۱۸,۹۰۰ ریال',
+        aliases: ['همای', 'صندوق همای'],
+        description: 'صندوق همای با سیاست سرمایه‌گذاری محتاطانه و نقدشوندگی روزانه، گزینه‌ای مناسب برای مدیریت نقدینگی است.',
+        marketCap: '۸۴۰ میلیارد تومان', volume24h: '۳۵ میلیارد تومان', circulatingSupply: '۳۲۰ میلیون واحد',
+        performance: {
+            daily: { change: -0.09, chartData: generateChartData(18900, 24, 0.005, 'daily') },
+            weekly: { change: 0.8, chartData: generateChartData(18850, 7, 0.008, 'weekly') },
+            monthly: { change: 3.4, chartData: generateChartData(18700, 30, 0.012, 'monthly') },
+            yearly: { change: 18.0, chartData: generateChartData(17400, 12, 0.02, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
+    {
+        id: 'kian', name: 'صندوق سهامی کیان', icon: '🏢', price: '۲۹,۷۰۰ ریال',
+        aliases: ['کیان', 'ETF کیان'],
+        description: 'صندوق سهامی کیان بر سهام شرکت‌های بزرگ بازار سرمایه تمرکز دارد و با تحلیل بنیادی مدیریت می‌شود.',
+        marketCap: '۱.۴ هزار میلیارد تومان', volume24h: '۱۰۰ میلیارد تومان', circulatingSupply: '۴۷۰ میلیون واحد',
+        performance: {
+            daily: { change: 33.81, chartData: generateChartData(29700, 24, 0.045, 'daily') },
+            weekly: { change: 30.1, chartData: generateChartData(27500, 7, 0.06, 'weekly') },
+            monthly: { change: 52.4, chartData: generateChartData(25200, 30, 0.08, 'monthly') },
+            yearly: { change: 102.0, chartData: generateChartData(19500, 12, 0.12, 'yearly') }
+        },
+        category: 'صندوق‌ها'
+    },
     {
         id: 'ayar', name: 'صندوق طلا عیار', icon: '💰', price: '۱۵,۳۲۰ ریال',
         aliases: ['عیار', 'صندوق طلا', 'طلا عیار'],
@@ -814,7 +1035,7 @@ export const staticMarketData: MarketAsset[] = [
         description: 'صندوق سرمایه‌گذاری با درآمد ثابت که با سرمایه‌گذاری در اوراق بهادار کم‌ریسک، سودی پایدار و بالاتر از سپرده بانکی ایجاد می‌کند.',
         marketCap: '۵ هزار میلیارد تومان', volume24h: '۱۰ میلیارد تومان', circulatingSupply: '۴.۵ میلیارد واحد',
         performance: {
-            daily: { change: 0.07, chartData: generateChartData(1100, 24, 0.001, 'daily') },
+            daily: { change: 2.26, chartData: generateChartData(1100, 24, 0.003, 'daily') },
             weekly: { change: 0.5, chartData: generateChartData(1095, 7, 0.002, 'weekly') },
             monthly: { change: 2.1, chartData: generateChartData(1078, 30, 0.003, 'monthly') },
             yearly: { change: 28.0, chartData: generateChartData(860, 12, 0.004, 'yearly') }
