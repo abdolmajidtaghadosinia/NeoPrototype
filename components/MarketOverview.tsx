@@ -5,6 +5,7 @@ import { globalMarketSessions } from '../data/marketData';
 import { toPersianDigits } from './formatters';
 import { composeHomeCardClasses, HomeCardPadding, HomeCardTone } from './designSystem';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
+import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
 export type MarketDisplayTab = 'دیده‌بان' | 'پورتفوی من' | 'بیشترین سود' | 'بیشترین ضرر';
 export type MarketOverviewTimeframe = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -160,81 +161,14 @@ const sentimentChangeTone: Record<SignalStance, string> = {
 
 const PAGE_SIZE = 10;
 
-const isImageSource = (value: string) => /^(https?:\/\/|data:image\/|blob:|\/)/i.test(value);
-
-const getFallbackInitials = (label: string) => {
-  const sanitized = label
-    .replace(/\(.+?\)/g, ' ')
-    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
-    .trim();
-
-  if (!sanitized) {
-    return '؟';
-  }
-
-  const parts = sanitized.split(/\s+/).filter(Boolean);
-  if (parts.length === 0) {
-    return sanitized.slice(0, 2) || '؟';
-  }
-
-  const [first, second] = parts;
-  const initials = `${first?.[0] ?? ''}${second?.[0] ?? ''}`.trim();
-  return initials || parts[0]?.slice(0, 2) || sanitized.slice(0, 2) || '؟';
-};
-
-const MarketItemIcon: React.FC<{ icon?: MarketAsset['icon']; name: string }> = ({ icon, name }) => {
-  const [hasError, setHasError] = useState(false);
-  const fallbackInitials = getFallbackInitials(name);
-
-  const renderFallback = () => (
-    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-bold text-white ring-1 ring-white/10">
-      {toPersianDigits(fallbackInitials)}
-    </div>
-  );
-
-  if (!icon || hasError) {
-    return renderFallback();
-  }
-
-  if (React.isValidElement(icon)) {
-    return (
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/10">
-        {icon}
-      </div>
-    );
-  }
-
-  if (typeof icon === 'string') {
-    const trimmed = icon.trim();
-    if (!trimmed) {
-      return renderFallback();
-    }
-
-    if (isImageSource(trimmed)) {
-      return (
-        <div className="h-9 w-9 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/10">
-          <img
-            src={trimmed}
-            alt={name}
-            className="h-full w-full object-cover"
-            loading="lazy"
-            onError={() => setHasError(true)}
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xl leading-none text-white ring-1 ring-white/10">
-        {trimmed}
-      </div>
-    );
-  }
-
-  return renderFallback();
-};
-
 const marketLabelOrder = ['بورس', 'صندوق‌ها', 'فلزهای گرانبها', 'بازار ارز', 'بازار کالایی'];
+
+const assetVariantMap: Record<MarketAsset['category'], NonNullable<React.ComponentProps<typeof AssetIcon>['variant']>> = {
+  بورس: 'stock',
+  'صندوق‌ها': 'fund',
+  کالا: 'commodity',
+  ارزها: 'currency',
+};
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
@@ -750,6 +684,9 @@ const convertAssetToItem = (
     });
   }
 
+  const symbol = subtitle ?? deriveAssetSymbol(asset.name);
+  const variant = assetVariantMap[asset.category] ?? 'default';
+
   return {
     id: asset.id,
     assetName: asset.name,
@@ -757,7 +694,15 @@ const convertAssetToItem = (
     price: asset.price,
     change: changeValue,
     marketLabel,
-    icon: <MarketItemIcon icon={asset.icon} name={displayName} />,
+    icon: (
+      <AssetIcon
+        icon={asset.icon}
+        name={asset.name}
+        symbol={symbol}
+        size="sm"
+        variant={variant}
+      />
+    ),
     subtitle,
     meta: metaSource,
     chartPoints: chartPoints && chartPoints.length ? chartPoints : undefined,

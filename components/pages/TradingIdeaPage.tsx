@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TradingIdea } from '../../types';
+import { TradingIdea, MarketAsset } from '../../types';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { CalendarIcon } from '../icons/CalendarIcon';
 import { ThumbUpIcon } from '../icons/ThumbUpIcon';
@@ -7,6 +7,7 @@ import { ChatBubbleIcon } from '../icons/ChatBubbleIcon';
 import { VerifiedIcon } from '../icons/VerifiedIcon';
 import { toPersianDigits } from '../formatters';
 import { ThumbUpSolidIcon } from '../icons/ThumbUpSolidIcon';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 
 /**
  * Props for the TradingIdeaPage component.
@@ -25,6 +26,23 @@ interface TradingIdeaPageProps {
   /** Callback function to submit a new comment on the idea. */
   onAddComment: (ideaId: string, commentText: string) => void;
 }
+
+const getAssetVariant = (
+  category?: MarketAsset['category'],
+): NonNullable<React.ComponentProps<typeof AssetIcon>['variant']> => {
+  switch (category) {
+    case 'بورس':
+      return 'stock';
+    case 'صندوق‌ها':
+      return 'fund';
+    case 'ارزها':
+      return 'currency';
+    case 'کالا':
+      return 'commodity';
+    default:
+      return 'default';
+  }
+};
 
 /**
  * Renders a full-page, detailed view of a single trading idea.
@@ -252,9 +270,13 @@ const TradingIdeaPage: React.FC<TradingIdeaPageProps> = ({
                 className="flex items-center justify-between gap-3 text-right w-full hover:text-white"
               >
                 <div className="flex items-center gap-3">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-neo-dark-3 text-2xl">
-                    {idea.asset.icon}
-                  </span>
+                  <AssetIcon
+                    icon={idea.asset.icon}
+                    name={idea.asset.name}
+                    symbol={deriveAssetSymbol(idea.asset.name)}
+                    size="md"
+                    variant={idea.asset.category ? getAssetVariant(idea.asset.category as MarketAsset['category']) : 'default'}
+                  />
                   <div className="text-right">
                     <p className="text-xs text-gray-400">نماد مورد بررسی</p>
                     <p className="text-base font-bold text-white">{idea.asset.name}</p>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { PortfolioSlice } from '../../types';
 import { toPersianDigits } from '../formatters';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 
 /**
  * Props for the QuickSellPage component.
@@ -43,7 +44,12 @@ const QuickSellPage: React.FC<QuickSellPageProps> = ({ asset, onBack }) => {
       </header>
 
       <div className="p-4 bg-white rounded-xl shadow-sm mb-6 flex items-center gap-4">
-        <div className="text-3xl">{asset.icon || '💵'}</div>
+        <AssetIcon
+          icon={asset.icon ?? ''}
+          name={asset.name}
+          symbol={deriveAssetSymbol(asset.name)}
+          size="md"
+        />
         <div className="text-right">
             <p className="font-bold text-lg text-gray-800">{asset.name}</p>
             <p className="text-gray-500">موجودی شما: {asset.amount}</p>

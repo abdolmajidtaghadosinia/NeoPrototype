@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Message, PortfolioSlice, AiAction } from '../../types';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 
 /**
  * Props for the SearchPage component.
@@ -181,7 +182,12 @@ const SearchPage: React.FC<SearchPageProps> = ({ portfolioAssets, messages, isLo
                             disabled={isLoading}
                             className="shrink-0 bg-neo-dark-3 hover:bg-gray-700 transition-colors text-gray-200 text-sm font-medium px-4 py-2 rounded-full border border-gray-700 disabled:bg-gray-800 disabled:cursor-not-allowed flex items-center gap-2 md:w-full md:justify-between"
                         >
-                            {asset.icon && <span className="text-lg">{asset.icon}</span>}
+                            <AssetIcon
+                                icon={asset.icon}
+                                name={asset.name}
+                                symbol={deriveAssetSymbol(asset.name)}
+                                size="xs"
+                            />
                             <span>{asset.name}</span>
                         </button>
                     ))}

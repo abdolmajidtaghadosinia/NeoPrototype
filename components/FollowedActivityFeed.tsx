@@ -3,6 +3,7 @@ import { FollowedActivity, LeaderboardUser } from '../types';
 import { leaderboardData } from '../data/marketData';
 import { CopyIcon } from './icons/CopyIcon';
 import { toPersianDigits } from './formatters';
+import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
 /**
  * Props for the FollowedActivityFeed component.
@@ -101,7 +102,12 @@ const ActivityCard: React.FC<{
                 ): null}
 
                 <button onClick={() => onAssetSelect(activity.asset.id)} className="flex items-center justify-center gap-2 mt-2 w-full hover:bg-neo-dark-1/50 p-2 rounded-lg transition-colors">
-                    <span className="text-2xl">{activity.asset.icon}</span>
+                    <AssetIcon
+                        icon={activity.asset.icon}
+                        name={activity.asset.name}
+                        symbol={deriveAssetSymbol(activity.asset.name)}
+                        size="sm"
+                    />
                     <p className="font-semibold text-gray-200">{activity.asset.name}</p>
                 </button>
 

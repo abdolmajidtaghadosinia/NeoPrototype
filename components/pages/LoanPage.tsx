@@ -6,6 +6,7 @@ import { ChevronDownIcon } from '../icons/ChevronDownIcon';
 import { ExclamationCircleIcon } from '../icons/ExclamationCircleIcon';
 import { toPersianDigits, toPersianFormatted } from '../formatters';
 import { composeSurfaceClasses, SurfacePadding, SurfaceTone } from '../designSystem';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 
 interface PortfolioAsset {
     id: string;
@@ -26,6 +27,12 @@ const userPortfolio: PortfolioAsset[] = [
     { id: 'ayar', name: 'صندوق طلا عیار', type: 'commodity', icon: '💰', balance: 25, unit: 'واحد', pricePerUnitToman: 153200, ltv: 70 },
     { id: 'goldcoin', name: 'سکه تمام بهار', type: 'commodity', icon: '🪙', balance: 6, unit: 'عدد', pricePerUnitToman: 35500000, ltv: 60 },
 ];
+
+const portfolioVariantMap: Record<PortfolioAsset['type'], NonNullable<React.ComponentProps<typeof AssetIcon>['variant']>> = {
+    stock: 'stock',
+    fund: 'fund',
+    commodity: 'commodity',
+};
 
 const formatToman = (n: number): string => {
     return toPersianFormatted(n);
@@ -179,7 +186,16 @@ const LoanPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                      {selectedAsset && (
                          <div className="text-right border-t border-gray-700 pt-4 mt-4 space-y-2">
                             <div className="flex justify-between items-center text-sm">
-                                <span className="font-semibold">{selectedAsset.icon} {selectedAsset.name}</span>
+                                <span className="flex items-center gap-2 font-semibold text-gray-100">
+                                    <AssetIcon
+                                        icon={selectedAsset.icon}
+                                        name={selectedAsset.name}
+                                        symbol={deriveAssetSymbol(selectedAsset.name)}
+                                        size="xs"
+                                        variant={portfolioVariantMap[selectedAsset.type]}
+                                    />
+                                    <span>{selectedAsset.name}</span>
+                                </span>
                                 <span className="text-gray-400">دارایی انتخابی</span>
                             </div>
                             <div className="flex justify-between items-center text-sm">

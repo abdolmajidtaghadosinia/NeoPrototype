@@ -8,6 +8,7 @@ import { ChevronDownIcon } from '../icons/ChevronDownIcon';
 import type { TradeRecord } from '../TradeList';
 import { toEnglishDigits, parsePrice, toPersianFormatted } from '../formatters';
 import { normalizeText } from '../../utils/normalizeText';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 
 type AssetCategory = MarketAsset['category'];
 
@@ -26,6 +27,13 @@ const volumeUnits: Record<AssetCategory, string> = {
     'صندوق‌ها': 'واحد',
     'ارزها': 'معامله',
     'کالا': 'قرارداد',
+};
+
+const assetVariantMap: Record<AssetCategory, NonNullable<React.ComponentProps<typeof AssetIcon>['variant']>> = {
+    'بورس': 'stock',
+    'صندوق‌ها': 'fund',
+    'ارزها': 'currency',
+    'کالا': 'commodity',
 };
 
 const orderFlowPresets: Record<AssetCategory, OrderFlowSnapshot[]> = {
@@ -718,13 +726,14 @@ const TradePage: React.FC<TradePageProps> = ({ assetInfo, onBack }) => {
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-3">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] shadow-sm">
-                                {typeof asset.icon === 'string' && asset.icon.startsWith('http') ? (
-                                    <img src={asset.icon} alt={asset.name} className="h-8 w-8 object-contain" />
-                                ) : (
-                                    <span className="text-2xl">{asset.icon}</span>
-                                )}
-                            </div>
+                            <AssetIcon
+                                icon={asset.icon}
+                                name={asset.name}
+                                symbol={deriveAssetSymbol(asset.name)}
+                                size="md"
+                                variant={assetVariantMap[asset.category]}
+                                className="shrink-0"
+                            />
                             <div className="space-y-1 text-right">
                                 <span className="inline-flex items-center justify-center rounded-full border border-[color:var(--neo-surface-border)] bg-[color:var(--neo-surface-ghost-bg)] px-3 py-1 text-xs font-semibold text-[rgb(var(--neo-text-secondary))]">
                                     {asset.category}

@@ -16,9 +16,17 @@ import TechnicalAnalysisSection from '../TechnicalAnalysisSection';
 import { toPersianDigits } from '../formatters';
 import Page from '../layout/Page';
 import { composeSurfaceClasses, SurfacePadding, SurfaceTone } from '../designSystem';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 
 
 type Timeframe = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
+const assetVariantMap: Record<MarketAsset['category'], NonNullable<React.ComponentProps<typeof AssetIcon>['variant']>> = {
+  بورس: 'stock',
+  'صندوق‌ها': 'fund',
+  ارزها: 'currency',
+  کالا: 'commodity',
+};
 
 /**
  * Props for the AssetProfilePage component.
@@ -261,11 +269,13 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                     </button>
                     <div className="flex items-center gap-3">
                         <div className="bg-neo-dark-2 p-1 rounded-xl flex items-center justify-center w-12 h-12">
-                            {typeof detailedAsset.icon === 'string' && detailedAsset.icon.startsWith('http') ? (
-                                <img src={detailedAsset.icon} alt={detailedAsset.name} className="w-9 h-9 object-contain" />
-                            ) : (
-                                <span className="text-2xl flex items-center justify-center w-full h-full">{detailedAsset.icon}</span>
-                            )}
+                            <AssetIcon
+                                icon={detailedAsset.icon}
+                                name={detailedAsset.name}
+                                symbol={deriveAssetSymbol(detailedAsset.name)}
+                                size="sm"
+                                variant={assetVariantMap[detailedAsset.category] ?? 'default'}
+                            />
                         </div>
                         <div className="flex flex-col items-start gap-1">
                             <h1 className="text-lg font-bold text-white sm:text-xl">{detailedAsset.name}</h1>

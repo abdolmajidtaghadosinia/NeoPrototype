@@ -8,6 +8,7 @@ import StockTickerSkeleton from '../StockTickerSkeleton';
 import Skeleton from '../Skeleton';
 import type { MarketOverviewItem, PortfolioReturnInsight } from '../MarketOverview';
 import { toPersianDigits } from '../formatters';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 const StockTickerCard = lazy(() => import('../StockTickerCard'));
 const MarketOverview = lazy(() => import('../MarketOverview'));
 const MarketSummary = lazy(() => import('../MarketSummary'));
@@ -167,6 +168,26 @@ const initialMarketSummaryData: MarketSummaryItem[] = [
         }
     },
 ];
+
+const getAssetVariant = (
+    category?: MarketAsset['category'],
+): NonNullable<React.ComponentProps<typeof AssetIcon>['variant']> => {
+    if (!category) {
+        return 'default';
+    }
+    switch (category) {
+        case 'بورس':
+            return 'stock';
+        case 'صندوق‌ها':
+            return 'fund';
+        case 'کالا':
+            return 'commodity';
+        case 'ارزها':
+            return 'currency';
+        default:
+            return 'default';
+    }
+};
 
 type SignalTone = 'positive' | 'warning' | 'neutral';
 type UpcomingEventAccent = 'primary' | 'info' | 'alert';
@@ -912,13 +933,15 @@ const HomePage: React.FC<HomePageProps> = ({
                 )}
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="flex flex-col items-end gap-1">
+                    <div className="flex flex-col items-end gap-1">
                     <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                      {typeof item.asset.icon === 'string' ? (
-                        <span className="text-base leading-none">{item.asset.icon}</span>
-                      ) : (
-                        item.asset.icon
-                      )}
+                      <AssetIcon
+                        icon={item.asset.icon}
+                        name={item.asset.name}
+                        symbol={deriveAssetSymbol(item.asset.name)}
+                        size="sm"
+                        variant={getAssetVariant(item.asset.category)}
+                      />
                       <span>{item.company}</span>
                     </div>
                     <span className="text-[11px] text-gray-400">{item.industry}</span>
@@ -973,11 +996,13 @@ const HomePage: React.FC<HomePageProps> = ({
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                    {typeof fund.asset.icon === 'string' ? (
-                      <span className="text-base leading-none">{fund.asset.icon}</span>
-                    ) : (
-                      fund.asset.icon
-                    )}
+                    <AssetIcon
+                      icon={fund.asset.icon}
+                      name={fund.asset.name}
+                      symbol={deriveAssetSymbol(fund.asset.name)}
+                      size="sm"
+                      variant={getAssetVariant(fund.asset.category)}
+                    />
                     <span>{fund.name}</span>
                   </div>
                   <div className="text-left">

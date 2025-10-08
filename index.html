@@ -90,6 +90,29 @@
         --neo-toggle-icon: rgba(226, 232, 240, 0.9);
         --neo-toggle-icon-hover: #d7fe43;
         --neo-toggle-shadow: 0 16px 40px -28px rgba(107, 255, 110, 0.6);
+        --neo-asset-stock-color: 40 161 104;
+        --neo-asset-fund-color: 233 196 106;
+        --neo-asset-commodity-color: 59 130 246;
+        --neo-asset-currency-color: 129 140 248;
+        --neo-asset-index-color: 99 102 241;
+        --neo-asset-bg-default: rgba(255, 255, 255, 0.08);
+        --neo-asset-border-default: rgba(255, 255, 255, 0.18);
+        --neo-asset-text-default: 241, 245, 249;
+        --neo-asset-bg-stock: linear-gradient(140deg, rgba(var(--neo-asset-stock-color), 0.45), rgba(17, 24, 39, 0.82));
+        --neo-asset-border-stock: rgba(var(--neo-asset-stock-color), 0.75);
+        --neo-asset-text-stock: 239, 255, 245;
+        --neo-asset-bg-fund: linear-gradient(140deg, rgba(var(--neo-asset-fund-color), 0.55), rgba(17, 24, 39, 0.82));
+        --neo-asset-border-fund: rgba(var(--neo-asset-fund-color), 0.7);
+        --neo-asset-text-fund: 255, 249, 235;
+        --neo-asset-bg-commodity: linear-gradient(140deg, rgba(var(--neo-asset-commodity-color), 0.45), rgba(17, 24, 39, 0.82));
+        --neo-asset-border-commodity: rgba(var(--neo-asset-commodity-color), 0.75);
+        --neo-asset-text-commodity: 240, 248, 255;
+        --neo-asset-bg-currency: linear-gradient(140deg, rgba(var(--neo-asset-currency-color), 0.45), rgba(17, 24, 39, 0.82));
+        --neo-asset-border-currency: rgba(var(--neo-asset-currency-color), 0.7);
+        --neo-asset-text-currency: 240, 247, 255;
+        --neo-asset-bg-index: linear-gradient(140deg, rgba(var(--neo-asset-index-color), 0.48), rgba(17, 24, 39, 0.82));
+        --neo-asset-border-index: rgba(var(--neo-asset-index-color), 0.75);
+        --neo-asset-text-index: 240, 246, 255;
         --neo-nav-inactive: var(--neo-text-secondary);
         --neo-nav-hover-text: var(--neo-text-primary);
         --neo-nav-active-text: 255 255 255;
@@ -294,6 +317,29 @@
         --neo-toggle-icon: rgba(30, 41, 59, 0.82);
         --neo-toggle-icon-hover: #1a2e05;
         --neo-toggle-shadow: 0 18px 48px -30px rgba(59, 130, 246, 0.4);
+        --neo-asset-stock-color: 40 161 104;
+        --neo-asset-fund-color: 234 179 8;
+        --neo-asset-commodity-color: 59 130 246;
+        --neo-asset-currency-color: 129 140 248;
+        --neo-asset-index-color: 79 70 229;
+        --neo-asset-bg-default: rgba(15, 23, 42, 0.06);
+        --neo-asset-border-default: rgba(15, 23, 42, 0.14);
+        --neo-asset-text-default: 17, 24, 39;
+        --neo-asset-bg-stock: linear-gradient(140deg, rgba(var(--neo-asset-stock-color), 0.18), rgba(255, 255, 255, 0.92));
+        --neo-asset-border-stock: rgba(var(--neo-asset-stock-color), 0.42);
+        --neo-asset-text-stock: 18, 53, 36;
+        --neo-asset-bg-fund: linear-gradient(140deg, rgba(var(--neo-asset-fund-color), 0.2), rgba(255, 255, 255, 0.92));
+        --neo-asset-border-fund: rgba(var(--neo-asset-fund-color), 0.38);
+        --neo-asset-text-fund: 88, 53, 0;
+        --neo-asset-bg-commodity: linear-gradient(140deg, rgba(var(--neo-asset-commodity-color), 0.18), rgba(255, 255, 255, 0.92));
+        --neo-asset-border-commodity: rgba(var(--neo-asset-commodity-color), 0.4);
+        --neo-asset-text-commodity: 23, 37, 84;
+        --neo-asset-bg-currency: linear-gradient(140deg, rgba(var(--neo-asset-currency-color), 0.2), rgba(255, 255, 255, 0.92));
+        --neo-asset-border-currency: rgba(var(--neo-asset-currency-color), 0.38);
+        --neo-asset-text-currency: 36, 47, 126;
+        --neo-asset-bg-index: linear-gradient(140deg, rgba(var(--neo-asset-index-color), 0.18), rgba(255, 255, 255, 0.92));
+        --neo-asset-border-index: rgba(var(--neo-asset-index-color), 0.4);
+        --neo-asset-text-index: 32, 41, 104;
         --neo-nav-inactive: 100, 116, 139;
         --neo-nav-hover-text: var(--neo-text-strong);
         --neo-nav-active-text: 255, 255, 255;
@@ -627,6 +673,96 @@
         background: rgba(148, 163, 184, 0.15);
         cursor: not-allowed;
         opacity: 0.85;
+      }
+      .neo-asset-icon {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--neo-radius-lg);
+        border: 1px solid var(--neo-asset-border-default);
+        background: var(--neo-asset-bg-default);
+        color: rgb(var(--neo-asset-text-default));
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        overflow: hidden;
+        box-shadow: 0 24px 48px -32px rgba(15, 23, 42, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+      }
+      .neo-asset-icon--xs {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.65rem;
+      }
+      .neo-asset-icon--sm {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 0.8rem;
+      }
+      .neo-asset-icon--md {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 0.95rem;
+      }
+      .neo-asset-icon--lg {
+        width: 3.25rem;
+        height: 3.25rem;
+        font-size: 1.05rem;
+      }
+      .neo-asset-icon__text {
+        display: inline-block;
+        font-weight: inherit;
+        letter-spacing: inherit;
+      }
+      .neo-asset-icon__node {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        color: inherit;
+      }
+      .neo-asset-icon--image {
+        padding: 0;
+      }
+      .neo-asset-icon__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: inherit;
+      }
+      .neo-asset-icon--default {
+        box-shadow: 0 22px 44px -32px rgba(15, 23, 42, 0.45);
+      }
+      .neo-asset-icon--stock {
+        background: var(--neo-asset-bg-stock);
+        border-color: var(--neo-asset-border-stock);
+        color: rgb(var(--neo-asset-text-stock));
+        box-shadow: 0 24px 48px -30px rgba(var(--neo-asset-stock-color), 0.35);
+      }
+      .neo-asset-icon--fund {
+        background: var(--neo-asset-bg-fund);
+        border-color: var(--neo-asset-border-fund);
+        color: rgb(var(--neo-asset-text-fund));
+        box-shadow: 0 24px 48px -30px rgba(var(--neo-asset-fund-color), 0.32);
+      }
+      .neo-asset-icon--commodity {
+        background: var(--neo-asset-bg-commodity);
+        border-color: var(--neo-asset-border-commodity);
+        color: rgb(var(--neo-asset-text-commodity));
+        box-shadow: 0 24px 48px -30px rgba(var(--neo-asset-commodity-color), 0.32);
+      }
+      .neo-asset-icon--currency {
+        background: var(--neo-asset-bg-currency);
+        border-color: var(--neo-asset-border-currency);
+        color: rgb(var(--neo-asset-text-currency));
+        box-shadow: 0 24px 48px -30px rgba(var(--neo-asset-currency-color), 0.32);
+      }
+      .neo-asset-icon--index {
+        background: var(--neo-asset-bg-index);
+        border-color: var(--neo-asset-border-index);
+        color: rgb(var(--neo-asset-text-index));
+        box-shadow: 0 24px 48px -30px rgba(var(--neo-asset-index-color), 0.32);
       }
       .neo-progress-track {
         width: 100%;

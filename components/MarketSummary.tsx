@@ -7,6 +7,7 @@ import { MarketSummaryItem } from '../types';
 import { toPersianDigits } from './formatters';
 import { composeHomeCardClasses, HomeCardPadding, HomeCardTone } from './designSystem';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
+import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
 const accentColor = 'rgb(var(--neo-accent))';
 
@@ -24,6 +25,21 @@ const composeHomeCard = (
     padding: HomeCardPadding = 'md',
 ) => composeHomeCardClasses(tone, padding, extra);
 
+const getSummaryVariant = (
+    item: MarketSummaryItem,
+): NonNullable<React.ComponentProps<typeof AssetIcon>['variant']> => {
+    if (item.name.includes('شاخص')) {
+        return 'index';
+    }
+    if (item.name.includes('دلار') || item.id === 'usd') {
+        return 'currency';
+    }
+    if (item.name.includes('طلا') || item.name.includes('صندوق')) {
+        return 'fund';
+    }
+    return 'stock';
+};
+
 const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timeframe, onClick }) => {
     const performance = item.performance[timeframe];
     const isPositive = performance.change >= 0;
@@ -35,6 +51,7 @@ const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timefr
     const negativePercent = details && totalSymbols ? 100 - positivePercent : 0;
 
     const tone: HomeCardTone = isPositive ? 'positive' : 'negative';
+    const iconVariant = getSummaryVariant(item);
 
     return (
         <div
@@ -49,7 +66,13 @@ const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timefr
             )}
         >
             <div className="flex items-center gap-2">
-                <span className="text-2xl">{item.icon}</span>
+                <AssetIcon
+                    icon={item.icon}
+                    name={item.name}
+                    symbol={deriveAssetSymbol(item.name)}
+                    size="sm"
+                    variant={iconVariant}
+                />
                 <h4 className="text-sm font-bold text-white">{item.name}</h4>
             </div>
             <div className="h-12 w-full">
