@@ -1000,11 +1000,11 @@ const HomePage: React.FC<HomePageProps> = ({
     if (displayedStocks.length === 0) {
       if (isLoading) {
         return (
-          <div className={`${topStripMinHeight} flex items-stretch gap-2.5 overflow-x-auto pb-1.5 scrollbar-hide`}>
+          <div className={`${topStripMinHeight} flex items-stretch gap-2.5 overflow-x-auto pb-1.5 scrollbar-hide snap-x snap-mandatory`}>
             {Array.from({ length: 4 }).map((_, index) => (
               <StockTickerSkeleton
                 key={index}
-                className={`min-w-[13rem] h-full ${topStripMinHeight}`}
+                className={`min-w-[13rem] h-full snap-start ${topStripMinHeight}`}
               />
             ))}
           </div>
@@ -1019,18 +1019,18 @@ const HomePage: React.FC<HomePageProps> = ({
     }
 
     return (
-      <div className={`${topStripMinHeight} flex items-stretch gap-2.5 overflow-x-auto pb-1.5 scrollbar-hide`}>
+      <div className={`${topStripMinHeight} flex items-stretch gap-2.5 overflow-x-auto pb-1.5 scrollbar-hide snap-x snap-mandatory`}>
         {displayedStocks.map((stock) => (
           <Suspense
             key={stock.id}
             fallback={(
-              <StockTickerSkeleton className={`min-w-[13rem] h-full ${topStripMinHeight}`} />
+              <StockTickerSkeleton className={`min-w-[13rem] h-full snap-start ${topStripMinHeight}`} />
             )}
           >
             <StockTickerCard
               stock={stock}
               onClick={() => onStockSelect(stock)}
-              className={`min-w-[13rem] h-full ${topStripMinHeight}`}
+              className={`min-w-[13rem] h-full snap-start ${topStripMinHeight}`}
             />
           </Suspense>
         ))}

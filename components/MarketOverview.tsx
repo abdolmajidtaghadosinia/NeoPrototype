@@ -935,8 +935,8 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
       <div className="absolute -top-32 -left-24 h-64 w-64 rounded-full bg-neo-green/10 blur-3xl" />
       <div className="absolute -bottom-40 -right-24 h-72 w-72 rounded-full bg-neo-green/5 blur-3xl" />
 
-      <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-xl font-extrabold text-white sm:text-2xl">بازارها در یک نگاه</h3>
+      <div className="relative flex flex-col items-start gap-3 text-right sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="w-full text-right text-xl font-extrabold text-white sm:text-2xl">بازارها در یک نگاه</h3>
         <div className="relative w-full sm:w-64">
           <label htmlFor={timeframeSelectId} id={timeframeLabelId} className="sr-only">
             انتخاب بازه زمانی بازار
@@ -963,9 +963,9 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
         id={timeframePanelId}
         role="tabpanel"
         aria-labelledby={timeframeLabelId}
-        className="relative mt-2.5 -mx-2 min-w-0 overflow-x-auto pb-1 scrollbar-hide sm:mx-0 sm:overflow-visible"
+        className="relative mt-3 w-full"
       >
-        <div className="flex min-w-full gap-2 sm:flex-wrap sm:gap-3">
+        <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
           {displayTabs.map((tab) => {
             const isActive = activeList === tab;
             const stateClasses = isActive
@@ -976,7 +976,7 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
               <button
                 key={tab}
                 onClick={() => setActiveList(tab)}
-                className={`flex min-w-[7.5rem] flex-none items-center justify-center rounded-full px-4 py-2 text-xs font-semibold transition-colors ${stateClasses} sm:flex-1 sm:min-w-0`}
+                className={`flex w-full items-center justify-center rounded-full px-3.5 py-2 text-xs font-semibold transition-colors ${stateClasses} sm:px-4 sm:py-2.5 sm:text-sm`}
               >
                 {tab}
               </button>
