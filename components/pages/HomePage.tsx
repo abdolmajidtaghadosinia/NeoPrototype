@@ -1313,7 +1313,7 @@ const HomePage: React.FC<HomePageProps> = ({
     if (displayedStocks.length === 0) {
       if (isLoading) {
         return (
-          <div className={`${topStripMinHeight} flex items-stretch gap-3 overflow-x-auto pb-2 scrollbar-hide`}>
+          <div className={`${topStripMinHeight} flex items-stretch gap-2.5 overflow-x-auto pb-1.5 scrollbar-hide`}>
             {Array.from({ length: 4 }).map((_, index) => (
               <StockTickerSkeleton
                 key={index}
@@ -1332,7 +1332,7 @@ const HomePage: React.FC<HomePageProps> = ({
     }
 
     return (
-      <div className={`${topStripMinHeight} flex items-stretch gap-3 overflow-x-auto pb-2 scrollbar-hide`}>
+      <div className={`${topStripMinHeight} flex items-stretch gap-2.5 overflow-x-auto pb-1.5 scrollbar-hide`}>
         {displayedStocks.map((stock) => (
           <Suspense
             key={stock.id}
@@ -1352,7 +1352,7 @@ const HomePage: React.FC<HomePageProps> = ({
   };
 
   const renderDashboardContent = () => (
-    <div className="flex flex-col gap-4 sm:gap-5 lg:gap-5">
+    <div className="flex flex-col gap-3.5 sm:gap-4 lg:gap-5">
       {renderTopStripContent()}
       <div className="flex flex-col gap-4 sm:gap-5 lg:grid lg:grid-cols-[minmax(0,280px),minmax(0,1fr)] lg:items-start lg:gap-5 xl:grid-cols-[minmax(0,320px),minmax(0,1fr)] xl:gap-7 2xl:grid-cols-[minmax(0,360px),minmax(0,1.1fr),minmax(0,360px)] 2xl:gap-7">
         <div className="order-2 space-y-4 sm:space-y-5 lg:order-1 lg:col-start-1 lg:space-y-5 xl:order-2 xl:col-span-2 xl:col-start-1 xl:space-y-6 2xl:order-1 2xl:col-span-1 2xl:col-start-1 2xl:space-y-6">
@@ -1388,7 +1388,7 @@ const HomePage: React.FC<HomePageProps> = ({
   );
 
   return (
-    <Page as="main" spacing="md" className="home-page space-y-5 pt-4 sm:space-y-6">
+    <Page as="main" spacing="md" className="home-page space-y-4 pt-3 sm:space-y-5 sm:pt-4">
       <FilterTabs
         activeTab={activeTab}
         onTabChange={handleTabChange}

@@ -399,7 +399,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
       : 'text-[rgb(var(--filter-highlight-text))]';
 
     const header = (
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-1.5 sm:gap-2">
         <span
           className={clsx(
             'flex items-center gap-1.5 text-sm font-semibold sm:text-base',
@@ -424,7 +424,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
 
     if (highlights.length === 0) {
       return (
-        <div className="flex h-full w-full flex-col justify-between gap-3 text-right">
+        <div className="flex h-full w-full flex-col justify-between gap-2.5 text-right">
           {header}
           {tab.description && (
             <p className="text-xs leading-5 text-[rgb(var(--filter-highlight-subtext))] sm:text-sm">
@@ -439,7 +439,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
 
     if (!primaryHighlight) {
       return (
-        <div className="flex h-full w-full flex-col justify-between gap-3 text-right">
+        <div className="flex h-full w-full flex-col justify-between gap-2.5 text-right">
           {header}
           {tab.description && (
             <p className="text-xs leading-5 text-[rgb(var(--filter-highlight-subtext))] sm:text-sm">
@@ -453,7 +453,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
     const { id, label, value, tone = 'neutral', icon, badge } = primaryHighlight;
 
     return (
-      <div className="flex h-full w-full flex-col justify-between gap-3 text-right">
+      <div className="flex h-full w-full flex-col justify-between gap-2.5 text-right">
         {header}
         <div
           key={id}
@@ -466,7 +466,7 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
           <div className="neo-highlight__meta">
             <span className={highlightToneDotClasses[tone]} aria-hidden />
             {label && (
-              <span className="neo-highlight__label max-w-[8.5rem] truncate sm:max-w-[10rem]">{label}</span>
+              <span className="neo-highlight__label max-w-[8rem] truncate sm:max-w-[9.5rem]">{label}</span>
             )}
             {badge && <span className="neo-highlight__badge">{badge}</span>}
           </div>
@@ -482,10 +482,10 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
   };
 
   return (
-    <div className="pb-2.5">
+    <div className="pb-1.5 sm:pb-2.5">
       <div
         ref={containerRef}
-        className="neo-animate-inline flex items-stretch gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:justify-between sm:gap-3 sm:overflow-visible md:grid md:grid-cols-2 md:gap-3 md:[&>*]:min-w-0 lg:grid-cols-4"
+        className="neo-animate-inline flex items-stretch gap-1.5 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:justify-between sm:gap-2.5 sm:overflow-visible md:grid md:grid-cols-2 md:gap-2.5 md:[&>*]:min-w-0 lg:grid-cols-4"
         role="tablist"
         aria-label="بخش‌های داشبورد"
       >
@@ -509,9 +509,9 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
               onClick={() => onTabChange(tab.name)}
               onKeyDown={(event) => handleKeyDown(event, index)}
               className={clsx(
-                'filter-tabs__button group relative flex h-full min-w-[11.5rem] flex-none flex-col items-stretch justify-between rounded-3xl border px-4 py-3 text-right text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60 snap-center sm:min-w-[13rem] sm:text-base md:w-full md:min-w-0',
+                'filter-tabs__button group relative flex h-full min-w-[10.5rem] flex-none flex-col items-stretch justify-between rounded-3xl border px-3.5 py-2.5 text-right text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60 snap-center sm:min-w-[12.5rem] sm:px-4 sm:py-3 sm:text-base md:w-full md:min-w-0',
                 isActive && 'is-active',
-                highlightsForTab.length > 0 ? 'min-h-[7.5rem]' : 'min-h-[6.5rem]',
+                highlightsForTab.length > 0 ? 'min-h-[6.75rem]' : 'min-h-[5.75rem]',
               )}
             >
               {renderTabContent(tab, highlightsForTab, isActive)}
