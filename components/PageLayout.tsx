@@ -45,7 +45,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       onLogout={onLogout}
       onTradeClick={onTradeClick}
     />
-    <div className="flex flex-col pb-24 md:pb-0">
+    <div className={clsx('flex flex-col', showBottomNav && 'neo-bottom-padding')}>
       <div
         className={clsx(
           composePageShell(
