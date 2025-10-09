@@ -7,10 +7,10 @@ type PageElement = 'div' | 'main' | 'section';
 type PageSpacing = 'none' | 'sm' | 'md' | 'lg';
 
 const spacingClassMap: Record<PageSpacing, string> = {
-  none: 'space-y-0',
-  sm: 'space-y-4',
-  md: 'space-y-6',
-  lg: 'space-y-8',
+  none: 'neo-stack neo-stack--none',
+  sm: 'neo-stack neo-stack--tight',
+  md: 'neo-stack neo-stack--normal',
+  lg: 'neo-stack neo-stack--loose',
 };
 
 /**

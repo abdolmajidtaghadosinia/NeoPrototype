@@ -5,7 +5,14 @@ import clsx from 'clsx';
 import { AreaChart, Area, ResponsiveContainer, YAxis } from 'recharts';
 import { MarketSummaryItem } from '../types';
 import { toPersianDigits } from './formatters';
-import { composeHomeCardClasses, HomeCardPadding, HomeCardTone } from './designSystem';
+import {
+    composeHomeCardClasses,
+    HomeCardPadding,
+    HomeCardTone,
+    toneBarFillVariantClasses,
+    toneChipVariantClasses,
+    toneTextVariantClasses,
+} from './designSystem';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
 import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
@@ -58,14 +65,14 @@ const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timefr
             onClick={isClickable ? onClick : undefined}
             className={composeHomeCard(
                 clsx(
-                    'flex h-full flex-col gap-3 transition-transform hover:-translate-y-0.5',
+                    'h-full neo-stack neo-stack--tight transition-transform hover:-translate-y-0.5',
                     isClickable && 'cursor-pointer',
                 ),
                 tone,
                 'sm',
             )}
         >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-[rgb(var(--neo-text-strong))]">
                 <AssetIcon
                     icon={item.icon}
                     name={item.name}
@@ -73,7 +80,7 @@ const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timefr
                     size="sm"
                     variant={iconVariant}
                 />
-                <h4 className="text-sm font-bold text-white">{item.name}</h4>
+                <h4 className="text-sm font-bold">{item.name}</h4>
             </div>
             <div className="h-12 w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -97,59 +104,59 @@ const MarketSummaryCard: React.FC<MarketSummaryCardProps> = memo(({ item, timefr
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-            <div className="flex items-end justify-between">
-                <div className="space-y-1 text-left">
-                    <span className="text-xs font-medium text-white/70">آخرین مقدار</span>
-                    <p className="text-base font-semibold text-white">{performance.value}</p>
+            <div className="flex items-end justify-between text-[rgb(var(--neo-text-secondary))]">
+                <div className="neo-stack neo-stack--tight text-left">
+                    <span className="text-xs font-medium">آخرین مقدار</span>
+                    <p className="text-base font-semibold text-[rgb(var(--neo-text-strong))]">{performance.value}</p>
                 </div>
                 <span
                     className={clsx(
-                        'inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold shadow-sm',
-                        isPositive ? 'bg-neo-green/15 text-neo-green' : 'bg-red-500/15 text-red-400',
+                        toneChipVariantClasses[isPositive ? 'positive' : 'negative'],
+                        'text-xs',
                     )}
                 >
                     {isPositive ? '▲' : '▼'} {toPersianDigits(performance.change.toFixed(2))}%
                 </span>
             </div>
             {details && (
-                <div className="space-y-3 rounded-2xl border border-white/5 bg-white/5 p-3 text-xs text-white/70">
+                <div className="neo-subtle-panel neo-stack neo-stack--tight text-xs text-[rgb(var(--neo-text-secondary))]">
                     <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                         <div className="flex flex-col gap-1">
-                            <span className="text-[11px] text-white/50">حجم معاملات</span>
-                            <span className="text-sm font-semibold text-white">{details.volume}</span>
+                            <span className="text-[11px] text-[rgb(var(--neo-text-muted))]">حجم معاملات</span>
+                            <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">{details.volume}</span>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <span className="text-[11px] text-white/50">ارزش معاملات</span>
-                            <span className="text-sm font-semibold text-white">{details.value}</span>
+                            <span className="text-[11px] text-[rgb(var(--neo-text-muted))]">ارزش معاملات</span>
+                            <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">{details.value}</span>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <span className="text-[11px] text-white/50">ارزش صف خرید</span>
-                            <span className="text-sm font-semibold text-white">{details.buyQueueValue}</span>
+                            <span className="text-[11px] text-[rgb(var(--neo-text-muted))]">ارزش صف خرید</span>
+                            <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">{details.buyQueueValue}</span>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <span className="text-[11px] text-white/50">ارزش صف فروش</span>
-                            <span className="text-sm font-semibold text-white">{details.sellQueueValue}</span>
+                            <span className="text-[11px] text-[rgb(var(--neo-text-muted))]">ارزش صف فروش</span>
+                            <span className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">{details.sellQueueValue}</span>
                         </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="neo-stack neo-stack--tight">
                         <div className="flex items-center justify-between text-[11px]">
-                            <span className="inline-flex items-center gap-1 font-medium text-white">
-                                <span className="h-2 w-2 rounded-full bg-neo-green" aria-hidden />
+                            <span className={clsx('inline-flex items-center gap-1 font-medium', toneTextVariantClasses.positive)}>
+                                <span className="neo-dot" aria-hidden />
                                 نمادهای مثبت {toPersianDigits(details.positiveCount)}
                             </span>
-                            <span className="inline-flex items-center gap-1 font-medium text-red-400">
-                                <span className="h-2 w-2 rounded-full bg-red-500" aria-hidden />
+                            <span className={clsx('inline-flex items-center gap-1 font-medium', toneTextVariantClasses.negative)}>
+                                <span className="neo-dot" aria-hidden />
                                 نمادهای منفی {toPersianDigits(details.negativeCount)}
                             </span>
                         </div>
-                        <div className="flex h-2 overflow-hidden rounded-full bg-white/10">
+                        <div className="neo-tone-bar" role="presentation">
                             <span
-                                className="h-full bg-neo-green"
+                                className={toneBarFillVariantClasses.positive}
                                 style={{ width: `${positivePercent}%` }}
                                 aria-hidden
                             />
                             <span
-                                className="h-full bg-red-500"
+                                className={toneBarFillVariantClasses.negative}
                                 style={{ width: `${negativePercent}%` }}
                                 aria-hidden
                             />
@@ -179,10 +186,10 @@ const MarketSummary: React.FC<MarketSummaryProps> = ({ items, onItemClick, colum
     ];
 
     return (
-        <div className={composeHomeCard('space-y-4', 'default', 'md')}>
-            <div className="space-y-3">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <h2 className="text-xl font-bold text-white">خلاصه وضعیت بازارها</h2>
+        <div className={composeHomeCard('neo-stack neo-stack--normal', 'default', 'md')}>
+            <div className="neo-stack neo-stack--tight">
+                <div className="flex flex-col gap-2 text-[rgb(var(--neo-text-strong))] sm:flex-row sm:items-center sm:justify-between">
+                    <h2 className="text-xl font-bold">خلاصه وضعیت بازارها</h2>
                     <div className="relative w-full sm:w-48">
                         <label id={timeframeLabelId} htmlFor={timeframeSelectId} className="sr-only">
                             انتخاب بازه زمانی خلاصه بازار
@@ -192,7 +199,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = ({ items, onItemClick, colum
                             aria-labelledby={timeframeLabelId}
                             value={activeTimeframe}
                             onChange={(event) => setActiveTimeframe(event.target.value as Timeframe)}
-                            className="w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-right text-xs font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60"
+                            className="neo-field neo-field--sm text-right text-xs font-semibold"
                         >
                             {timeframes.map((tf) => (
                                 <option key={tf.value} value={tf.value} className="text-gray-900">

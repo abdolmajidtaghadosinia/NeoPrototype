@@ -2,10 +2,10 @@ import clsx from 'clsx';
 
 /** Base classes for a standard page container. */
 export const pageShell =
-  'neo-page-shell neo-animate-stack space-y-8 pb-16 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
+  'neo-page-shell neo-animate-stack pb-16 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
 /** Base classes for a narrower page container. */
 export const pageShellNarrow =
-  'neo-page-shell neo-animate-stack space-y-6 pb-12 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
+  'neo-page-shell neo-animate-stack pb-12 text-[rgb(var(--neo-text-primary))] text-[0.95rem] sm:text-base';
 /** Styling for a standard section title. */
 export const sectionTitle =
   'flex items-center justify-between gap-3 text-right text-lg font-bold sm:text-xl';
@@ -162,3 +162,71 @@ export const composeHomeCardClasses = (
     homeCardPaddingMap[padding],
     className,
   );
+
+/**
+ * Shared tone variants for highlight, chip, and text styling.
+ */
+export type ToneVariant = 'neutral' | 'positive' | 'negative' | 'info' | 'alert';
+
+/**
+ * Mapping of tone variants to highlight container classes.
+ */
+export const highlightToneVariantClasses: Record<ToneVariant, string> = {
+  neutral: 'neo-highlight--neutral',
+  positive: 'neo-highlight--positive',
+  negative: 'neo-highlight--negative',
+  info: 'neo-highlight--info',
+  alert: 'neo-highlight--alert',
+};
+
+/**
+ * Mapping of tone variants to highlight dot classes.
+ */
+export const highlightDotVariantClasses: Record<ToneVariant, string> = {
+  neutral: 'neo-highlight__dot neo-highlight-dot--neutral',
+  positive: 'neo-highlight__dot neo-highlight-dot--positive',
+  negative: 'neo-highlight__dot neo-highlight-dot--negative',
+  info: 'neo-highlight__dot neo-highlight-dot--info',
+  alert: 'neo-highlight__dot neo-highlight-dot--alert',
+};
+
+/**
+ * Mapping of tone variants to highlight value text classes.
+ */
+export const highlightValueVariantClasses: Record<ToneVariant, string> = {
+  neutral: 'neo-highlight__value neo-highlight-value--neutral',
+  positive: 'neo-highlight__value neo-highlight-value--positive',
+  negative: 'neo-highlight__value neo-highlight-value--negative',
+  info: 'neo-highlight__value neo-highlight-value--info',
+  alert: 'neo-highlight__value neo-highlight-value--alert',
+};
+
+/**
+ * Mapping of tone variants to chip classes used across the design system.
+ */
+export const toneChipVariantClasses: Record<ToneVariant, string> = {
+  neutral: 'neo-tone-chip neo-tone-chip--neutral',
+  positive: 'neo-tone-chip neo-tone-chip--positive',
+  negative: 'neo-tone-chip neo-tone-chip--negative',
+  info: 'neo-tone-chip neo-tone-chip--info',
+  alert: 'neo-tone-chip neo-tone-chip--alert',
+};
+
+/**
+ * Mapping of tone variants to text utility classes.
+ */
+export const toneTextVariantClasses: Record<ToneVariant, string> = {
+  neutral: 'neo-tone-text--neutral',
+  positive: 'neo-tone-text--positive',
+  negative: 'neo-tone-text--negative',
+  info: 'neo-tone-text--info',
+  alert: 'neo-tone-text--alert',
+};
+
+/**
+ * Mapping of tone variants to progress bar fill classes.
+ */
+export const toneBarFillVariantClasses: Record<'positive' | 'negative', string> = {
+  positive: 'neo-tone-bar__fill neo-tone-bar__fill--positive',
+  negative: 'neo-tone-bar__fill neo-tone-bar__fill--negative',
+};

@@ -5,6 +5,11 @@ import { StarIcon } from './icons/StarIcon';
 import { ChartPieIcon } from './icons/ChartPieIcon';
 import { ChartBarIcon } from './icons/ChartBarIcon';
 import type { PortfolioReturnInsight } from './MarketOverview';
+import {
+  highlightDotVariantClasses,
+  highlightToneVariantClasses,
+  highlightValueVariantClasses,
+} from './designSystem';
 
 export type HighlightTone = 'up' | 'down' | 'neutral' | 'info' | 'alert';
 
@@ -45,31 +50,30 @@ interface FilterTabsProps {
   onActiveTabIdChange?: (tabId: string) => void;
 }
 
-const baseHighlightClasses =
-  'filter-tab-highlight text-[rgb(var(--filter-highlight-text))] backdrop-blur-sm';
+const baseHighlightClasses = 'neo-highlight text-right';
 
 const highlightToneClasses: Record<HighlightTone, string> = {
-  up: 'border-emerald-400/60 shadow-[0_0_18px_rgba(16,185,129,0.35)]',
-  down: 'border-rose-400/60 shadow-[0_0_18px_rgba(244,63,94,0.3)]',
-  neutral: '',
-  info: 'border-sky-400/60 shadow-[0_0_18px_rgba(56,189,248,0.35)]',
-  alert: 'border-amber-400/60 shadow-[0_0_18px_rgba(251,191,36,0.35)]',
+  up: highlightToneVariantClasses.positive,
+  down: highlightToneVariantClasses.negative,
+  neutral: highlightToneVariantClasses.neutral,
+  info: highlightToneVariantClasses.info,
+  alert: highlightToneVariantClasses.alert,
 };
 
 const highlightToneDotClasses: Record<HighlightTone, string> = {
-  up: 'bg-emerald-400',
-  down: 'bg-rose-400',
-  neutral: 'bg-slate-200',
-  info: 'bg-sky-400',
-  alert: 'bg-amber-400',
+  up: highlightDotVariantClasses.positive,
+  down: highlightDotVariantClasses.negative,
+  neutral: highlightDotVariantClasses.neutral,
+  info: highlightDotVariantClasses.info,
+  alert: highlightDotVariantClasses.alert,
 };
 
 const highlightValueToneClasses: Record<HighlightTone, string> = {
-  up: 'text-[rgb(var(--filter-highlight-value-up))]',
-  down: 'text-[rgb(var(--filter-highlight-value-down))]',
-  neutral: 'text-[rgb(var(--filter-highlight-text))]',
-  info: 'text-[rgb(var(--filter-highlight-value-info))]',
-  alert: 'text-[rgb(var(--filter-highlight-value-alert))]',
+  up: highlightValueVariantClasses.positive,
+  down: highlightValueVariantClasses.negative,
+  neutral: highlightValueVariantClasses.neutral,
+  info: highlightValueVariantClasses.info,
+  alert: highlightValueVariantClasses.alert,
 };
 
 const getHighlightScore = (highlight: TabHighlight): number => {
@@ -454,36 +458,21 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
         <div
           key={id}
           className={clsx(
-            'flex min-h-[3.25rem] items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-sm font-semibold leading-tight',
+            'min-h-[3.25rem] w-full text-sm font-semibold leading-tight',
             baseHighlightClasses,
             highlightToneClasses[tone],
           )}
         >
-          <div className="flex min-w-0 items-center gap-1.5 text-[0.72rem] font-medium text-[rgb(var(--filter-highlight-subtext))] sm:text-xs">
-            <span className={`h-2 w-2 rounded-full ${highlightToneDotClasses[tone]}`} />
+          <div className="neo-highlight__meta">
+            <span className={highlightToneDotClasses[tone]} aria-hidden />
             {label && (
-              <span className="filter-tab-highlight__label max-w-[8.5rem] truncate text-[rgb(var(--filter-highlight-text))] sm:max-w-[10rem]">
-                {label}
-              </span>
+              <span className="neo-highlight__label max-w-[8.5rem] truncate sm:max-w-[10rem]">{label}</span>
             )}
-            {badge && (
-              <span className="rounded-full bg-[color:var(--filter-highlight-chip-subtle-bg)] px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-[rgb(var(--filter-highlight-text))]">
-                {badge}
-              </span>
-            )}
+            {badge && <span className="neo-highlight__badge">{badge}</span>}
           </div>
-          <div className="flex items-center gap-1.5 text-base font-bold text-[rgb(var(--filter-highlight-text))] sm:text-lg">
-            {icon && (
-              <span className="flex items-center text-sm text-[rgb(var(--filter-highlight-text))] opacity-90">
-                {icon}
-              </span>
-            )}
-            <span
-              className={clsx(
-                'filter-tab-highlight__value max-w-[8.5rem] truncate text-right tracking-tight sm:max-w-[10rem]',
-                highlightValueToneClasses[tone],
-              )}
-            >
+          <div className="neo-highlight__value-wrap text-base sm:text-lg">
+            {icon && <span className="neo-highlight__icon">{icon}</span>}
+            <span className={clsx('truncate sm:max-w-[10rem]', highlightValueToneClasses[tone])}>
               {value ?? label ?? '—'}
             </span>
           </div>
