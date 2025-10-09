@@ -1075,7 +1075,11 @@ const HomePage: React.FC<HomePageProps> = ({
   );
 
   return (
-    <Page as="main" spacing="md" className="home-page space-y-4 pt-3 sm:space-y-5 sm:pt-4">
+    <Page
+      as="main"
+      spacing="md"
+      className="home-page space-y-4 px-3 pt-3 sm:space-y-5 sm:px-0 sm:pt-4"
+    >
       <FilterTabs
         activeTab={activeTab}
         onTabChange={handleTabChange}

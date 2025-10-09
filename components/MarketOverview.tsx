@@ -935,9 +935,9 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
       <div className="absolute -top-32 -left-24 h-64 w-64 rounded-full bg-neo-green/10 blur-3xl" />
       <div className="absolute -bottom-40 -right-24 h-72 w-72 rounded-full bg-neo-green/5 blur-3xl" />
 
-      <div className="relative flex flex-col items-start gap-3 text-right sm:flex-row sm:items-center sm:justify-between">
+      <div className="relative grid w-full grid-cols-1 items-stretch gap-2 text-right sm:flex sm:flex-row sm:items-center sm:justify-between sm:gap-3">
         <h3 className="w-full text-right text-xl font-extrabold text-white sm:text-2xl">بازارها در یک نگاه</h3>
-        <div className="relative w-full sm:w-64">
+        <div className="relative w-full sm:w-56 lg:w-64">
           <label htmlFor={timeframeSelectId} id={timeframeLabelId} className="sr-only">
             انتخاب بازه زمانی بازار
           </label>
@@ -947,7 +947,7 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
             aria-controls={timeframePanelId}
             value={selectedTimeframe}
             onChange={(event) => setSelectedTimeframe(event.target.value as MarketOverviewTimeframe)}
-            className="w-full appearance-none rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-right text-sm font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60"
+            className="w-full appearance-none rounded-2xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-right text-sm font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60 sm:px-4 sm:py-3"
           >
             {timeframeOptions.map((option) => (
               <option key={option.value} value={option.value} className="text-gray-900">
@@ -955,7 +955,7 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
               </option>
             ))}
           </select>
-          <ChevronDownIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-200" />
+          <ChevronDownIcon className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-200 sm:left-4" />
         </div>
       </div>
 
@@ -963,9 +963,9 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
         id={timeframePanelId}
         role="tabpanel"
         aria-labelledby={timeframeLabelId}
-        className="relative mt-3 w-full"
+        className="relative mt-4 w-full"
       >
-        <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4">
           {displayTabs.map((tab) => {
             const isActive = activeList === tab;
             const stateClasses = isActive
