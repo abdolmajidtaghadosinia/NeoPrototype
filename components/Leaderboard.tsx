@@ -7,6 +7,7 @@ import { ArrowDownIcon } from './icons/ArrowDownIcon';
 import { ClockIcon } from './icons/ClockIcon';
 import { TrophyIcon } from './icons/TrophyIcon';
 import { toPersianDigits } from './formatters';
+import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
 const formatToman = (n: number): string => {
     return toPersianDigits(n.toLocaleString('fa-IR'));
@@ -133,7 +134,12 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ users, onUserClick, followedU
                             </button>
                             <div className="flex items-center gap-4 text-sm mr-4">
                                 <div className="flex items-center gap-1">
-                                    <span className="text-base">{user.favoriteAsset.icon}</span>
+                                    <AssetIcon
+                                        icon={user.favoriteAsset.icon}
+                                        name={user.favoriteAsset.name}
+                                        symbol={deriveAssetSymbol(user.favoriteAsset.name)}
+                                        size="xs"
+                                    />
                                     <span className="text-white/80 font-medium hidden sm:inline">{user.favoriteAsset.name}</span>
                                 </div>
                                 <div className="font-bold text-neo-green">{toPersianDigits(user.profit)}%</div>

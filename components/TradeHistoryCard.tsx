@@ -3,6 +3,7 @@ import { Trade } from '../types';
 import { toPersianFormatted } from './formatters';
 import { ArrowUpIcon } from './icons/ArrowUpIcon';
 import { ArrowDownIcon } from './icons/ArrowDownIcon';
+import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
 interface TradeHistoryCardProps {
     trade: Trade;
@@ -16,7 +17,12 @@ const TradeHistoryCard: React.FC<TradeHistoryCardProps> = ({ trade }) => {
         <div className="bg-neo-dark-3 rounded-xl p-4 space-y-3">
             <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                    <span className="text-3xl w-10 h-10 flex items-center justify-center">{trade.asset.icon}</span>
+                    <AssetIcon
+                        icon={trade.asset.icon}
+                        name={trade.asset.name}
+                        symbol={deriveAssetSymbol(trade.asset.name)}
+                        size="sm"
+                    />
                     <div className="text-right">
                         <p className="font-bold text-white">{trade.asset.name}</p>
                         <div className="flex items-center gap-2 mt-1">

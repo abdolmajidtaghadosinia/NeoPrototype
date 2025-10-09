@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({
   theme,
   onThemeToggle,
 }) => (
-  <header className="flex items-center justify-between p-4">
+  <header className="flex items-center justify-between pr-2 pl-3 py-4 sm:px-4 md:pl-[12rem] md:pr-[7.5rem] xl:pl-[14rem] xl:pr-[9rem]">
     <div className="flex items-center gap-3">
       <div className="h-10 w-10 p-1 text-neo-green">
         <StockMarketIcon />

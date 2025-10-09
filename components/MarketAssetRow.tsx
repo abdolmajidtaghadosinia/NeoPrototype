@@ -2,6 +2,7 @@ import React from 'react';
 import { LineChart, Line, ResponsiveContainer, YAxis } from 'recharts';
 import { MarketAsset } from '../types';
 import { toPersianDigits } from './formatters';
+import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
 interface MarketAssetRowProps {
   asset: MarketAsset;
@@ -27,36 +28,40 @@ const MarketAssetRow: React.FC<MarketAssetRowProps> = ({ asset }) => {
   // Use daily performance data as default since timeframe selectors are removed
   const performance = asset.performance.daily;
   const isPositive = performance.change >= 0;
-  const chartColor = isPositive ? '#D7FE43' : '#ef4444';
-  
-  const isCrypto = asset.category === 'کریپتو';
-  const nameParts = isCrypto ? asset.name.match(/(.*)\s+\((.*)\)/) : null;
-  const cryptoFullName = nameParts ? nameParts[1].trim() : asset.name;
-  const cryptoTicker = nameParts ? nameParts[2].trim() : '';
+  const accentColor = 'rgb(var(--neo-accent))';
+  const chartColor = isPositive ? accentColor : '#ef4444';
 
-  const renderIcon = () => {
-    if (asset.category === 'ارزها' && typeof asset.icon === 'string' && asset.icon.startsWith('http')) {
-      return <img src={asset.icon} alt={asset.name} className="w-8 h-8 object-contain rounded-md" />;
-    }
-    if (typeof asset.icon === 'string' && asset.icon.startsWith('http')) {
-      return <img src={asset.icon} alt={asset.name} className="w-8 h-8 object-contain" />;
-    }
-    return <span className="text-2xl w-8 h-8 flex items-center justify-center">{asset.icon}</span>;
+  const nameParts = asset.name.match(/(.*)\s+\((.*)\)/);
+  const assetBaseName = nameParts ? nameParts[1].trim() : asset.name;
+  const assetTicker = nameParts ? nameParts[2].trim() : '';
+  const derivedSymbol = assetTicker || deriveAssetSymbol(asset.name);
+
+  const variantMap: Record<MarketAsset['category'], NonNullable<React.ComponentProps<typeof AssetIcon>['variant']>> = {
+    بورس: 'stock',
+    'صندوق‌ها': 'fund',
+    کالا: 'commodity',
+    ارزها: 'currency',
   };
 
   return (
     <div className="bg-neo-dark-3 rounded-2xl p-3 flex items-center gap-3 sm:gap-4 overflow-hidden">
         {/* Column 1: Icon (appears on the right in RTL) */}
-        <div className="bg-neo-dark-2 p-2 rounded-lg flex-shrink-0 w-12 h-12 flex items-center justify-center">
-            {renderIcon()}
+        <div className="flex-shrink-0">
+          <AssetIcon
+            icon={asset.icon}
+            name={asset.name}
+            symbol={derivedSymbol}
+            size="md"
+            variant={variantMap[asset.category] ?? 'default'}
+          />
         </div>
 
         {/* Column 2: Name & Ticker */}
         <div className="text-right flex-1 min-w-0">
-          {isCrypto && cryptoTicker ? (
+          {assetTicker ? (
             <>
-              <p className="font-bold text-white text-sm truncate">{cryptoTicker}</p>
-              <p className="text-xs text-gray-400 truncate">{cryptoFullName}</p>
+              <p className="font-bold text-white text-sm truncate">{assetTicker}</p>
+              <p className="text-xs text-gray-400 truncate">{assetBaseName}</p>
             </>
           ) : (
             <p className="font-bold text-white text-sm truncate">{asset.name}</p>

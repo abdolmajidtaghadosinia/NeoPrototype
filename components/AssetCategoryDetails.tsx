@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import type { AssetCategory } from './AssetCategories';
 import { toPersianDigits } from './formatters';
+import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
 /**
  * Renders a detailed view of a single asset category, displaying its constituent assets.
@@ -36,7 +37,12 @@ const AssetCategoryDetails: React.FC<{ category: AssetCategory }> = ({ category 
           return (
             <li key={idx} className="flex items-center justify-between p-3 rounded-xl bg-neo-dark-2">
               <div className="flex items-center gap-2">
-                {asset.icon && <span className="text-xl">{asset.icon}</span>}
+                <AssetIcon
+                  icon={asset.icon}
+                  name={asset.name}
+                  symbol={deriveAssetSymbol(asset.name)}
+                  size="xs"
+                />
                 <div>
                   <p className="font-semibold">{asset.name}</p>
                   {asset.amount && <p className="text-xs text-gray-400 mt-0.5">{asset.amount}</p>}

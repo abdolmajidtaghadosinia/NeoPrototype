@@ -13,6 +13,7 @@ import { ChatBubbleIcon } from '../icons/ChatBubbleIcon';
 import { TrendingUpIcon } from '../icons/TrendingUpIcon';
 import { UsersIcon } from '../icons/UsersIcon';
 import { toPersianDigits } from '../formatters';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 
 /**
  * Props for the SocialTradingPage component.
@@ -45,6 +46,23 @@ interface SocialTradingPageProps {
   /** Optional key to specify a section to scroll to and highlight upon loading. */
   focusSection?: 'news';
 }
+
+const getAssetVariant = (
+  category?: MarketAsset['category'],
+): NonNullable<React.ComponentProps<typeof AssetIcon>['variant']> => {
+  switch (category) {
+    case 'بورس':
+      return 'stock';
+    case 'صندوق‌ها':
+      return 'fund';
+    case 'ارزها':
+      return 'currency';
+    case 'کالا':
+      return 'commodity';
+    default:
+      return 'default';
+  }
+};
 
 /**
  * Renders the main social trading page, which acts as a hub for community-driven content.
@@ -263,19 +281,19 @@ const SocialTradingPage: React.FC<SocialTradingPageProps> = ({ onUserSelect, onI
   };
 
   const ideaTemplates = useMemo<IdeaTemplate[]>(() => {
-    const bitcoinId = assets.find((asset) => asset.id === 'bitcoin')?.id;
     const khodroId = assets.find((asset) => asset.id === 'khodro')?.id;
     const ayarId = assets.find((asset) => asset.id === 'ayar')?.id;
+    const webmelatId = assets.find((asset) => asset.id === 'webmelat')?.id;
 
     return [
       {
-        id: 'btc-swing',
-        label: 'سوئینگ بیت‌کوین',
-        title: 'سناریوی سوئینگ بیت‌کوین',
-        description: 'بررسی واکنش قیمت بین محدوده حمایتی ۵۸ تا ۶۲ هزار دلار با تمرکز بر حجم معاملات.',
+        id: 'tse-outlook',
+        label: 'چشم‌انداز شاخص کل',
+        title: 'تحلیل ناحیه مقاومتی شاخص کل بورس',
+        description: 'بررسی رفتار شاخص کل در محدوده ۲.۲ میلیون واحد با تمرکز بر ورود پول حقیقی.',
         type: 'bullish',
         timeframe: '۱ هفته',
-        assetId: bitcoinId || defaultAssetId,
+        assetId: webmelatId || defaultAssetId,
       },
       {
         id: 'auto-risk',
@@ -374,8 +392,18 @@ const SocialTradingPage: React.FC<SocialTradingPageProps> = ({ onUserSelect, onI
               <div>
                 <p className="text-xs font-semibold text-gray-400">محبوب‌ترین ایده امروز</p>
                 <p className="mt-1 text-sm font-bold text-white line-clamp-2">{topIdea.title}</p>
-                <p className="mt-2 text-xs text-gray-400">
-                  {topIdea.asset.icon} {topIdea.asset.name} · {toPersianDigits(topIdea.likes)} پسند
+                <p className="mt-2 flex items-center gap-2 text-xs text-gray-400">
+                  <span className="inline-flex items-center gap-1">
+                    <AssetIcon
+                      icon={topIdea.asset.icon}
+                      name={topIdea.asset.name}
+                      symbol={deriveAssetSymbol(topIdea.asset.name)}
+                      size="xs"
+                      variant={topIdea.asset.category ? getAssetVariant(topIdea.asset.category) : 'default'}
+                    />
+                    <span>{topIdea.asset.name}</span>
+                  </span>
+                  <span>· {toPersianDigits(topIdea.likes)} پسند</span>
                 </p>
               </div>
               <span className="text-2xl text-neo-green transition-transform duration-200 group-hover:translate-x-1">➜</span>

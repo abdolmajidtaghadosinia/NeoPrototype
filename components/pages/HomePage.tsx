@@ -129,22 +129,22 @@ const initialMarketSummaryData: MarketSummaryItem[] = [
         }
     },
     {
-        id: 'btc',
-        name: 'بیت‌کوین',
-        icon: '₿',
+        id: 'tse-index',
+        name: 'شاخص کل بورس',
+        icon: '📈',
         performance: {
-            daily: { value: '$۶۷,۵۰۰', change: -1.8, chartData: generateSummaryChartData(67500, 7, 0.03) },
-            weekly: { value: '$۶۹,۰۰۰', change: 2.5, chartData: generateSummaryChartData(69000, 4, 0.05) },
-            monthly: { value: '$۶۵,۰۰۰', change: 3.8, chartData: generateSummaryChartData(65000, 30, 0.1) },
-            yearly: { value: '$۳۰,۰۰۰', change: 125.0, chartData: generateSummaryChartData(30000, 12, 0.2) },
+            daily: { value: '۲,۱۸۰,۰۰۰', change: 0.6, chartData: generateSummaryChartData(2180, 7, 0.015) },
+            weekly: { value: '۲,۱۵۵,۰۰۰', change: 1.2, chartData: generateSummaryChartData(2155, 4, 0.02) },
+            monthly: { value: '۲,۰۹۵,۰۰۰', change: 3.5, chartData: generateSummaryChartData(2095, 30, 0.04) },
+            yearly: { value: '۱,۸۹۰,۰۰۰', change: 12.3, chartData: generateSummaryChartData(1890, 12, 0.05) },
         },
         details: {
-            volume: '۳۵ میلیارد دلار',
-            value: '۱.۳ تریلیون دلار',
-            positiveCount: 3,
-            negativeCount: 7,
-            buyQueueValue: '۵ میلیارد دلار',
-            sellQueueValue: '۴ میلیارد دلار',
+            volume: '۷,۵۰۰ میلیارد تومان',
+            value: '۱۳,۴۰۰ میلیارد تومان',
+            positiveCount: 275,
+            negativeCount: 180,
+            buyQueueValue: '۹۵۰ میلیارد تومان',
+            sellQueueValue: '۶۸۰ میلیارد تومان',
         }
     },
     {
@@ -188,7 +188,6 @@ interface UpcomingEventItem {
   time?: string;
   location?: string;
   meta?: string;
-  tag?: string;
   accent: UpcomingEventAccent;
 }
 
@@ -204,29 +203,29 @@ interface HotSpotlight {
 
 const hotSpotlightItems: HotSpotlight[] = [
   {
-    id: 'growth-leader',
-    title: 'پیشتاز رشد',
-    subtitle: 'صندوق اهرمی شتاب در ۲۴ ساعت اخیر',
-    asset: 'صندوق اهرمی شتاب',
-    change: 3.5,
+    id: 'index-leader',
+    title: 'رهبر شاخص',
+    subtitle: 'فارس امروز با رشد ۸٫۶۵٪ در صدر نمادهای شاخص‌ساز قرار گرفت.',
+    asset: 'فارس',
+    change: 8.65,
     tone: 'up',
+  },
+  {
+    id: 'gold-fund',
+    title: 'طلایی‌ترین صندوق',
+    subtitle: 'گنج در بازه شش‌ماهه ۳۲٫۷۴٪ بازدهی داشته است.',
+    asset: 'گنج',
+    change: 32.74,
+    tone: 'up',
+    tag: '۶ ماهه',
   },
   {
     id: 'sell-pressure',
-    title: 'بیشترین فشار فروش',
-    subtitle: 'BNB نیازمند پایش دقیق است.',
-    asset: 'BNB',
-    change: -2.8,
+    title: 'نیازمند پایش',
+    subtitle: 'شبندر پس از افت ۴٫۱۶٪ امروز زیر ذره‌بین قرار دارد.',
+    asset: 'شبندر',
+    change: -4.16,
     tone: 'down',
-  },
-  {
-    id: 'commodity-leader',
-    title: 'رهبر بازار کالایی',
-    subtitle: 'بازار کالایی در روزانه اخیر',
-    asset: 'زعفران نگین',
-    change: 2.3,
-    tone: 'up',
-    tag: 'امروز',
   },
 ];
 
@@ -237,8 +236,8 @@ const hotSpotlightToneMap: Record<HighlightTone, { text: string; chip: string; t
     tone: 'positive',
   },
   down: {
-    text: 'text-rose-400',
-    chip: 'border border-rose-400/40 bg-rose-500/10 text-rose-100',
+    text: 'text-rose-600 dark:text-rose-300',
+    chip: 'border border-rose-300/60 bg-rose-100 text-rose-700 dark:border-rose-400/40 dark:bg-rose-500/10 dark:text-rose-100',
     tone: 'negative',
   },
   neutral: {
@@ -277,7 +276,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const [activeTab, setActiveTab] = useState('پورتفوی من');
   const [displayedStocks, setDisplayedStocks] = useState<Stock[]>([]);
   const [marketSummaryItems, setMarketSummaryItems] = useState<MarketSummaryItem[]>(initialMarketSummaryData);
-  const [marketMapView, setMarketMapView] = useState<'stock' | 'crypto' | 'funds'>('stock');
+  const [marketMapView, setMarketMapView] = useState<'stock' | 'commodities' | 'funds'>('stock');
   const [activeTabLabelId, setActiveTabLabelId] = useState<string>('');
   const topStripMinHeight = activeTab === 'پورتفوی من' ? 'min-h-[5rem]' : 'min-h-[4.5rem]';
   const tabPanelId = 'homepage-tabpanel';
@@ -293,6 +292,14 @@ const HomePage: React.FC<HomePageProps> = ({
     const formatted = `${prefix}${magnitude.toFixed(magnitude >= 1 ? 1 : 2)}`;
     return `${toPersianDigits(formatted)}٪`;
   }, []);
+
+  const getChangeChipClasses = useCallback(
+    (value: number) =>
+      value >= 0
+        ? 'border border-neo-green/35 bg-neo-green/10 text-neo-green'
+        : 'border border-rose-400/45 bg-rose-500/10 text-rose-100',
+    [],
+  );
 
   const portfolioReturnInsights = useMemo<PortfolioReturnInsight[]>(
     () => [
@@ -325,8 +332,8 @@ const HomePage: React.FC<HomePageProps> = ({
       },
       {
         id: 'signal-2',
-        title: 'حد ضرر برای بیت‌کوین',
-        reason: 'واگرایی منفی در RSI روزانه دیده می‌شود؛ حد ضرر ۶۶٬۸۰۰ دلار پیشنهاد شد.',
+        title: 'حد ضرر برای طلای آب‌شده',
+        reason: 'ضعف مومنتوم در RSI روزانه دیده می‌شود؛ حد ضرر ۳٬۴۸۰٬۰۰۰ تومان برای هر مثقال پیشنهاد شد.',
         badge: 'هشدار مدیریت ریسک',
         tone: 'warning',
       },
@@ -444,7 +451,6 @@ const HomePage: React.FC<HomePageProps> = ({
         description: 'جزئیات تولید اردیبهشت پس از بسته شدن بازار منتشر می‌شود و می‌تواند مسیر فردا را تعیین کند.',
         time: 'ساعت ۱۷:۳۰',
         meta: 'گزارش فصلی تولید',
-        tag: 'یادآوری مهم',
         accent: 'primary',
       },
       {
@@ -455,7 +461,6 @@ const HomePage: React.FC<HomePageProps> = ({
         description: 'ارائه گزارش هیئت‌مدیره و تصمیم‌گیری درباره تقسیم سود در مجمع عمومی سالانه.',
         time: 'ساعت ۱۰:۳۰',
         location: 'تهران، مرکز همایش‌های صدا و سیما',
-        tag: 'حضور سهامداران',
         accent: 'info',
       },
       {
@@ -466,7 +471,6 @@ const HomePage: React.FC<HomePageProps> = ({
         description: 'انتشار شاخص CPI آمریکا که می‌تواند روی بازار ارز و طلا در ابتدای هفته آینده اثر بگذارد.',
         time: '۲۳:۳۰ به وقت تهران',
         meta: 'پیگیری از طریق وب‌سایت BLS',
-        tag: 'رویداد جهانی',
         accent: 'alert',
       },
     ],
@@ -484,7 +488,6 @@ const HomePage: React.FC<HomePageProps> = ({
     dayBadge: string;
     connector: string;
     mobileDivider: string;
-    tag: string;
     timeIcon: string;
   }> = {
     primary: {
@@ -492,7 +495,6 @@ const HomePage: React.FC<HomePageProps> = ({
       dayBadge: 'border border-neo-green/50 bg-neo-green/10 text-neo-green',
       connector: 'bg-gradient-to-b from-transparent via-neo-green/45 to-transparent',
       mobileDivider: 'bg-gradient-to-l from-transparent via-neo-green/60 to-transparent',
-      tag: 'border border-neo-green/45 bg-neo-green/10 text-neo-green',
       timeIcon: 'text-neo-green',
     },
     info: {
@@ -500,7 +502,6 @@ const HomePage: React.FC<HomePageProps> = ({
       dayBadge: 'border border-sky-500/40 bg-sky-500/10 text-sky-300',
       connector: 'bg-gradient-to-b from-transparent via-sky-500/40 to-transparent',
       mobileDivider: 'bg-gradient-to-l from-transparent via-sky-400/50 to-transparent',
-      tag: 'border border-sky-500/40 bg-sky-500/10 text-sky-200',
       timeIcon: 'text-sky-300',
     },
     alert: {
@@ -508,7 +509,6 @@ const HomePage: React.FC<HomePageProps> = ({
       dayBadge: 'border border-rose-500/40 bg-rose-500/10 text-rose-300',
       connector: 'bg-gradient-to-b from-transparent via-rose-500/35 to-transparent',
       mobileDivider: 'bg-gradient-to-l from-transparent via-rose-400/45 to-transparent',
-      tag: 'border border-rose-500/40 bg-rose-500/10 text-rose-200',
       timeIcon: 'text-rose-300',
     },
   };
@@ -598,19 +598,21 @@ const HomePage: React.FC<HomePageProps> = ({
             return (
               <div
                 key={event.id}
-                className="flex flex-col gap-4 sm:flex-row-reverse sm:items-stretch sm:gap-4"
+                className="flex flex-col gap-4 sm:flex-row sm:items-stretch sm:gap-4"
               >
-                <div className="hidden sm:flex sm:w-20 sm:flex-col sm:items-center sm:pt-1">
+                <div className="hidden sm:flex sm:w-20 sm:flex-col sm:items-end sm:pt-1">
                   <div
                     className={`flex min-h-[3.5rem] min-w-[4.25rem] items-center justify-center rounded-2xl px-3 text-center text-[11px] font-semibold ${accent.dayBadge}`}
                   >
                     {event.day}
                   </div>
                   {index < upcomingEvents.length - 1 && (
-                    <div
-                      className={`mt-3 h-full w-[3px] flex-1 rounded-full ${accent.connector}`}
-                      aria-hidden="true"
-                    />
+                    <div className="relative mt-3 w-full flex-1">
+                      <span
+                        className={`mx-auto block h-full w-[3px] rounded-full ${accent.connector}`}
+                        aria-hidden="true"
+                      />
+                    </div>
                   )}
                 </div>
                 <article
@@ -624,19 +626,12 @@ const HomePage: React.FC<HomePageProps> = ({
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent" />
                   </div>
                   <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between text-[11px] sm:hidden">
+                    <div className="flex items-center justify-end text-[11px] sm:hidden">
                       <span
                         className={`inline-flex items-center rounded-full px-3 py-1 font-semibold ${accent.dayBadge}`}
                       >
                         {event.day}
                       </span>
-                      {event.tag && (
-                        <span
-                          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-medium ${accent.tag}`}
-                        >
-                          {event.tag}
-                        </span>
-                      )}
                     </div>
                     <div className="sm:hidden">
                       <div
@@ -644,18 +639,11 @@ const HomePage: React.FC<HomePageProps> = ({
                         aria-hidden="true"
                       />
                     </div>
-                    <div className="flex flex-row-reverse items-center justify-between gap-3 text-[11px]">
+                    <div className="flex flex-row-reverse items-center justify-end gap-3 text-[11px]">
                       <div className="flex flex-row-reverse items-center gap-2 text-gray-400">
                         <CalendarIcon className="h-4 w-4 text-gray-500" />
                         <span>{event.date}</span>
                       </div>
-                      {event.tag && (
-                        <span
-                          className={`hidden sm:inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-medium ${accent.tag}`}
-                        >
-                          {event.tag}
-                        </span>
-                      )}
                     </div>
                     <h4 className="text-sm font-semibold text-white md:text-base">{event.title}</h4>
                     <p className="text-xs leading-6 text-gray-400">{event.description}</p>
@@ -724,7 +712,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const renderRightPanels = () => (
     <>
       <Suspense fallback={<Skeleton className="h-[26rem] rounded-3xl" />}>
-        <div className={homeCard('sm:p-5', 'default', 'md')}>
+        <div className={homeCard('sm:p-5 w-full min-w-0', 'default', 'md')}>
           <MarketSummary items={marketSummaryItems} onItemClick={onMarketSummarySelect} columns={1} />
         </div>
       </Suspense>
@@ -745,16 +733,27 @@ const HomePage: React.FC<HomePageProps> = ({
     onStockSelect(stockForNavigation);
   };
 
-  const cryptoMarketData = useMemo(() => {
-    const cryptoAssets = marketAssets.filter(a => a.category === 'کریپتو').slice(0, 10);
+  const commodityMarketData = useMemo(() => {
+    const commodityAssets = marketAssets.filter(a => a.category === 'کالا').slice(0, 10);
     const sizeOrder: MarketMapStock['size'][] = ['xl', 'xl', 'lg', 'lg', 'md', 'md', 'md', 'sm', 'sm', 'sm'];
-    const stocks: MarketMapStock[] = cryptoAssets.map((asset, index) => ({
+    const stocks: MarketMapStock[] = commodityAssets.map((asset, index) => ({
       name: asset.name.replace(/\s*\(.*\)/, ''),
       change: asset.performance.daily.change,
       size: sizeOrder[index] || 'sm',
       id: asset.id,
     }));
-    return [{ name: 'رمزارزها', stocks }];
+    return stocks.length
+      ? [{ name: 'بازار کالایی', stocks }]
+      : [
+          {
+            name: 'بازار کالایی',
+            stocks: [
+              { name: 'انس جهانی طلا', change: 0.6, size: 'lg' as const },
+              { name: 'سکه طرح جدید', change: 0.9, size: 'md' as const },
+              { name: 'شمش طلا', change: 0.4, size: 'md' as const },
+            ],
+          },
+        ];
   }, [marketAssets]);
 
   const fundMarketData = useMemo(() => {
@@ -820,7 +819,7 @@ const HomePage: React.FC<HomePageProps> = ({
       if (!apiKey) return;
       try {
         const ai = new GoogleGenAI({ apiKey });
-        const prompt = `Search the web and provide latest market summary for Tehran Stock Exchange (tse), gold price in Iran (gold), Bitcoin price in USD (btc), and US dollar price in Iran (usd). Return a JSON array with objects {id, value, change, details: {volume, value, positiveCount, negativeCount, buyQueueValue, sellQueueValue}}. Use Persian digits and appropriate currency units.`;
+        const prompt = `Search the web and provide latest market summary for Tehran Stock Exchange main index (tse), gold price in Iran (gold), major equity fund performance (fund), and US dollar price in Iran (usd). Return a JSON array with objects {id, value, change, details: {volume, value, positiveCount, negativeCount, buyQueueValue, sellQueueValue}}. Use Persian digits and appropriate currency units.`;
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -873,11 +872,11 @@ const HomePage: React.FC<HomePageProps> = ({
 
         const assetKeywordMap: { [key: string]: string } = {
             'وبملت': 'webmelat',
-            'دوجکوین': 'dogecoin',
             'درآمدثابت': 'kamand',
             'خودرو': 'khodro',
             'طلاعیار': 'ayar',
-            'اتریوم': 'ethereum',
+            'فولاد': 'foolad',
+            'شپنا': 'shepna',
         };
 
         const portfolioAssetsAsStocks: Stock[] = userPortfolioData
@@ -901,11 +900,7 @@ const HomePage: React.FC<HomePageProps> = ({
                 const performance = foundAsset.performance.daily;
                 const isPositive = performance.change >= 0;
 
-                // For crypto assets from the API, we have weekly sparkline data.
-                // For other static assets, we have generated daily chart data.
-                const chartDataForTicker = foundAsset.category === 'کریپتو' 
-                    ? foundAsset.performance.weekly.chartData 
-                    : foundAsset.performance.daily.chartData;
+                const chartDataForTicker = foundAsset.performance.daily.chartData;
 
                 return {
                     id: foundAsset.id,
@@ -958,7 +953,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
     if (activeTab === 'داغ‌ترین‌ها') {
       return (
-        <div className="flex items-stretch gap-4 overflow-x-auto pb-2 scrollbar-hide sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible">
+        <div className="flex items-stretch gap-3 overflow-x-auto pb-2 scrollbar-hide sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible">
           {hotSpotlightItems.map((spotlight) => {
             const accent = hotSpotlightToneMap[spotlight.tone] ?? hotSpotlightToneMap.neutral;
 
@@ -966,7 +961,7 @@ const HomePage: React.FC<HomePageProps> = ({
               <article
                 key={spotlight.id}
                 className={homeCard(
-                  'relative flex min-w-[14rem] flex-1 flex-col justify-between gap-4 transition-all duration-300 ease-out hover:-translate-y-1 sm:min-w-0 sm:p-6',
+                  'relative flex min-w-[14rem] flex-1 flex-col justify-between gap-3 transition-all duration-300 ease-out hover:-translate-y-1 sm:min-w-0 sm:p-5',
                   accent.tone,
                   'md',
                 )}
@@ -974,14 +969,14 @@ const HomePage: React.FC<HomePageProps> = ({
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-sm font-semibold text-white md:text-base">{spotlight.title}</span>
                   {spotlight.tag && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold text-gray-100">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-gray-100">
                       {spotlight.tag}
                     </span>
                   )}
                 </div>
                 <p className="text-xs leading-6 text-gray-300">{spotlight.subtitle}</p>
                 <div className="mt-1 h-px w-full rounded-full bg-gradient-to-l from-transparent via-white/15 to-transparent" />
-                <div className="flex items-end justify-between gap-3 pt-1 text-sm text-gray-200">
+                <div className="flex items-end justify-between gap-2.5 pt-1 text-sm text-gray-200">
                   <span className={`text-2xl font-black tracking-tight ${accent.text}`}>
                     {formatSpotlightPercent(spotlight.change)}
                   </span>
@@ -1005,11 +1000,11 @@ const HomePage: React.FC<HomePageProps> = ({
     if (displayedStocks.length === 0) {
       if (isLoading) {
         return (
-          <div className={`${topStripMinHeight} flex items-stretch gap-4 overflow-x-auto pb-2 scrollbar-hide`}>
+          <div className={`${topStripMinHeight} flex items-stretch gap-2.5 overflow-x-auto pb-1.5 scrollbar-hide snap-x snap-mandatory`}>
             {Array.from({ length: 4 }).map((_, index) => (
               <StockTickerSkeleton
                 key={index}
-                className={`min-w-[13rem] h-full ${topStripMinHeight}`}
+                className={`min-w-[13rem] h-full snap-start ${topStripMinHeight}`}
               />
             ))}
           </div>
@@ -1024,18 +1019,18 @@ const HomePage: React.FC<HomePageProps> = ({
     }
 
     return (
-      <div className={`${topStripMinHeight} flex items-stretch gap-4 overflow-x-auto pb-2 scrollbar-hide`}>
+      <div className={`${topStripMinHeight} flex items-stretch gap-2.5 overflow-x-auto pb-1.5 scrollbar-hide snap-x snap-mandatory`}>
         {displayedStocks.map((stock) => (
           <Suspense
             key={stock.id}
             fallback={(
-              <StockTickerSkeleton className={`min-w-[13rem] h-full ${topStripMinHeight}`} />
+              <StockTickerSkeleton className={`min-w-[13rem] h-full snap-start ${topStripMinHeight}`} />
             )}
           >
             <StockTickerCard
               stock={stock}
               onClick={() => onStockSelect(stock)}
-              className={`min-w-[13rem] h-full ${topStripMinHeight}`}
+              className={`min-w-[13rem] h-full snap-start ${topStripMinHeight}`}
             />
           </Suspense>
         ))}
@@ -1044,33 +1039,35 @@ const HomePage: React.FC<HomePageProps> = ({
   };
 
   const renderDashboardContent = () => (
-    <div className="flex flex-col gap-6 sm:gap-7 lg:gap-8">
+    <div className="flex flex-col gap-3.5 sm:gap-4 lg:gap-5">
       {renderTopStripContent()}
-      <div className="flex flex-col gap-6 sm:gap-7 lg:grid lg:grid-cols-[minmax(0,280px),minmax(0,1fr)] lg:items-start lg:gap-7 xl:grid-cols-[minmax(0,320px),minmax(0,1fr),minmax(0,320px)] xl:gap-8 2xl:grid-cols-[minmax(0,360px),minmax(0,1.1fr),minmax(0,360px)] 2xl:gap-10">
-        <div className="order-2 space-y-6 sm:space-y-7 lg:order-1 lg:col-start-1 lg:space-y-7 xl:order-1 xl:space-y-7 2xl:space-y-8">
+      <div className="flex flex-col gap-4 sm:gap-5 lg:grid lg:grid-cols-[minmax(0,280px),minmax(0,1fr)] lg:items-start lg:gap-5 xl:grid-cols-[minmax(0,320px),minmax(0,1fr)] xl:gap-7 2xl:grid-cols-[minmax(0,360px),minmax(0,1.1fr),minmax(0,360px)] 2xl:gap-7">
+        <div className="order-2 space-y-4 sm:space-y-5 lg:order-1 lg:col-start-1 lg:space-y-5 xl:order-2 xl:col-span-2 xl:col-start-1 xl:space-y-6 2xl:order-1 2xl:col-span-1 2xl:col-start-1 2xl:space-y-6">
           {renderLeftPanels()}
         </div>
-        <div className="order-1 space-y-6 sm:space-y-7 lg:col-start-2 xl:order-2 xl:space-y-7 2xl:space-y-8">
-          <Suspense fallback={<Skeleton className="h-[26rem] rounded-3xl" />}>
-            <MarketOverview
-              marketAssets={marketAssets}
-              onAssetSelect={handleMarketOverviewSelect}
-              onQuickTradeClick={onQuickTradeClick}
-              isLoading={isLoading}
-              onPortfolioItemSelect={(item) =>
-                onPortfolioSliceSelect({
-                  name: item.assetName,
-                  value: 0,
-                  color: '#D7FE43',
-                  dailyChange: item.change,
-                })
-              }
-              portfolioReturns={portfolioReturnInsights}
-              renderHighlightsInline={false}
-            />
-          </Suspense>
+        <div className="order-1 space-y-4 sm:space-y-5 lg:col-start-2 lg:min-w-0 xl:order-1 xl:col-span-2 xl:col-start-1 xl:space-y-6 xl:min-w-0 2xl:order-2 2xl:col-span-1 2xl:col-start-2 2xl:space-y-6">
+          <div className="min-w-0">
+            <Suspense fallback={<Skeleton className="h-[26rem] rounded-3xl" />}>
+              <MarketOverview
+                marketAssets={marketAssets}
+                onAssetSelect={handleMarketOverviewSelect}
+                onQuickTradeClick={onQuickTradeClick}
+                isLoading={isLoading}
+                onPortfolioItemSelect={(item) =>
+                  onPortfolioSliceSelect({
+                    name: item.assetName,
+                    value: 0,
+                    color: 'rgb(var(--neo-accent))',
+                    dailyChange: item.change,
+                  })
+                }
+                portfolioReturns={portfolioReturnInsights}
+                renderHighlightsInline={false}
+              />
+            </Suspense>
+          </div>
         </div>
-        <div className="order-3 space-y-6 sm:space-y-7 lg:col-span-2 lg:col-start-1 xl:col-span-1 xl:col-start-auto xl:space-y-7 2xl:space-y-8">
+        <div className="order-3 space-y-4 sm:space-y-5 lg:col-span-2 lg:col-start-1 xl:order-3 xl:col-span-2 xl:col-start-1 xl:space-y-6 xl:min-w-0 2xl:order-3 2xl:col-span-1 2xl:col-start-3 2xl:space-y-7">
           {renderRightPanels()}
         </div>
       </div>
@@ -1078,7 +1075,7 @@ const HomePage: React.FC<HomePageProps> = ({
   );
 
   return (
-    <Page as="main" spacing="lg" className="home-page pt-4">
+    <Page as="main" spacing="md" className="home-page space-y-4 pt-3 sm:space-y-5 sm:pt-4">
       <FilterTabs
         activeTab={activeTab}
         onTabChange={handleTabChange}
@@ -1100,7 +1097,7 @@ const HomePage: React.FC<HomePageProps> = ({
               {[
                 { key: 'stock' as const, label: 'بورس' },
                 { key: 'funds' as const, label: 'صندوق‌ها' },
-                { key: 'crypto' as const, label: 'کریپتو' },
+                { key: 'commodities' as const, label: 'بازار کالایی' },
               ].map((tab) => (
                 <button
                   key={tab.key}
@@ -1124,7 +1121,7 @@ const HomePage: React.FC<HomePageProps> = ({
                     ? marketMapData
                     : marketMapView === 'funds'
                       ? fundMarketData
-                      : cryptoMarketData
+                      : commodityMarketData
                 }
                 onStockClick={handleMarketMapStockClick}
               />

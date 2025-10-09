@@ -4,12 +4,13 @@ import React from 'react';
 import Portfolio from '../Portfolio';
 import PortfolioAnalysis from '../PortfolioAnalysis';
 import { PortfolioSlice } from '../../types';
-import { ResponsiveContainer, XAxis, YAxis, Tooltip, ComposedChart, Bar, Scatter, CartesianGrid, TooltipProps } from 'recharts';
+import { ResponsiveContainer, XAxis, YAxis, Tooltip, ComposedChart, Area, CartesianGrid, TooltipProps } from 'recharts';
 import { userPortfolioData, userRecentTrades } from '../../data/marketData';
 import AssetCategories, { AssetCategory } from '../AssetCategories';
 import { toPersianDigits } from '../formatters';
 import TradeHistoryCard from '../TradeHistoryCard';
-import ERC20Wallet from '../ERC20Wallet';
+import { composeSurfaceClasses } from '../designSystem';
+import RecommendedPortfolio from '../RecommendedPortfolio';
 
 const portfolioHistoryData = [
   { name: '۶ روز پیش', value: 31200000 },
@@ -22,32 +23,75 @@ const portfolioHistoryData = [
 
 const fundAssets = userPortfolioData.filter(a => a.name.includes('صندوق'));
 const stockAssets = userPortfolioData.filter(a => a.name.includes('سهام'));
-const cryptoAssets = userPortfolioData.filter(a => !a.name.includes('صندوق') && !a.name.includes('سهام'));
+const accentColor = 'rgb(var(--neo-accent))';
 
 const categories: AssetCategory[] = [
-    { name: 'ارزش صندوق‌ها', value: 16350000, percentage: 50, color: '#D7FE43', lastUpdated: 'بروزرسانی سه شنبه, ۱۱ شهریور', assets: fundAssets },
-    { name: 'ارزش سبد سهام', value: 8175000, percentage: 25, color: '#8b5cf6', lastUpdated: 'بروزرسانی پنج شنبه, ۱۳ شهریور', assets: stockAssets },
-    { name: 'ارزش رمزارزها', value: 8175000, percentage: 25, color: '#38bdf8', lastUpdated: 'بروزرسانی لحظه‌ای', assets: cryptoAssets },
+    { name: 'ارزش صندوق‌ها', value: 19500000, percentage: 45, color: accentColor, lastUpdated: 'بروزرسانی سه شنبه, ۱۱ شهریور', assets: fundAssets },
+    { name: 'ارزش سبد سهام', value: 17250000, percentage: 40, color: '#8b5cf6', lastUpdated: 'بروزرسانی پنج شنبه, ۱۳ شهریور', assets: stockAssets },
+    { name: 'اوراق و سپرده‌ها', value: 6500000, percentage: 15, color: '#38bdf8', lastUpdated: 'بروزرسانی لحظه‌ای', assets: userPortfolioData.filter(a => a.name.includes('اوراق')) },
 ];
 
-const tooltipStyles = {
-    backgroundColor: 'rgba(20, 20, 20, 0.9)',
-    border: '1px solid #444',
-    borderRadius: '10px',
-    direction: 'rtl' as const,
+const tooltipStyles: React.CSSProperties = {
+    background: 'var(--neo-surface-bg)',
+    border: '1px solid var(--neo-surface-border)',
+    borderRadius: '14px',
+    boxShadow: 'var(--neo-surface-shadow)',
+    color: 'rgb(var(--neo-text-primary))',
+    direction: 'rtl',
     fontFamily: 'Vazirmatn, sans-serif',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-    color: '#fff',
-    padding: '6px 10px'
+    padding: '8px 12px'
 };
+
+const chartGridColor = 'rgba(148, 163, 184, 0.18)';
+const chartAreaGradientId = 'portfolioValueArea';
+const portfolioSurfaceClasses = composeSurfaceClasses('muted', 'lg', 'rounded-3xl space-y-5 transition-colors');
+
+const aiPortfolioRecommendations = [
+    {
+        id: 'value-stocks',
+        title: 'سهام ارزنده بنیادی',
+        targetAllocation: 42,
+        currentAllocation: 36,
+        insight: 'احتمال افزایش سود شرکت‌های صادرات‌محور در فصل پیش رو',
+        action: 'increase' as const,
+    },
+    {
+        id: 'gold-fund',
+        title: 'صندوق طلای آب‌شده',
+        targetAllocation: 24,
+        currentAllocation: 28,
+        insight: 'ثبات قیمت سکه در کانال فعلی؛ نگه‌داری بیش از حد نقدینگی را بلوکه می‌کند',
+        action: 'decrease' as const,
+    },
+    {
+        id: 'fixed-income',
+        title: 'اوراق مشارکت دولتی',
+        targetAllocation: 18,
+        currentAllocation: 15,
+        insight: 'بازده بدون ریسک ۲۱٪ می‌تواند نوسان پرتفو را کاهش دهد',
+        action: 'increase' as const,
+    },
+    {
+        id: 'growth-stocks',
+        title: 'سهام رشدی فناوری',
+        targetAllocation: 10,
+        currentAllocation: 9,
+        insight: 'الگوی صعودی حجم معاملات در نمادهای فناوری بازار پایه',
+        action: 'hold' as const,
+    },
+];
 
 const PortfolioTooltip: React.FC<TooltipProps<number, string>> = ({ active, payload, label }) => {
     if (!active || !payload || payload.length === 0) return null;
     const value = payload[0].value as number;
     return (
         <div style={tooltipStyles}>
-            <p className="font-bold mb-1">{label}</p>
-            <p>{`ارزش: ${toPersianDigits(value.toLocaleString())} تومان`}</p>
+            <p className="mb-1 text-sm font-semibold text-[rgb(var(--neo-text-strong))]">{label}</p>
+            <p className="text-sm font-bold text-[rgb(var(--neo-text-primary))]">
+                <span className="font-medium text-[rgb(var(--neo-text-secondary))]">ارزش:</span>{' '}
+                <span style={{ color: accentColor }}>{toPersianDigits(value.toLocaleString())}</span>
+                <span className="mr-1 font-medium text-[rgb(var(--neo-text-secondary))]">تومان</span>
+            </p>
         </div>
     );
 };
@@ -68,6 +112,8 @@ const WalletPage: React.FC<WalletPageProps> = ({ onSellClick, onLoanRequestClick
             <div className="space-y-6">
                 <AssetCategories totalValue={totalValue} categories={categories} />
 
+                <RecommendedPortfolio totalValue={totalValue} recommendations={aiPortfolioRecommendations} />
+
                 <button
                     onClick={onLoanRequestClick}
                     className="w-full text-center py-3 rounded-xl font-semibold text-black bg-neo-green shadow-lg hover:bg-opacity-90 transition-all transform hover:scale-105"
@@ -75,24 +121,36 @@ const WalletPage: React.FC<WalletPageProps> = ({ onSellClick, onLoanRequestClick
                     درخواست وام (توثیق)
                 </button>
 
-                <div className="bg-neo-dark-3 rounded-2xl p-4">
-                    <h2 className="text-xl font-bold text-white mb-4 text-right">روند ارزش پورتفوی</h2>
-                    <div style={{ width: '100%', height: 200 }}>
+                <div className={portfolioSurfaceClasses}>
+                    <h2 className="text-right text-lg font-bold text-[rgb(var(--neo-text-strong))] sm:text-xl">روند ارزش پورتفوی</h2>
+                    <div className="h-56 w-full sm:h-60">
                         <ResponsiveContainer width="100%" height="100%">
-                            <ComposedChart data={portfolioHistoryData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+                            <ComposedChart data={portfolioHistoryData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                                 <defs>
-                                    <pattern id="portfolioBar" width="8" height="8" patternUnits="userSpaceOnUse">
-                                        <rect width="8" height="8" fill="#D7FE43" opacity="0.15" />
-                                        <rect width="4" height="4" fill="#D7FE43" opacity="0.25" />
-                                        <rect x="4" y="4" width="4" height="4" fill="#D7FE43" opacity="0.25" />
-                                    </pattern>
+                                    <linearGradient id={chartAreaGradientId} x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor={accentColor} stopOpacity={0.32} />
+                                        <stop offset="100%" stopColor={accentColor} stopOpacity={0.04} />
+                                    </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.1} />
-                                <XAxis dataKey="name" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={false} tickLine={false} dy={10} />
-                                <YAxis hide domain={['dataMin', 'dataMax']} />
-                                <Tooltip content={<PortfolioTooltip />} />
-                                <Bar dataKey="value" fill="url(#portfolioBar)" radius={[8, 8, 0, 0]} barSize={24} />
-                                <Scatter dataKey="value" fill="#D7FE43" />
+                                <CartesianGrid strokeDasharray="3 6" vertical={false} stroke={chartGridColor} />
+                                <XAxis
+                                    dataKey="name"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tickMargin={12}
+                                    tick={{ fill: 'rgb(var(--neo-text-secondary))', fontSize: 12, fontWeight: 500 }}
+                                />
+                                <YAxis hide domain={[dataMin => dataMin * 0.98, dataMax => dataMax * 1.04]} />
+                                <Tooltip content={<PortfolioTooltip />} cursor={{ stroke: accentColor, strokeDasharray: '3 6', strokeOpacity: 0.4 }} />
+                                <Area
+                                    type="monotone"
+                                    dataKey="value"
+                                    stroke={accentColor}
+                                    strokeWidth={3}
+                                    fill={`url(#${chartAreaGradientId})`}
+                                    dot={{ r: 5, fill: accentColor, stroke: `rgb(var(--neo-accent-ink))`, strokeWidth: 2 }}
+                                    activeDot={{ r: 6, fill: accentColor, stroke: '#ffffff', strokeWidth: 2 }}
+                                />
                             </ComposedChart>
                         </ResponsiveContainer>
                     </div>
@@ -109,8 +167,6 @@ const WalletPage: React.FC<WalletPageProps> = ({ onSellClick, onLoanRequestClick
                     onSliceClick={onPortfolioSliceSelect}
                     variant="highlight"
                 />
-
-                <ERC20Wallet />
 
                 <div>
                     <h2 className="text-xl font-bold text-white text-right mb-4">آخرین معاملات</h2>

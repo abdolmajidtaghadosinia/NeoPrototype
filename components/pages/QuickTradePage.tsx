@@ -1,6 +1,5 @@
 import React from 'react';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
-import { BitcoinIcon } from '../icons/BitcoinIcon';
 import { CreditCardIcon } from '../icons/CreditCardIcon';
 import { BankIcon } from '../icons/BankIcon';
 import { UserCircleIcon } from '../icons/UserCircleIcon';
@@ -66,7 +65,7 @@ const DepositMethodCard = ({ icon, title, details, tag, instant, disabled = fals
 };
 
 /**
- * Renders a page for selecting a deposit method, categorized into "Crypto" and "Toman".
+ * Renders a page for selecting a deposit method با تمرکز بر راه‌های واریز ریالی.
  * This page acts as a gateway for users to add funds to their account.
  *
  * @param {object} props - The component props.
@@ -74,14 +73,6 @@ const DepositMethodCard = ({ icon, title, details, tag, instant, disabled = fals
  * @returns {JSX.Element} The deposit method selection page.
  */
 const QuickTradePage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-
-    const cryptoMethods = [
-        {
-            icon: <BitcoinIcon className="w-7 h-7 text-gray-300" />,
-            title: 'واریز رمزارز',
-            description: 'واریز به کیف پول از طریق شبکه بلاکچین',
-        },
-    ];
 
     const tomanMethods = [
          {
@@ -115,6 +106,19 @@ const QuickTradePage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         },
     ];
 
+    const brokerageAccounts = [
+        {
+            icon: <BankIcon className="w-7 h-7 text-gray-300" />,
+            title: 'حساب وکالتی بانک ملت',
+            description: 'فعال برای عرضه‌های اولیه و تسویه وجوه',
+        },
+        {
+            icon: <BankIcon className="w-7 h-7 text-gray-300" />,
+            title: 'حساب وکالتی بانک ملی',
+            description: 'قابل استفاده برای معاملات بورس کالا و اوراق',
+        },
+    ];
+
     return (
         <div className="pt-4 h-screen flex flex-col bg-neo-dark-1 text-white">
             <header className="flex items-center justify-between mb-8 px-4">
@@ -127,17 +131,19 @@ const QuickTradePage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
             <div className="flex-grow overflow-y-auto space-y-6 px-4 pb-4">
                 <div>
-                    <h2 className="text-sm font-semibold text-gray-400 mb-3 text-right px-2">رمزارزی</h2>
-                    {cryptoMethods.map((method, i) => (
-                        <DepositMethodCard key={i} {...method} />
-                    ))}
-                </div>
-
-                <div>
                     <h2 className="text-sm font-semibold text-gray-400 mb-3 text-right px-2">تومانی</h2>
                     <div className="space-y-3">
                         {tomanMethods.map((method, i) => (
                             <DepositMethodCard key={i} {...method} />
+                        ))}
+                    </div>
+                </div>
+
+                <div>
+                    <h2 className="text-sm font-semibold text-gray-400 mb-3 text-right px-2">حساب‌های وکالتی فعال</h2>
+                    <div className="space-y-3">
+                        {brokerageAccounts.map((account, i) => (
+                            <DepositMethodCard key={i} {...account} />
                         ))}
                     </div>
                 </div>

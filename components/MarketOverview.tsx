@@ -1,9 +1,11 @@
-import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { MarketAsset, MarketSession, SignalStance } from '../types';
 import { globalMarketSessions } from '../data/marketData';
 import { toPersianDigits } from './formatters';
 import { composeHomeCardClasses, HomeCardPadding, HomeCardTone } from './designSystem';
+import { ChevronDownIcon } from './icons/ChevronDownIcon';
+import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
 export type MarketDisplayTab = 'دیده‌بان' | 'پورتفوی من' | 'بیشترین سود' | 'بیشترین ضرر';
 export type MarketOverviewTimeframe = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -81,11 +83,11 @@ const timeframeDescriptions: Record<MarketOverviewTimeframe, string> = {
   yearly: '۱۲ ماه اخیر',
 };
 
-const timeframeOptions: { value: MarketOverviewTimeframe; label: string; hint: string }[] = [
-  { value: 'daily', label: timeframeLabels.daily, hint: timeframeDescriptions.daily },
-  { value: 'weekly', label: timeframeLabels.weekly, hint: timeframeDescriptions.weekly },
-  { value: 'monthly', label: timeframeLabels.monthly, hint: timeframeDescriptions.monthly },
-  { value: 'yearly', label: timeframeLabels.yearly, hint: timeframeDescriptions.yearly },
+const timeframeOptions: { value: MarketOverviewTimeframe; label: string }[] = [
+  { value: 'daily', label: timeframeLabels.daily },
+  { value: 'weekly', label: timeframeLabels.weekly },
+  { value: 'monthly', label: timeframeLabels.monthly },
+  { value: 'yearly', label: timeframeLabels.yearly },
 ];
 
 interface MarketOverviewSections {
@@ -159,81 +161,14 @@ const sentimentChangeTone: Record<SignalStance, string> = {
 
 const PAGE_SIZE = 10;
 
-const isImageSource = (value: string) => /^(https?:\/\/|data:image\/|blob:|\/)/i.test(value);
+const marketLabelOrder = ['بورس', 'صندوق‌ها', 'فلزهای گرانبها', 'بازار ارز', 'بازار کالایی'];
 
-const getFallbackInitials = (label: string) => {
-  const sanitized = label
-    .replace(/\(.+?\)/g, ' ')
-    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
-    .trim();
-
-  if (!sanitized) {
-    return '؟';
-  }
-
-  const parts = sanitized.split(/\s+/).filter(Boolean);
-  if (parts.length === 0) {
-    return sanitized.slice(0, 2) || '؟';
-  }
-
-  const [first, second] = parts;
-  const initials = `${first?.[0] ?? ''}${second?.[0] ?? ''}`.trim();
-  return initials || parts[0]?.slice(0, 2) || sanitized.slice(0, 2) || '؟';
+const assetVariantMap: Record<MarketAsset['category'], NonNullable<React.ComponentProps<typeof AssetIcon>['variant']>> = {
+  بورس: 'stock',
+  'صندوق‌ها': 'fund',
+  کالا: 'commodity',
+  ارزها: 'currency',
 };
-
-const MarketItemIcon: React.FC<{ icon?: MarketAsset['icon']; name: string }> = ({ icon, name }) => {
-  const [hasError, setHasError] = useState(false);
-  const fallbackInitials = getFallbackInitials(name);
-
-  const renderFallback = () => (
-    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-bold text-white ring-1 ring-white/10">
-      {toPersianDigits(fallbackInitials)}
-    </div>
-  );
-
-  if (!icon || hasError) {
-    return renderFallback();
-  }
-
-  if (React.isValidElement(icon)) {
-    return (
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/10">
-        {icon}
-      </div>
-    );
-  }
-
-  if (typeof icon === 'string') {
-    const trimmed = icon.trim();
-    if (!trimmed) {
-      return renderFallback();
-    }
-
-    if (isImageSource(trimmed)) {
-      return (
-        <div className="h-9 w-9 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/10">
-          <img
-            src={trimmed}
-            alt={name}
-            className="h-full w-full object-cover"
-            loading="lazy"
-            onError={() => setHasError(true)}
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xl leading-none text-white ring-1 ring-white/10">
-        {trimmed}
-      </div>
-    );
-  }
-
-  return renderFallback();
-};
-
-const marketLabelOrder = ['بورس', 'صندوق‌ها', 'فلزهای گرانبها', 'کریپتوکارنسی', 'بازار ارز', 'بازار کالایی'];
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
@@ -358,9 +293,14 @@ const generateTrendSeries = (key: string, change: number) => {
   });
 };
 
-const monoBarBase: [string, string] = ['rgba(215, 254, 67, 0.92)', 'rgba(215, 254, 67, 0.92)'];
-const monoBarBorder = 'rgba(215, 254, 67, 0.98)';
-const monoBarShadow = 'rgba(120, 190, 45, 0.35)';
+const accentBarStart = 'rgb(var(--neo-accent) / 0.9)';
+const accentBarEnd = 'rgb(var(--neo-accent) / 0.8)';
+const accentBarBorder = 'rgb(var(--neo-accent))';
+const accentBarShadow = 'rgb(var(--neo-accent) / 0.35)';
+
+const monoBarBase: [string, string] = [accentBarStart, accentBarEnd];
+const monoBarBorder = accentBarBorder;
+const monoBarShadow = accentBarShadow;
 
 const chartPalette: Record<
   'positive' | 'negative' | 'neutral',
@@ -662,10 +602,6 @@ const getMarketLabel = (asset: MarketAsset): string | null => {
     return 'صندوق‌ها';
   }
 
-  if (asset.category === 'کریپتو') {
-    return 'کریپتوکارنسی';
-  }
-
   if (asset.category === 'ارزها') {
     return 'بازار ارز';
   }
@@ -748,6 +684,9 @@ const convertAssetToItem = (
     });
   }
 
+  const symbol = subtitle ?? deriveAssetSymbol(asset.name);
+  const variant = assetVariantMap[asset.category] ?? 'default';
+
   return {
     id: asset.id,
     assetName: asset.name,
@@ -755,7 +694,15 @@ const convertAssetToItem = (
     price: asset.price,
     change: changeValue,
     marketLabel,
-    icon: <MarketItemIcon icon={asset.icon} name={displayName} />,
+    icon: (
+      <AssetIcon
+        icon={asset.icon}
+        name={asset.name}
+        symbol={symbol}
+        size="sm"
+        variant={variant}
+      />
+    ),
     subtitle,
     meta: metaSource,
     chartPoints: chartPoints && chartPoints.length ? chartPoints : undefined,
@@ -855,54 +802,9 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
   const [activeList, setActiveList] = useState<MarketDisplayTab>('دیده‌بان');
   const [selectedTimeframe, setSelectedTimeframe] = useState<MarketOverviewTimeframe>('daily');
   const [page, setPage] = useState(0);
-  const timeframeListId = useId();
-  const timeframePanelId = `${timeframeListId}-panel`;
-  const timeframeButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const focusTimeframeAt = (targetIndex: number) => {
-    const total = timeframeOptions.length;
-    if (!total) {
-      return;
-    }
-
-    const normalizedIndex = ((targetIndex % total) + total) % total;
-    const target = timeframeOptions[normalizedIndex];
-    if (!target) {
-      return;
-    }
-
-    setSelectedTimeframe(target.value);
-    const button = timeframeButtonRefs.current[normalizedIndex];
-    button?.focus();
-  };
-
-  const handleTimeframeKeyDown = (
-    event: React.KeyboardEvent<HTMLButtonElement>,
-    currentIndex: number,
-  ) => {
-    switch (event.key) {
-      case 'ArrowLeft':
-      case 'ArrowDown':
-        event.preventDefault();
-        focusTimeframeAt(currentIndex + 1);
-        break;
-      case 'ArrowRight':
-      case 'ArrowUp':
-        event.preventDefault();
-        focusTimeframeAt(currentIndex - 1);
-        break;
-      case 'Home':
-        event.preventDefault();
-        focusTimeframeAt(0);
-        break;
-      case 'End':
-        event.preventDefault();
-        focusTimeframeAt(timeframeOptions.length - 1);
-        break;
-      default:
-        break;
-    }
-  };
+  const timeframeSelectId = useId();
+  const timeframePanelId = `${timeframeSelectId}-panel`;
+  const timeframeLabelId = `${timeframeSelectId}-label`;
 
   const allItems = useMemo(
     () =>
@@ -1025,7 +927,7 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
   return (
     <div
       className={composeHomeCard(
-        'relative overflow-hidden bg-gradient-to-br from-neo-dark-2 via-neo-dark-3 to-neo-dark-1 px-4 py-5 text-white sm:px-5 sm:py-6 lg:px-6 lg:py-7 xl:px-7 xl:py-8 2xl:px-10 2xl:py-10',
+        'relative w-full min-w-0 overflow-hidden bg-gradient-to-br from-neo-dark-2 via-neo-dark-3 to-neo-dark-1 px-4 py-5 text-white sm:px-5 sm:py-6 lg:px-6 lg:py-7 xl:px-7 xl:py-8 2xl:px-10 2xl:py-10',
         'default',
         'none',
       )}
@@ -1033,81 +935,37 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
       <div className="absolute -top-32 -left-24 h-64 w-64 rounded-full bg-neo-green/10 blur-3xl" />
       <div className="absolute -bottom-40 -right-24 h-72 w-72 rounded-full bg-neo-green/5 blur-3xl" />
 
-      <div className="relative flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <p className="text-[11px] text-gray-300/80">نمای سریع بازارهای منتخب</p>
-          <h3 className="text-lg font-extrabold text-white sm:text-xl">بازارها در یک نگاه</h3>
-        </div>
-        <div className="flex w-full flex-col gap-2 text-xs text-gray-200 sm:w-auto sm:flex-row sm:items-center sm:justify-end sm:gap-3">
-          <div className="flex items-center gap-2 text-xs text-gray-200">
-            <span className="h-2 w-2 rounded-full bg-neo-green animate-pulse" />
-            <span>به‌روزرسانی زنده</span>
-          </div>
-          {onQuickTradeClick && (
-            <button
-              onClick={onQuickTradeClick}
-              className="w-full rounded-full bg-neo-green px-4 py-2 text-xs font-bold text-[rgb(var(--tabs-active-text))] shadow-lg shadow-neo-green/20 transition-transform hover:-translate-y-0.5 sm:w-auto sm:py-1.5"
-            >
-              معامله سریع
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-4" role="presentation">
-        <div
-          id={timeframeListId}
-          role="tablist"
-          aria-label="فیلتر بازه زمانی بازارها"
-          aria-orientation="horizontal"
-          className="flex flex-wrap gap-2 sm:flex-nowrap sm:gap-3"
-        >
-          {timeframeOptions.map((option, index) => {
-            const isActive = selectedTimeframe === option.value;
-            const stateClasses = isActive
-              ? 'border border-neo-green/40 bg-neo-green/15 text-neo-green shadow-[0_12px_28px_-18px_rgba(107,255,110,0.8)]'
-              : 'border border-white/10 bg-white/5 text-gray-300 hover:border-white/20 hover:bg-white/10';
-            const tabId = `${timeframeListId}-${option.value}`;
-
-            return (
-              <button
-                key={option.value}
-                id={tabId}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-controls={timeframePanelId}
-                tabIndex={isActive ? 0 : -1}
-                onClick={() => setSelectedTimeframe(option.value)}
-                onKeyDown={(event) => handleTimeframeKeyDown(event, index)}
-                ref={(element) => {
-                  timeframeButtonRefs.current[index] = element;
-                }}
-                className={clsx(
-                  'group relative flex basis-[calc(50%-0.25rem)] flex-col items-center justify-center gap-1 rounded-2xl px-4 py-3 text-center text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60 sm:basis-0 sm:flex-1 sm:px-5',
-                  stateClasses,
-                )}
-              >
-                <span className="text-sm font-extrabold tracking-tight">{option.label}</span>
-                <span className="text-[11px] font-medium text-gray-400/90 group-hover:text-gray-200/90">
-                  {option.hint}
-                </span>
-                {isActive && (
-                  <span className="pointer-events-none absolute inset-x-3 bottom-1 h-0.5 rounded-full bg-neo-green/60" aria-hidden="true" />
-                )}
-              </button>
-            );
-          })}
+      <div className="relative flex flex-col items-start gap-3 text-right sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="w-full text-right text-xl font-extrabold text-white sm:text-2xl">بازارها در یک نگاه</h3>
+        <div className="relative w-full sm:w-64">
+          <label htmlFor={timeframeSelectId} id={timeframeLabelId} className="sr-only">
+            انتخاب بازه زمانی بازار
+          </label>
+          <select
+            id={timeframeSelectId}
+            aria-labelledby={timeframeLabelId}
+            aria-controls={timeframePanelId}
+            value={selectedTimeframe}
+            onChange={(event) => setSelectedTimeframe(event.target.value as MarketOverviewTimeframe)}
+            className="w-full appearance-none rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-right text-sm font-semibold text-white shadow-sm transition focus:border-neo-green/40 focus:outline-none focus:ring-2 focus:ring-neo-green/60"
+          >
+            {timeframeOptions.map((option) => (
+              <option key={option.value} value={option.value} className="text-gray-900">
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDownIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-200" />
         </div>
       </div>
 
       <div
         id={timeframePanelId}
         role="tabpanel"
-        aria-labelledby={`${timeframeListId}-${selectedTimeframe}`}
-        className="relative mt-2.5 -mx-2 overflow-x-auto pb-1 scrollbar-hide sm:mx-0 sm:overflow-visible"
+        aria-labelledby={timeframeLabelId}
+        className="relative mt-3 w-full"
       >
-        <div className="flex min-w-full gap-2 sm:flex-wrap sm:gap-3">
+        <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
           {displayTabs.map((tab) => {
             const isActive = activeList === tab;
             const stateClasses = isActive
@@ -1118,7 +976,7 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({
               <button
                 key={tab}
                 onClick={() => setActiveList(tab)}
-                className={`flex min-w-[7.5rem] flex-none items-center justify-center rounded-full px-4 py-2 text-xs font-semibold transition-colors ${stateClasses} sm:flex-1 sm:min-w-0`}
+                className={`flex w-full items-center justify-center rounded-full px-3.5 py-2 text-xs font-semibold transition-colors ${stateClasses} sm:px-4 sm:py-2.5 sm:text-sm`}
               >
                 {tab}
               </button>

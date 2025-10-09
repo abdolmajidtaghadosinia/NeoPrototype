@@ -1,5 +1,5 @@
 import React from 'react';
-import { composeSurfaceClasses, SurfacePadding, SurfaceTone } from '../designSystem';
+import { composeSurfaceClasses, SurfacePadding, SurfaceTone, dividerSubtle } from '../designSystem';
 
 /**
  * Props for the SurfaceCard component.
@@ -71,7 +71,7 @@ const SurfaceCard: React.FC<SurfaceCardProps> = ({
         {children}
       </div>
       {footer && (
-        <div className="mt-5 border-t border-[color:var(--neo-divider-color)] pt-4 text-xs leading-relaxed text-[rgb(var(--neo-text-secondary))]">
+        <div className={`mt-5 ${dividerSubtle} pt-4 text-xs leading-relaxed text-[rgb(var(--neo-text-secondary))]`}>
           {footer}
         </div>
       )}

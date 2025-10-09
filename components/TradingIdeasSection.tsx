@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { TradingIdea } from '../types';
+import { TradingIdea, MarketAsset } from '../types';
 import { ThumbUpIcon } from './icons/ThumbUpIcon';
 import { ChatBubbleIcon } from './icons/ChatBubbleIcon';
 import { toPersianDigits } from './formatters';
 import { ThumbUpSolidIcon } from './icons/ThumbUpSolidIcon';
+import AssetIcon, { deriveAssetSymbol } from './AssetIcon';
 
 interface TradingIdeasSectionProps {
   ideas: TradingIdea[];
@@ -13,6 +14,23 @@ interface TradingIdeasSectionProps {
   showTitle?: boolean;
   showDescription?: boolean;
 }
+
+const getAssetVariant = (
+  category?: MarketAsset['category'],
+): NonNullable<React.ComponentProps<typeof AssetIcon>['variant']> => {
+  switch (category) {
+    case 'بورس':
+      return 'stock';
+    case 'صندوق‌ها':
+      return 'fund';
+    case 'ارزها':
+      return 'currency';
+    case 'کالا':
+      return 'commodity';
+    default:
+      return 'default';
+  }
+};
 
 const IdeaCard: React.FC<{ idea: TradingIdea; onIdeaClick: () => void; onLikeClick: (e: React.MouseEvent) => void; showDescription: boolean }> = ({ idea, onIdeaClick, onLikeClick, showDescription }) => {
   const isBullish = idea.type === 'bullish';
@@ -28,7 +46,13 @@ const IdeaCard: React.FC<{ idea: TradingIdea; onIdeaClick: () => void; onLikeCli
       
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-            <span className="text-2xl">{idea.asset.icon}</span>
+            <AssetIcon
+              icon={idea.asset.icon}
+              name={idea.asset.name}
+              symbol={deriveAssetSymbol(idea.asset.name)}
+              size="xs"
+              variant={idea.asset.category ? getAssetVariant(idea.asset.category as MarketAsset['category']) : 'default'}
+            />
             <p className="font-semibold text-gray-200">{idea.asset.name}</p>
         </div>
         <span className={`px-3 py-1 text-xs font-bold rounded-full ${isBullish ? 'bg-neo-green/20 text-neo-green' : 'bg-red-500/20 text-red-400'}`}>

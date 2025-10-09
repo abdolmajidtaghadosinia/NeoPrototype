@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useRef } from 'react';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { UserIcon } from '../icons/UserIcon';
@@ -7,11 +5,15 @@ import { LockClosedIcon } from '../icons/LockClosedIcon';
 import { BellIcon } from '../icons/BellIcon';
 import { QuestionMarkCircleIcon } from '../icons/QuestionMarkCircleIcon';
 import { ChevronLeftIcon } from '../icons/ChevronLeftIcon';
+import { CalendarIcon } from '../icons/CalendarIcon';
+import { ShieldCheckIcon } from '../icons/ShieldCheckIcon';
 import { User } from '../../types';
 import FinancialHealthSection from '../FinancialHealthSection';
 import SupportSection from '../SupportSection';
 import PremiumSection from '../PremiumSection';
-
+import SurfaceCard from '../layout/SurfaceCard';
+import Page from '../layout/Page';
+import { composeSurfaceClasses, metricDescription, metricTitle } from '../designSystem';
 
 /**
  * Props for the ProfilePage component.
@@ -40,69 +42,181 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onBack, section }) => {
   useEffect(() => {
     if (section === 'settings' && settingsRef.current) {
       const node = settingsRef.current;
-      // Defer scrolling to ensure the section is laid out
       requestAnimationFrame(() => {
         node.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     }
   }, [section]);
+
+  const quickFacts = [
+    {
+      label: 'وضعیت احراز هویت',
+      value: 'تأیید شده',
+      icon: <ShieldCheckIcon className="h-5 w-5 text-[rgb(var(--neo-accent))]" />,
+    },
+    {
+      label: 'آخرین ورود',
+      value: '۲۳ شهریور ۱۴۰۳',
+      icon: <CalendarIcon className="h-5 w-5 text-[rgb(var(--neo-text-secondary))]" />,
+    },
+    {
+      label: 'کد بورسی',
+      value: 'آب۱۲۳۴۵',
+      icon: <UserIcon className="h-5 w-5 text-[rgb(var(--neo-text-secondary))]" />,
+    },
+    {
+      label: 'اعلان‌های خوانده نشده',
+      value: '۲ اعلان جدید',
+      icon: <BellIcon className="h-5 w-5 text-[rgb(var(--neo-text-secondary))]" />,
+    },
+  ];
+
   const menuItems = [
-    { text: 'ویرایش اطلاعات', icon: <UserIcon className="w-6 h-6 text-gray-400" /> },
-    { text: 'امنیت و رمز عبور', icon: <LockClosedIcon className="w-6 h-6 text-gray-400" /> },
-    { text: 'اعلانات', icon: <BellIcon className="w-6 h-6 text-gray-400" /> },
-    { text: 'راهنما و پشتیبانی', icon: <QuestionMarkCircleIcon className="w-6 h-6 text-gray-400" /> },
+    {
+      text: 'ویرایش اطلاعات',
+      description: 'به‌روزرسانی نام، شماره تماس و حساب‌های بانکی',
+      icon: <UserIcon className="h-6 w-6 text-[rgb(var(--neo-text-secondary))]" />,
+    },
+    {
+      text: 'امنیت و رمز عبور',
+      description: 'مدیریت رمز ورود، ورود دو مرحله‌ای و دستگاه‌های فعال',
+      icon: <LockClosedIcon className="h-6 w-6 text-[rgb(var(--neo-text-secondary))]" />,
+    },
+    {
+      text: 'اعلانات',
+      description: 'کنترل هشدارهای بازار، اعلان‌های تراکنش و پیام‌ها',
+      icon: <BellIcon className="h-6 w-6 text-[rgb(var(--neo-text-secondary))]" />,
+    },
+    {
+      text: 'راهنما و پشتیبانی',
+      description: 'دسترسی سریع به سوالات متداول و کانال‌های پشتیبانی',
+      icon: <QuestionMarkCircleIcon className="h-6 w-6 text-[rgb(var(--neo-text-secondary))]" />,
+    },
   ];
 
   return (
-    <div className="pt-4 h-screen flex flex-col bg-neo-dark-1 text-white">
-      <header className="flex items-center justify-between mb-6 px-4">
-         <div className="w-8"></div>
-         <h1 className="text-2xl font-bold text-white">پروفایل کاربری</h1>
-        <button onClick={onBack} className="p-2 text-gray-300 hover:text-neo-green">
-          <ArrowLeftIcon className="w-7 h-7" />
+    <Page
+      title="پروفایل کاربری"
+      actions={(
+        <button onClick={onBack} className="neo-icon-button" aria-label="بازگشت" type="button">
+          <ArrowLeftIcon className="h-6 w-6" />
         </button>
-      </header>
-      
-      <div className="flex flex-col items-center text-center mb-6">
-        <div className="w-24 h-24 rounded-full overflow-hidden mb-4 ring-4 ring-neo-dark-1 shadow-lg">
-           <img src={user.picture} alt="User Profile" className="w-full h-full object-cover" />
+      )}
+      spacing="lg"
+      className="overflow-x-hidden"
+    >
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
+        <SurfaceCard tone="elevated" padding="lg" className="space-y-6 max-w-full overflow-hidden">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between xl:flex-col xl:items-end">
+            <div className="flex flex-col items-center gap-4 text-center lg:flex-row lg:items-center lg:gap-6 lg:text-right xl:flex-col xl:items-end">
+              <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full ring-4 ring-[color:rgba(var(--neo-accent),0.15)] shadow-[var(--neo-surface-shadow)] sm:h-28 sm:w-28">
+                <img src={user.picture} alt="User Profile" className="h-full w-full object-cover" />
+              </div>
+              <div className="flex flex-col items-center gap-2 text-center lg:items-end lg:text-right">
+                <h2 className="text-xl font-bold text-[rgb(var(--neo-text-strong))] sm:text-2xl">{user.name}</h2>
+                <p className="text-sm text-[rgb(var(--neo-text-secondary))] sm:text-[0.95rem]">{user.email}</p>
+              </div>
+            </div>
+            <div className="grid w-full grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:max-w-xl xl:w-full xl:grid-cols-1">
+              {quickFacts.map((fact) => (
+                <div
+                  key={fact.label}
+                  className={composeSurfaceClasses(
+                    'ghost',
+                    'sm',
+                    'w-full flex flex-wrap items-center justify-between gap-3 text-right lg:flex-nowrap'
+                  )}
+                >
+                  <div className="flex flex-1 flex-col gap-1 text-right">
+                    <p className="text-xs font-medium text-[rgb(var(--neo-text-muted))]">{fact.label}</p>
+                    <p className={`${metricTitle} text-sm`}>{fact.value}</p>
+                  </div>
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[color:var(--neo-frame-ghost-bg)]">
+                    {fact.icon}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-3 text-center sm:flex-row sm:flex-wrap sm:justify-end sm:text-right">
+            <button className="neo-pill-button w-full sm:w-auto" type="button">
+              مدیریت پروفایل
+            </button>
+            <button className="neo-pill-button w-full sm:w-auto" type="button">
+              تنظیمات امنیتی
+            </button>
+            <button className="neo-pill-button w-full sm:w-auto" type="button">
+              ارسال درخواست پشتیبانی
+            </button>
+          </div>
+        </SurfaceCard>
+
+        <div className="space-y-6">
+          <FinancialHealthSection user={user} />
+          <PremiumSection />
         </div>
-        <h2 className="text-xl font-bold text-white">{user.name}</h2>
-        <p className="text-sm text-gray-400">{user.email}</p>
       </div>
 
-      <div className="flex-grow overflow-y-auto px-4 pb-4 space-y-6">
-        <FinancialHealthSection
-          user={user}
-        />
-        <PremiumSection />
+      <div className="grid gap-6 lg:grid-cols-2" ref={settingsRef}>
+        <SurfaceCard tone="muted" padding="lg" className="space-y-5">
+          <header className="flex items-center justify-between gap-3">
+            <div className="space-y-1 text-right">
+              <h3 className="text-lg font-bold text-[rgb(var(--neo-text-strong))]">تنظیمات حساب</h3>
+              <p className={metricDescription}>تنظیمات اصلی حساب کاربری، امنیت و اعلان‌ها</p>
+            </div>
+          </header>
+          <div
+            className={composeSurfaceClasses(
+              'ghost',
+              'none',
+              'divide-y divide-[color:var(--neo-divider-color)] overflow-hidden'
+            )}
+          >
+            {menuItems.map((item) => (
+              <button
+                key={item.text}
+                className="flex w-full items-stretch justify-between gap-4 px-5 py-4 text-right transition hover:bg-[color:var(--neo-frame-ghost-bg)]"
+                type="button"
+              >
+                <div className="flex flex-1 items-start justify-end gap-4">
+                  <div className="space-y-1 text-right">
+                    <p className="text-base font-semibold text-[rgb(var(--neo-text-strong))]">{item.text}</p>
+                    <p className="text-sm leading-relaxed text-[rgb(var(--neo-text-secondary))]">{item.description}</p>
+                  </div>
+                  <div
+                    className={composeSurfaceClasses(
+                      'ghost',
+                      'sm',
+                      'flex h-11 w-11 items-center justify-center !p-0'
+                    )}
+                  >
+                    {item.icon}
+                  </div>
+                </div>
+                <ChevronLeftIcon className="h-5 w-5 text-[rgb(var(--neo-text-muted))]" />
+              </button>
+            ))}
+          </div>
+          <div
+            className={composeSurfaceClasses(
+              'ghost',
+              'sm',
+              'flex items-center justify-between px-5 py-4'
+            )}
+          >
+            <div className="space-y-1 text-right">
+              <p className="text-sm font-semibold text-[rgb(var(--neo-text-strong))]">خروج از حساب کاربری</p>
+              <p className="text-xs text-[rgb(var(--neo-text-secondary))]">برای امنیت بیشتر پس از پایان کار خود خارج شوید.</p>
+            </div>
+            <button className="rounded-full bg-[rgb(var(--neo-accent))] px-4 py-2 text-xs font-bold text-[rgb(var(--neo-accent-ink))] shadow-sm transition hover:brightness-105" type="button">
+              خروج
+            </button>
+          </div>
+        </SurfaceCard>
 
         <SupportSection />
-
-        <div ref={settingsRef}>
-            <h3 className="text-lg font-bold text-right mb-2 text-white px-1">تنظیمات</h3>
-            <div className="space-y-4">
-                <div className="bg-neo-dark-2 rounded-xl">
-                {menuItems.map((item, index) => (
-                    <button key={index} className="w-full flex items-center justify-between text-right p-4 transition-colors hover:bg-neo-dark-3 first:rounded-t-xl last:rounded-b-xl">
-                    <div className="flex items-center gap-4">
-                        {item.icon}
-                        <p className="font-semibold text-gray-200">{item.text}</p>
-                    </div>
-                    <ChevronLeftIcon className="w-5 h-5 text-gray-400" />
-                    </button>
-                ))}
-                </div>
-
-                <div className="space-y-3 pt-4">
-                    <button className="w-full text-center p-3 rounded-lg text-gray-400 font-semibold transition-colors hover:bg-neo-dark-3">
-                        خروج از برنامه
-                    </button>
-                </div>
-            </div>
-        </div>
       </div>
-    </div>
+    </Page>
   );
 };
 

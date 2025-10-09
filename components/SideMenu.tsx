@@ -5,6 +5,7 @@ import { SwapIcon } from './icons/SwapIcon';
 import { WalletSolidIcon } from './icons/WalletSolidIcon';
 import { UsersGroupIcon } from './icons/UsersGroupIcon';
 import { NavTab } from '../types';
+import { composeNavItemClasses } from './designSystem';
 
 interface SideMenuProps {
   activeTab: NavTab;
@@ -21,22 +22,25 @@ const SideMenu: React.FC<SideMenuProps> = ({ activeTab, onTabChange }) => {
   ], []);
 
   return (
-    <aside className="hidden md:flex fixed top-0 right-0 flex-col w-28 h-screen bg-neo-dark-2 border-l border-gray-800 py-6">
-      {navItems.map((item) => {
-        const isActive = activeTab === item.id;
-        const isHome = item.id === 'home' && isActive;
-        return (
-          <button
-            key={item.id}
-            onClick={() => onTabChange(item.id as NavTab)}
-            aria-label={item.label}
-            className={`flex flex-col items-center gap-2 py-5 text-sm transition-colors ${isActive ? (isHome ? 'text-neo-green bg-neo-green/20 rounded-lg' : 'text-neo-green') : 'text-gray-400 hover:text-white'}`}
-          >
-            {item.icon}
-            <span>{item.label}</span>
-          </button>
-        );
-      })}
+    <aside className="hidden md:flex fixed top-0 right-0 flex-col w-28 h-screen bg-neo-dark-2 border-l border-gray-800 px-4 py-6">
+      <div className="flex flex-col gap-2">
+        {navItems.map((item) => {
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onTabChange(item.id as NavTab)}
+              aria-label={item.label}
+              aria-current={isActive ? 'page' : undefined}
+              className={composeNavItemClasses('stacked', isActive)}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
     </aside>
   );
 };

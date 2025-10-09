@@ -48,7 +48,7 @@ export interface PerformanceData {
 export interface MarketAsset {
   id: string;
   name: string;
-  category: 'بورس' | 'کریپتو' | 'صندوق‌ها' | 'ارزها' | 'کالا';
+  category: 'بورس' | 'صندوق‌ها' | 'ارزها' | 'کالا';
   icon: string | React.ReactNode;
   price: string;
   aliases?: string[];
@@ -61,6 +61,12 @@ export interface MarketAsset {
     weekly: PerformanceData;
     monthly: PerformanceData;
     yearly: PerformanceData;
+  };
+  extendedReturns?: {
+    three: number;
+    six: number;
+    nine: number;
+    twelve: number;
   };
   rsi?: number;
 }
@@ -136,7 +142,7 @@ export interface TokenBalance {
 export interface Loan {
   amount: number;
   duration: 3 | 6 | 9;
-  collateral: 'USDT';
+  collateral: 'سهام' | 'صندوق' | 'طلا';
   ltv: number;
 }
 
@@ -180,7 +186,7 @@ export interface User {
 
 export interface NewsArticle {
   id: string;
-  category: 'بورس' | 'کریپتو' | 'جهان';
+  category: 'بورس' | 'جهان';
   title: string;
   summary: string;
   source: string;

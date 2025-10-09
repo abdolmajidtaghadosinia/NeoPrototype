@@ -6,11 +6,12 @@ import { ChevronDownIcon } from '../icons/ChevronDownIcon';
 import { ExclamationCircleIcon } from '../icons/ExclamationCircleIcon';
 import { toPersianDigits, toPersianFormatted } from '../formatters';
 import { composeSurfaceClasses, SurfacePadding, SurfaceTone } from '../designSystem';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 
 interface PortfolioAsset {
     id: string;
     name: string;
-    type: 'crypto' | 'stock' | 'fund';
+    type: 'stock' | 'fund' | 'commodity';
     icon: string;
     balance: number; 
     unit: string; 
@@ -20,14 +21,18 @@ interface PortfolioAsset {
 
 // Mock data representing the user's portfolio with more details for calculation
 const userPortfolio: PortfolioAsset[] = [
-    { id: 'usdt', name: 'تتر', type: 'crypto', icon: '₮', balance: 1200, unit: 'USDT', pricePerUnitToman: 59500, ltv: 65 },
-    { id: 'doge', name: 'دوج کوین', type: 'crypto', icon: '🐶', balance: 3500, unit: 'DOGE', pricePerUnitToman: 9500, ltv: 50 },
-    { id: 'eth', name: 'اتریوم', type: 'crypto', icon: 'Ξ', balance: 0.75, unit: 'ETH', pricePerUnitToman: 210000000, ltv: 60 },
     { id: 'khodro', name: 'سهام خودرو', type: 'stock', icon: '🚗', balance: 540, unit: 'سهم', pricePerUnitToman: 2120, ltv: 55 },
     { id: 'webmelat', name: 'سهام وبملت', type: 'stock', icon: '🏦', balance: 120, unit: 'سهم', pricePerUnitToman: 3210, ltv: 58 },
     { id: 'kamand', name: 'صندوق درآمدثابت کمند', type: 'fund', icon: '📈', balance: 50, unit: 'واحد', pricePerUnitToman: 11000, ltv: 75 },
-    { id: 'ayar', name: 'صندوق طلا عیار', type: 'fund', icon: '💰', balance: 25, unit: 'واحد', pricePerUnitToman: 153200, ltv: 70 },
+    { id: 'ayar', name: 'صندوق طلا عیار', type: 'commodity', icon: '💰', balance: 25, unit: 'واحد', pricePerUnitToman: 153200, ltv: 70 },
+    { id: 'goldcoin', name: 'سکه تمام بهار', type: 'commodity', icon: '🪙', balance: 6, unit: 'عدد', pricePerUnitToman: 35500000, ltv: 60 },
 ];
+
+const portfolioVariantMap: Record<PortfolioAsset['type'], NonNullable<React.ComponentProps<typeof AssetIcon>['variant']>> = {
+    stock: 'stock',
+    fund: 'fund',
+    commodity: 'commodity',
+};
 
 const formatToman = (n: number): string => {
     return toPersianFormatted(n);
@@ -52,7 +57,7 @@ const LoanPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         amount: 50000000,
         duration: 6,
     });
-    const [collateralType, setCollateralType] = useState<'crypto' | 'stock' | 'fund' | ''>('');
+    const [collateralType, setCollateralType] = useState<'commodity' | 'stock' | 'fund' | ''>('');
     const [selectedAssetId, setSelectedAssetId] = useState<string>('');
     
     const filteredAssets = useMemo(() => {
@@ -160,7 +165,7 @@ const LoanPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                              <label className="text-right text-sm font-semibold text-gray-300 mb-2 block">۱. نوع وثیقه</label>
                              <select onChange={handleCollateralTypeChange} value={collateralType} className="w-full appearance-none text-right bg-neo-dark-3 rounded-lg p-3 pr-4 font-semibold text-white focus:outline-none focus:ring-2 focus:ring-neo-green">
                                 <option value="">انتخاب کنید...</option>
-                                <option value="crypto">رمز ارز</option>
+                                <option value="commodity">طلا و سکه</option>
                                 <option value="stock">سهام</option>
                                 <option value="fund">صندوق</option>
                              </select>
@@ -181,7 +186,16 @@ const LoanPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                      {selectedAsset && (
                          <div className="text-right border-t border-gray-700 pt-4 mt-4 space-y-2">
                             <div className="flex justify-between items-center text-sm">
-                                <span className="font-semibold">{selectedAsset.icon} {selectedAsset.name}</span>
+                                <span className="flex items-center gap-2 font-semibold text-gray-100">
+                                    <AssetIcon
+                                        icon={selectedAsset.icon}
+                                        name={selectedAsset.name}
+                                        symbol={deriveAssetSymbol(selectedAsset.name)}
+                                        size="xs"
+                                        variant={portfolioVariantMap[selectedAsset.type]}
+                                    />
+                                    <span>{selectedAsset.name}</span>
+                                </span>
                                 <span className="text-gray-400">دارایی انتخابی</span>
                             </div>
                             <div className="flex justify-between items-center text-sm">

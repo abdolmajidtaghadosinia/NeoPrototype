@@ -12,6 +12,7 @@ interface PageLayoutProps {
   onTabChange: (tab: NavTab) => void;
   children: React.ReactNode;
   showBottomNav?: boolean;
+  secondaryActiveItem?: 'profile' | 'alerts' | 'wallet' | 'settings' | 'logout' | null;
   onProfile?: () => void;
   onAlerts?: () => void;
   onWallet?: () => void;
@@ -25,6 +26,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   onTabChange,
   children,
   showBottomNav = true,
+  secondaryActiveItem,
   onProfile,
   onAlerts,
   onWallet,
@@ -35,6 +37,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   <div className="min-h-screen font-sans text-[rgb(var(--neo-text-primary))] transition-colors duration-300 md:pl-[12rem] md:pr-[7.5rem] xl:pl-[14rem] xl:pr-[9rem]">
     <SideMenu activeTab={activeTab} onTabChange={onTabChange} />
     <SecondaryMenu
+      activeItem={secondaryActiveItem}
       onProfile={onProfile}
       onAlerts={onAlerts}
       onWallet={onWallet}
@@ -42,7 +45,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       onLogout={onLogout}
       onTradeClick={onTradeClick}
     />
-    <div className="flex flex-col pb-24 md:pb-0">
+    <div className={clsx('flex flex-col', showBottomNav && 'pb-24', 'md:pb-0')}>
       <div
         className={clsx(
           composePageShell(

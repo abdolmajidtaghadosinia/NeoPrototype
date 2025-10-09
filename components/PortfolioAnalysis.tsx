@@ -6,6 +6,8 @@ import { GoogleGenAI, Type } from '@google/genai';
 import { PortfolioSlice, PortfolioAnalysisData } from '../types';
 import { toPersianDigits } from './formatters';
 
+const accentColor = 'rgb(var(--neo-accent))';
+
 const mockAnalysisData: PortfolioAnalysisData = {
     radarData: [
         { subject: 'ارزش', score: 75 },
@@ -84,7 +86,7 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ portfolioData }) 
                 
                 Portfolio Data: ${JSON.stringify(portfolioSummary)}
 
-                Provide your analysis in a JSON object that conforms to the specified schema. Generate scores from 1 to 100 for the radar chart data. The summary metrics must be concise and in Persian. The 'subject' fields in 'radarData' must also be in Persian, matching the list in the schema. Analyze the portfolio considering factors like the high allocation to gold (Stability), the presence of volatile crypto assets (Risk, Growth Potential), and the mix of stocks/fixed income (Diversification). Provide realistic metrics.
+                Provide your analysis in a JSON object that conforms to the specified schema. Generate scores from 1 to 100 for the radar chart data. The summary metrics must be concise and in Persian. The 'subject' fields in 'radarData' must also be in Persian, matching the list in the schema. Analyze the portfolio considering عوامل‌ی مانند وزن قابل توجه صندوق‌های طلا (ثبات)، ترکیب سهام خودرویی و بانکی (ریسک و رشد)، و سهم اوراق درآمد ثابت (تنوع و نقدشوندگی). Provide realistic metrics.
                 `;
 
                 const response = await ai.models.generateContent({
@@ -146,14 +148,14 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ portfolioData }) 
                         <PolarGrid stroke="#4A4A4A" />
                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#A0A0A0', fontSize: 12, fontWeight: 500 }} />
                         <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                        <Radar 
-                            name="Portfolio" 
-                            dataKey="score" 
-                            stroke="#D7FE43" 
-                            fill="#D7FE43" 
-                            fillOpacity={0.4} 
-                            dot={{ stroke: '#D7FE43', fill: '#1C1C1E', strokeWidth: 2, r: 4 }}
-                            activeDot={{ r: 6, stroke: '#D7FE43', fill: 'white', strokeWidth: 2 }}
+                        <Radar
+                            name="Portfolio"
+                            dataKey="score"
+                            stroke={accentColor}
+                            fill={accentColor}
+                            fillOpacity={0.4}
+                            dot={{ stroke: accentColor, fill: '#1C1C1E', strokeWidth: 2, r: 4 }}
+                            activeDot={{ r: 6, stroke: accentColor, fill: 'white', strokeWidth: 2 }}
                         />
                     </RadarChart>
                 </ResponsiveContainer>

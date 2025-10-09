@@ -1,0 +1,77 @@
+import type { Trade } from '@/types';
+
+export const userRecentTrades: Trade[] = [
+  {
+    id: 't1',
+    type: 'buy',
+    asset: { id: 'ayar', name: 'صندوق طلا عیار', icon: '💰' },
+    amount: 10,
+    unit: 'واحد',
+    pricePerUnit: 15320,
+    currency: 'ریال',
+    timestamp: 'همین الان',
+  },
+  {
+    id: 't2',
+    type: 'sell',
+    asset: { id: 'khodro', name: 'سهام خودرو', icon: '🚗' },
+    amount: 200,
+    unit: 'سهم',
+    pricePerUnit: 2120,
+    currency: 'ریال',
+    timestamp: '۲ ساعت پیش',
+  },
+  {
+    id: 't3',
+    type: 'buy',
+    asset: { id: 'foolad', name: 'سهام فولاد', icon: '🏭' },
+    amount: 1200,
+    unit: 'سهم',
+    pricePerUnit: 4500,
+    currency: 'ریال',
+    timestamp: 'دیروز',
+  },
+  {
+    id: 't4',
+    type: 'sell',
+    asset: { id: 'webmelat', name: 'سهام وبملت', icon: '🏦' },
+    amount: 100,
+    unit: 'سهم',
+    pricePerUnit: 3210,
+    currency: 'ریال',
+    timestamp: '۳ روز پیش',
+  },
+];
+
+export const publicProfileRecentTrades: Trade[] = [
+  {
+    id: 'pt1',
+    type: 'buy',
+    asset: { id: 'foolad', name: 'سهام فولاد', icon: '🏭' },
+    amount: 1000,
+    unit: 'سهم',
+    pricePerUnit: 4500,
+    currency: 'ریال',
+    timestamp: '۲ ساعت پیش',
+  },
+  {
+    id: 'pt2',
+    type: 'sell',
+    asset: { id: 'shepna', name: 'شپنا', icon: '⛽️' },
+    amount: 4000,
+    unit: 'سهم',
+    pricePerUnit: 755,
+    currency: 'ریال',
+    timestamp: 'دیروز',
+  },
+  {
+    id: 'pt3',
+    type: 'buy',
+    asset: { id: 'ayar', name: 'صندوق طلا عیار', icon: '💰' },
+    amount: 20,
+    unit: 'واحد',
+    pricePerUnit: 15300,
+    currency: 'ریال',
+    timestamp: '۳ روز پیش',
+  },
+];

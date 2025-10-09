@@ -3,14 +3,16 @@ import { MarketAsset } from '../types';
 import TechnicalAnalysisGauge from './TechnicalAnalysisGauge';
 import { SignalIcon } from './icons/SignalIcon';
 
+const accentColor = 'rgb(var(--neo-accent))';
+
 export const getAnalysisDetails = (
     val: number,
 ): { longLabel: string; shortLabel: string; color: string } => {
     if (val <= 15) return { longLabel: 'فروش قوی', shortLabel: 'فروش قوی', color: '#ef4444' };
     if (val <= 35) return { longLabel: 'فروش', shortLabel: 'فروش', color: '#f97316' };
     if (val <= 65) return { longLabel: 'خنثی', shortLabel: 'خنثی', color: '#fbbf24' };
-    if (val <= 85) return { longLabel: 'خرید', shortLabel: 'خرید', color: '#99ff57' };
-    return { longLabel: 'خرید قوی', shortLabel: 'خرید قوی', color: '#6bff3d' };
+    if (val <= 85) return { longLabel: 'خرید', shortLabel: 'خرید', color: accentColor };
+    return { longLabel: 'خرید قوی', shortLabel: 'خرید قوی', color: accentColor };
 };
 
 const summaryNarratives: Record<string, string> = {
@@ -152,7 +154,7 @@ const TechnicalAnalysisSection: React.FC<{ asset: MarketAsset }> = ({ asset }) =
     );
 
     return (
-        <section className="relative rounded-[28px] border border-white/8 bg-[#0b1118]/90 text-right shadow-[0_30px_90px_-40px_rgba(0,0,0,0.85)]">
+        <section className="technical-section relative rounded-[28px] border text-right">
             <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-neo-green/5 via-transparent to-transparent" />
             <div className="relative z-10 flex flex-col gap-10 p-6 sm:p-10">
                 <header className="flex flex-col gap-6 text-white lg:flex-row-reverse lg:items-center lg:justify-between">
@@ -167,14 +169,14 @@ const TechnicalAnalysisSection: React.FC<{ asset: MarketAsset }> = ({ asset }) =
                         </div>
                     </div>
                     <div className="flex flex-row-reverse flex-wrap items-center justify-end gap-2 text-[11px] text-gray-400">
-                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5">به‌روزرسانی لحظه‌ای</span>
-                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5">بازه ۲۴ ساعته</span>
-                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5">نماد: {asset.name}</span>
+                        <span className="technical-chip rounded-full border px-4 py-1.5">به‌روزرسانی لحظه‌ای</span>
+                        <span className="technical-chip rounded-full border px-4 py-1.5">بازه ۲۴ ساعته</span>
+                        <span className="technical-chip rounded-full border px-4 py-1.5">نماد: {asset.name}</span>
                     </div>
                 </header>
 
                 <div className="flex flex-col gap-8 xl:flex-row-reverse xl:items-start">
-                    <aside className="flex w-full max-w-full flex-col gap-7 rounded-3xl border border-white/10 bg-black/40 p-6 xl:w-[340px]">
+                    <aside className="technical-aside flex w-full max-w-full flex-col gap-7 rounded-3xl border p-6 xl:w-[340px]">
                         <div className="flex flex-col items-end gap-2 text-white">
                             <span className="text-xs text-gray-400">سیگنال غالب</span>
                             <strong style={{ color: summaryDetails.color }} className="text-3xl font-black leading-tight">
@@ -187,21 +189,21 @@ const TechnicalAnalysisSection: React.FC<{ asset: MarketAsset }> = ({ asset }) =
                                 <TechnicalAnalysisGauge value={summaryScore} size="large" color={summaryDetails.color} />
                             </div>
                             <div className="flex flex-row-reverse flex-wrap items-center justify-center gap-2 text-[11px] text-gray-300">
-                                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">امتیاز {summaryScore} از ۱۰۰</span>
-                                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">میانگین چهار شاخص</span>
+                                <span className="technical-chip rounded-full border px-3 py-1">امتیاز {summaryScore} از ۱۰۰</span>
+                                <span className="technical-chip rounded-full border px-3 py-1">میانگین چهار شاخص</span>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 gap-3">
                             {quickStats.map((stat) => (
                                 <div
                                     key={stat.label}
-                                    className="rounded-2xl border border-white/5 bg-white/5 px-4 py-3"
+                                    className="technical-stat-card rounded-2xl border px-4 py-3"
                                 >
                                     <div className="flex flex-row-reverse items-center justify-between text-sm text-white">
                                         <span className="font-semibold">{stat.label}</span>
                                         <span className="text-lg font-bold text-neo-green">{stat.value}</span>
                                     </div>
-                                    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                                    <div className="technical-progress-track mt-2 h-1.5 w-full overflow-hidden rounded-full">
                                         <span
                                             className="block h-full rounded-full bg-gradient-to-l from-neo-green via-neo-green/70 to-neo-green/30"
                                             style={{ width: `${stat.value}%` }}
@@ -221,7 +223,7 @@ const TechnicalAnalysisSection: React.FC<{ asset: MarketAsset }> = ({ asset }) =
 
                                 return (
                                     <li key={insight.key}>
-                                        <div className="flex flex-col gap-3 rounded-3xl border border-white/8 bg-white/5 px-4 py-4 text-right transition-colors duration-200 hover:border-neo-green/40 hover:bg-neo-green/5 sm:flex-row-reverse sm:items-center sm:justify-between">
+                                        <div className="technical-insight flex flex-col gap-3 rounded-3xl border px-4 py-4 text-right transition-colors duration-200 hover:border-neo-green/40 hover:bg-neo-green/5 sm:flex-row-reverse sm:items-center sm:justify-between">
                                             <div className="flex flex-1 flex-col gap-2 text-right">
                                                 <div className="flex flex-row-reverse items-start justify-between gap-3">
                                                     <div className="text-right">
@@ -229,7 +231,7 @@ const TechnicalAnalysisSection: React.FC<{ asset: MarketAsset }> = ({ asset }) =
                                                         <h3 className="mt-1 text-sm font-semibold text-white">{insight.title}</h3>
                                                     </div>
                                                     <span
-                                                        className="shrink-0 rounded-full border border-white/10 bg-white/0 px-3 py-1 text-[11px] font-semibold"
+                                                        className="technical-badge shrink-0 rounded-full border px-3 py-1 text-[11px] font-semibold"
                                                         style={{ color: detail.color }}
                                                     >
                                                         {detail.shortLabel}
@@ -243,7 +245,7 @@ const TechnicalAnalysisSection: React.FC<{ asset: MarketAsset }> = ({ asset }) =
                                                     <span>قدرت سیگنال</span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    <div className="h-1.5 w-24 overflow-hidden rounded-full bg-white/10">
+                                                    <div className="technical-progress-track h-1.5 w-24 overflow-hidden rounded-full">
                                                         <span
                                                             className="block h-full rounded-full bg-gradient-to-l from-neo-green via-neo-green/70 to-neo-green/25"
                                                             style={{ width: `${score}%` }}
@@ -258,7 +260,7 @@ const TechnicalAnalysisSection: React.FC<{ asset: MarketAsset }> = ({ asset }) =
                             })}
                         </ul>
 
-                        <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-xs leading-6 text-gray-200">
+                        <div className="technical-note rounded-2xl border px-5 py-4 text-xs leading-6 text-gray-200">
                             <strong className="ml-2 text-white">راهنمای سریع:</strong>
                             سیگنال‌ها با ترکیب میانگین‌های متحرک، نوسانگرها، MACD و RSI محاسبه شده‌اند. پیش از تصمیم‌گیری مالی، شرایط بازار و استراتژی شخصی خود را نیز بررسی کنید.
                         </div>

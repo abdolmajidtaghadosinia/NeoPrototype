@@ -1,9 +1,15 @@
 
 import React, { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import clsx from 'clsx';
 import { StarIcon } from './icons/StarIcon';
 import { ChartPieIcon } from './icons/ChartPieIcon';
 import { ChartBarIcon } from './icons/ChartBarIcon';
 import type { PortfolioReturnInsight } from './MarketOverview';
+import {
+  highlightDotVariantClasses,
+  highlightToneVariantClasses,
+  highlightValueVariantClasses,
+} from './designSystem';
 
 export type HighlightTone = 'up' | 'down' | 'neutral' | 'info' | 'alert';
 
@@ -44,23 +50,30 @@ interface FilterTabsProps {
   onActiveTabIdChange?: (tabId: string) => void;
 }
 
-const baseHighlightClasses =
-  'bg-black/60 text-white border border-white/10 backdrop-blur-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)]';
+const baseHighlightClasses = 'neo-highlight text-right';
 
 const highlightToneClasses: Record<HighlightTone, string> = {
-  up: 'border-emerald-400/60 text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.35)]',
-  down: 'border-rose-400/60 text-rose-100 shadow-[0_0_18px_rgba(244,63,94,0.3)]',
-  neutral: 'border-white/20 text-slate-50',
-  info: 'border-sky-400/60 text-sky-100 shadow-[0_0_18px_rgba(56,189,248,0.35)]',
-  alert: 'border-amber-400/60 text-amber-100 shadow-[0_0_18px_rgba(251,191,36,0.35)]',
+  up: highlightToneVariantClasses.positive,
+  down: highlightToneVariantClasses.negative,
+  neutral: highlightToneVariantClasses.neutral,
+  info: highlightToneVariantClasses.info,
+  alert: highlightToneVariantClasses.alert,
 };
 
 const highlightToneDotClasses: Record<HighlightTone, string> = {
-  up: 'bg-emerald-400',
-  down: 'bg-rose-400',
-  neutral: 'bg-slate-200',
-  info: 'bg-sky-400',
-  alert: 'bg-amber-400',
+  up: highlightDotVariantClasses.positive,
+  down: highlightDotVariantClasses.negative,
+  neutral: highlightDotVariantClasses.neutral,
+  info: highlightDotVariantClasses.info,
+  alert: highlightDotVariantClasses.alert,
+};
+
+const highlightValueToneClasses: Record<HighlightTone, string> = {
+  up: highlightValueVariantClasses.positive,
+  down: highlightValueVariantClasses.negative,
+  neutral: highlightValueVariantClasses.neutral,
+  info: highlightValueVariantClasses.info,
+  alert: highlightValueVariantClasses.alert,
 };
 
 const getHighlightScore = (highlight: TabHighlight): number => {
@@ -119,10 +132,27 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
   onActiveTabIdChange,
 }) => {
   const tabs = [
-    { name: 'ایده‌ها', icon: <StarIcon className="h-4 w-4" /> },
-    { name: 'داغ‌ترین‌ها', icon: null, badge: 'NEW' },
-    { name: 'پورتفوی من', icon: <ChartPieIcon className="h-4 w-4" /> },
-    { name: 'نمای بازار', icon: <ChartBarIcon className="h-4 w-4" /> },
+    {
+      name: 'ایده‌ها',
+      icon: <StarIcon className="h-5 w-5" />,
+      description: 'ایده‌های تحلیلی منتخب بر اساس روند بازار',
+    },
+    {
+      name: 'داغ‌ترین‌ها',
+      icon: null,
+      badge: 'NEW',
+      description: 'نمادهای پربازده و پرتقاضا در ساعات اخیر',
+    },
+    {
+      name: 'پورتفوی من',
+      icon: <ChartPieIcon className="h-5 w-5" />,
+      description: 'نمای کلی از ارزش و بازده پرتفو شخصی شما',
+    },
+    {
+      name: 'نمای بازار',
+      icon: <ChartBarIcon className="h-5 w-5" />,
+      description: 'وضعیت شاخص‌ها و صنایع منتخب بازار سرمایه',
+    },
   ];
 
   const idPrefix = useId();
@@ -360,20 +390,48 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
   }, [ensureActiveTabVisible]);
 
   const renderTabContent = (
-    tab: { name: string; icon?: React.ReactNode; badge?: string | null },
+    tab: { name: string; icon?: React.ReactNode; badge?: string | null; description?: string },
     highlights: TabHighlight[],
+    isActive: boolean,
   ) => {
-    if (highlights.length === 0) {
-      return (
-        <span className="flex items-center justify-center gap-1.5">
+    const labelColorClass = isActive
+      ? 'text-[rgb(var(--tabs-active-text))]'
+      : 'text-[rgb(var(--filter-highlight-text))]';
+
+    const header = (
+      <div className="flex items-center justify-between gap-1.5 sm:gap-2">
+        <span
+          className={clsx(
+            'flex items-center gap-1.5 text-sm font-semibold sm:text-base',
+            labelColorClass,
+          )}
+        >
           <span>{tab.name.trim()}</span>
           {tab.icon}
-          {tab.badge && (
-            <span className="rounded-md bg-black/50 px-1.5 py-0.5 text-[10px] font-bold text-white">
-              {tab.badge}
-            </span>
-          )}
         </span>
+        {tab.badge && (
+          <span
+            className={clsx(
+              'rounded-md bg-[color:var(--filter-highlight-chip-strong-bg)] px-2 py-0.5 text-xs font-bold',
+              labelColorClass,
+            )}
+          >
+            {tab.badge}
+          </span>
+        )}
+      </div>
+    );
+
+    if (highlights.length === 0) {
+      return (
+        <div className="flex h-full w-full flex-col justify-between gap-2.5 text-right">
+          {header}
+          {tab.description && (
+            <p className="text-xs leading-5 text-[rgb(var(--filter-highlight-subtext))] sm:text-sm">
+              {tab.description}
+            </p>
+          )}
+        </div>
       );
     }
 
@@ -381,49 +439,40 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
 
     if (!primaryHighlight) {
       return (
-        <span className="flex items-center justify-center gap-1.5">
-          <span>{tab.name.trim()}</span>
-          {tab.icon}
-          {tab.badge && (
-            <span className="rounded-md bg-black/50 px-1.5 py-0.5 text-[10px] font-bold text-white">
-              {tab.badge}
-            </span>
+        <div className="flex h-full w-full flex-col justify-between gap-2.5 text-right">
+          {header}
+          {tab.description && (
+            <p className="text-xs leading-5 text-[rgb(var(--filter-highlight-subtext))] sm:text-sm">
+              {tab.description}
+            </p>
           )}
-        </span>
+        </div>
       );
     }
 
     const { id, label, value, tone = 'neutral', icon, badge } = primaryHighlight;
 
     return (
-      <div className="flex w-full flex-col items-center gap-1.5">
-        <span className="flex items-center gap-1 text-[13px] font-semibold">
-          {tab.icon}
-          <span>{tab.name.trim()}</span>
-          {tab.badge && (
-            <span className="rounded-md bg-black/50 px-1.5 py-0.5 text-[10px] font-bold text-white">
-              {tab.badge}
-            </span>
-          )}
-        </span>
+      <div className="flex h-full w-full flex-col justify-between gap-2.5 text-right">
+        {header}
         <div
           key={id}
-          className={`flex w-full items-center justify-between gap-2 rounded-2xl px-2.5 py-1.5 text-[11px] font-semibold leading-tight ${baseHighlightClasses} ${highlightToneClasses[tone]}`}
+          className={clsx(
+            'min-h-[3.25rem] w-full text-sm font-semibold leading-tight',
+            baseHighlightClasses,
+            highlightToneClasses[tone],
+          )}
         >
-          <div className="flex items-center gap-1 text-[10px] font-medium opacity-85">
-            <span
-              className={`h-1.5 w-1.5 rounded-full ${highlightToneDotClasses[tone]}`}
-            />
-            {label && <span className="truncate max-w-[6.5rem]">{label}</span>}
-            {badge && (
-              <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wide">
-                {badge}
-              </span>
+          <div className="neo-highlight__meta">
+            <span className={highlightToneDotClasses[tone]} aria-hidden />
+            {label && (
+              <span className="neo-highlight__label max-w-[8rem] truncate sm:max-w-[9.5rem]">{label}</span>
             )}
+            {badge && <span className="neo-highlight__badge">{badge}</span>}
           </div>
-          <div className="flex items-center gap-1 text-sm font-bold">
-            {icon && <span className="flex items-center text-xs opacity-90">{icon}</span>}
-            <span className="max-w-[8rem] truncate text-right tracking-tight">
+          <div className="neo-highlight__value-wrap text-base sm:text-lg">
+            {icon && <span className="neo-highlight__icon">{icon}</span>}
+            <span className={clsx('truncate sm:max-w-[10rem]', highlightValueToneClasses[tone])}>
               {value ?? label ?? '—'}
             </span>
           </div>
@@ -433,10 +482,10 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
   };
 
   return (
-    <div className="pb-2">
+    <div className="pb-1.5 sm:pb-2.5">
       <div
         ref={containerRef}
-        className="flex items-stretch gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:overflow-visible"
+        className="neo-animate-inline flex items-stretch gap-1.5 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:justify-between sm:gap-2.5 sm:overflow-visible md:grid md:grid-cols-2 md:gap-2.5 md:[&>*]:min-w-0 lg:grid-cols-4"
         role="tablist"
         aria-label="بخش‌های داشبورد"
       >
@@ -459,11 +508,13 @@ const FilterTabs: React.FC<FilterTabsProps> = ({
               tabIndex={isActive ? 0 : -1}
               onClick={() => onTabChange(tab.name)}
               onKeyDown={(event) => handleKeyDown(event, index)}
-              className={`filter-tabs__button flex min-w-[9.5rem] flex-none items-center justify-center rounded-2xl border text-xs font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60 snap-center ${
-                isActive ? 'is-active' : ''
-              } ${highlightsForTab.length > 0 ? 'px-3 py-2.5' : 'px-2 py-2'} sm:flex-1 sm:min-w-0`}
+              className={clsx(
+                'filter-tabs__button group relative flex h-full min-w-[10.5rem] flex-none flex-col items-stretch justify-between rounded-3xl border px-3.5 py-2.5 text-right text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neo-green/60 snap-center sm:min-w-[12.5rem] sm:px-4 sm:py-3 sm:text-base md:w-full md:min-w-0',
+                isActive && 'is-active',
+                highlightsForTab.length > 0 ? 'min-h-[6.75rem]' : 'min-h-[5.75rem]',
+              )}
             >
-              {renderTabContent(tab, highlightsForTab)}
+              {renderTabContent(tab, highlightsForTab, isActive)}
             </button>
           );
         })}

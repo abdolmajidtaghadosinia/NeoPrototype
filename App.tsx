@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, Suspense, lazy, useRef } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy, useMemo } from 'react';
 import { GoogleGenAI } from '@google/genai';
 
 import Header from './components/Header';
@@ -23,7 +23,6 @@ const TradingIdeaPage = lazy(() => import('./components/pages/TradingIdeaPage'))
 const NewsArticlePage = lazy(() => import('./components/pages/NewsArticlePage'));
 import { NavTab, PortfolioSlice, LeaderboardUser, MarketAsset, Message, User, Stock, MarketSummaryItem, TradingIdea, NewsArticle, AiAction, FollowedActivity, View, IdeaComment } from './types';
 import { staticMarketData, userPortfolioData, leaderboardData, mockUserLoans, tradingIdeasData, financialNewsData } from './data/marketData';
-import { calculateRSI } from './components/technicalIndicators';
 import { toPersianDigits } from './components/formatters';
 import { normalizeText } from './utils/normalizeText';
 
@@ -80,7 +79,7 @@ const initialNotifications: NotificationItem[] = [
   {
     id: 1,
     type: 'trade',
-    message: '۱۰ واحد بیت‌کوین با موفقیت خریداری شد.',
+    message: '۱۰ واحد صندوق طلا عیار با موفقیت خریداری شد.',
     time: '۸ دقیقه پیش',
     read: false,
     actions: [
@@ -167,112 +166,6 @@ const initialNotifications: NotificationItem[] = [
   },
 ];
 
-const DAY_IN_MS = 24 * 60 * 60 * 1000;
-const WEEK_IN_MS = DAY_IN_MS * 7;
-const MONTH_IN_MS = DAY_IN_MS * 30;
-const YEAR_IN_MS = DAY_IN_MS * 365;
-
-const resampleSeries = (values: number[], targetPoints: number): number[] => {
-  if (!values.length || targetPoints <= 0) {
-    return [];
-  }
-
-  if (values.length === 1) {
-    return Array.from({ length: targetPoints }, () => values[0]);
-  }
-
-  if (targetPoints === values.length) {
-    return [...values];
-  }
-
-  const lastIndex = values.length - 1;
-
-  return Array.from({ length: targetPoints }, (_, index) => {
-    const ratio = targetPoints === 1 ? 0 : index / (targetPoints - 1);
-    const scaledIndex = ratio * lastIndex;
-    const lowerIndex = Math.floor(scaledIndex);
-    const upperIndex = Math.min(lastIndex, lowerIndex + 1);
-    const weight = scaledIndex - lowerIndex;
-    const lowerValue = values[lowerIndex];
-    const upperValue = values[upperIndex];
-
-    return lowerValue + (upperValue - lowerValue) * weight;
-  });
-};
-
-const buildChartDataFromSparkline = (
-  prices: number[],
-  targetPoints: number,
-  options?: { mode?: 'tail' | 'span'; totalDurationMs?: number; now?: number },
-) => {
-  if (!prices.length || targetPoints <= 0) {
-    return [];
-  }
-
-  const mode = options?.mode ?? 'span';
-  const totalDurationMs = options?.totalDurationMs ?? WEEK_IN_MS;
-  const now = options?.now ?? Date.now();
-
-  const sanitized = prices.filter((value) => Number.isFinite(value));
-  if (!sanitized.length) {
-    return [];
-  }
-
-  const needsTailSlice = mode === 'tail' && sanitized.length > targetPoints;
-  const sourceValues = needsTailSlice
-    ? sanitized.slice(sanitized.length - targetPoints)
-    : sanitized;
-
-  const series = resampleSeries(sourceValues, targetPoints);
-  const effectiveInterval =
-    series.length > 1 ? totalDurationMs / (series.length - 1) : totalDurationMs;
-  const startTimestamp =
-    mode === 'tail'
-      ? now - effectiveInterval * (series.length - 1)
-      : now - totalDurationMs;
-
-  return series.map((value, index) => ({
-    name: String(Math.round(startTimestamp + index * effectiveInterval)),
-    value,
-  }));
-};
-
-const CRYPTO_REFRESH_INTERVAL = 60_000;
-
-const STATIC_NON_CRYPTO_ASSETS = staticMarketData.filter(
-  (asset) => asset.category !== 'کریپتو',
-);
-const STATIC_CRYPTO_ASSETS = staticMarketData.filter(
-  (asset) => asset.category === 'کریپتو',
-);
-
-const resolveCoinGeckoApiKey = (): string | null => {
-  const metaEnv = (import.meta as unknown as {
-    env?: Record<string, string | undefined>;
-  }).env;
-  const processEnv =
-    typeof process !== 'undefined'
-      ? (process.env as Record<string, string | undefined>)
-      : undefined;
-
-  const candidates = [
-    metaEnv?.VITE_COINGECKO_API_KEY,
-    metaEnv?.VITE_CG_API_KEY,
-    metaEnv?.VITE_CG_DEMO_KEY,
-    processEnv?.VITE_COINGECKO_API_KEY,
-    processEnv?.COINGECKO_API_KEY,
-    processEnv?.CG_API_KEY,
-  ];
-
-  for (const candidate of candidates) {
-    if (typeof candidate === 'string' && candidate.trim().length > 0) {
-      return candidate.trim();
-    }
-  }
-
-  return null;
-};
-
 const App: React.FC = () => {
   const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
   const [view, setView] = useState<View>({ page: 'main', tab: 'home' });
@@ -280,15 +173,31 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User>(initialUser);
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [isChatLoading, setIsChatLoading] = useState(false);
-  const [marketAssets, setMarketAssets] = useState<MarketAsset[]>(
-    STATIC_NON_CRYPTO_ASSETS,
-  );
+  const marketAssets = staticMarketData;
   const [tradingIdeas, setTradingIdeas] = useState<TradingIdea[]>(tradingIdeasData);
   const [followedUserIds, setFollowedUserIds] = useState<number[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
-  const isFetchingMarketData = useRef(false);
+  const isLoading = false;
+  const error: string | null = null;
+
+  const secondaryActiveItem = useMemo(() => {
+    if (view.page === 'profile') {
+      if (view.payload.section === 'settings') {
+        return 'settings';
+      }
+      return 'profile';
+    }
+    if (view.page === 'alerts') {
+      return 'alerts';
+    }
+    if (view.page === 'loan') {
+      return 'wallet';
+    }
+    if (view.page === 'main' && view.tab === 'wallet') {
+      return 'wallet';
+    }
+    return null;
+  }, [view]);
 
   useEffect(() => {
     if (typeof document === 'undefined') {
@@ -344,219 +253,6 @@ const App: React.FC = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const fetchMarketAssets = useCallback(async (options?: { silent?: boolean }) => {
-    if (isFetchingMarketData.current) {
-      return;
-    }
-
-    isFetchingMarketData.current = true;
-
-    if (!options?.silent) {
-      setIsLoading(true);
-      setError(null);
-    }
-
-    const errors: string[] = [];
-    let fetchedCryptoAssets: MarketAsset[] | null = null;
-
-    try {
-      const params = new URLSearchParams({
-        vs_currency: 'usd',
-        order: 'market_cap_desc',
-        per_page: '10',
-        page: '1',
-        sparkline: 'true',
-        price_change_percentage: '24h,7d,30d,1y',
-      });
-
-      const headers: Record<string, string> = {
-        accept: 'application/json',
-        'cache-control': 'no-cache',
-      };
-
-      const apiKey = resolveCoinGeckoApiKey();
-      if (apiKey) {
-        headers['x_cg_demo_api_key'] = apiKey;
-      }
-
-      const cryptoResponse = await fetch(
-        `https://api.coingecko.com/api/v3/coins/markets?${params.toString()}`,
-        {
-          headers,
-          cache: 'no-store',
-        },
-      );
-
-      if (!cryptoResponse.ok) {
-        throw new Error(`HTTP error! status: ${cryptoResponse.status}`);
-      }
-
-      const payload = await cryptoResponse.json();
-      const coinsArray: any[] = Array.isArray(payload) ? payload : [];
-
-      if (!coinsArray.length) {
-        errors.push('داده معتبر از بازار کریپتو دریافت نشد.');
-      } else {
-        fetchedCryptoAssets = coinsArray.map((coin: any) => {
-          const rawSymbol =
-            typeof coin.symbol === 'string' && coin.symbol.trim().length > 0
-              ? coin.symbol.trim()
-              : '';
-          const symbol = rawSymbol.toUpperCase();
-          const rawName =
-            typeof coin.name === 'string' && coin.name.trim().length > 0
-              ? coin.name.trim()
-              : '';
-          const displayName = rawName || symbol || 'رمزارز';
-          const id =
-            typeof coin.id === 'string' && coin.id.trim().length > 0
-              ? coin.id
-              : `${symbol || displayName}`.toLowerCase().replace(/\s+/g, '-');
-
-          const priceValue =
-            typeof coin.current_price === 'number'
-              ? coin.current_price
-              : Number(coin.current_price);
-          const currentPrice = Number.isFinite(priceValue) ? priceValue : 0;
-
-          const sparkline = Array.isArray(coin.sparkline_in_7d?.price)
-            ? coin.sparkline_in_7d.price.filter((value: number) =>
-                typeof value === 'number' && Number.isFinite(value),
-              )
-            : [];
-
-          const baseSeries = sparkline.length ? sparkline : [currentPrice];
-          const dailyPointCount = Math.max(1, Math.min(24, baseSeries.length));
-          const weeklyPointCount = Math.max(1, Math.min(7, baseSeries.length));
-          const monthlyPointCount = Math.max(1, Math.min(30, baseSeries.length));
-          const yearlyPointCount = Math.max(1, Math.min(52, baseSeries.length));
-
-          const dailyChartData = buildChartDataFromSparkline(baseSeries, dailyPointCount, {
-            mode: 'tail',
-            totalDurationMs: DAY_IN_MS,
-          });
-          const weeklyChartData = buildChartDataFromSparkline(baseSeries, weeklyPointCount, {
-            totalDurationMs: WEEK_IN_MS,
-          });
-          const monthlyChartData = buildChartDataFromSparkline(baseSeries, monthlyPointCount, {
-            totalDurationMs: MONTH_IN_MS,
-          });
-          const yearlyChartData = buildChartDataFromSparkline(baseSeries, yearlyPointCount, {
-            totalDurationMs: YEAR_IN_MS,
-          });
-
-          const rsiValue = calculateRSI(baseSeries, 14);
-
-          const formatUsd = (value: number | null | undefined): string => {
-            if (typeof value === 'number' && Number.isFinite(value)) {
-              return `$${value.toLocaleString('en-US')}`;
-            }
-            return 'نامشخص';
-          };
-
-          const formatSupply = (value: number | null | undefined): string => {
-            if (typeof value === 'number' && Number.isFinite(value)) {
-              return `${value.toLocaleString('en-US')} ${symbol}`;
-            }
-            return 'نامشخص';
-          };
-
-          const formattedPrice =
-            currentPrice > 0 && currentPrice < 1
-              ? `$${currentPrice.toLocaleString('en-US', {
-                  minimumFractionDigits: 4,
-                  maximumFractionDigits: 6,
-                })}`
-              : `$${currentPrice.toLocaleString('en-US', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}`;
-
-          return {
-            id,
-            name: symbol ? `${displayName} (${symbol})` : displayName,
-            category: 'کریپتو',
-            icon: typeof coin.image === 'string' ? coin.image : '',
-            price: formattedPrice,
-            description: `اطلاعات لحظه‌ای و نمودار ${displayName}. این ارز دیجیتال با نماد ${symbol || displayName} شناخته می‌شود.`,
-            marketCap: formatUsd(coin.market_cap),
-            volume24h: formatUsd(coin.total_volume),
-            circulatingSupply: formatSupply(coin.circulating_supply),
-            performance: {
-              daily: {
-                change:
-                  typeof coin.price_change_percentage_24h_in_currency === 'number'
-                    ? coin.price_change_percentage_24h_in_currency
-                    : 0,
-                chartData: dailyChartData,
-              },
-              weekly: {
-                change:
-                  typeof coin.price_change_percentage_7d_in_currency === 'number'
-                    ? coin.price_change_percentage_7d_in_currency
-                    : 0,
-                chartData: weeklyChartData,
-              },
-              monthly: {
-                change:
-                  typeof coin.price_change_percentage_30d_in_currency === 'number'
-                    ? coin.price_change_percentage_30d_in_currency
-                    : 0,
-                chartData: monthlyChartData,
-              },
-              yearly: {
-                change:
-                  typeof coin.price_change_percentage_1y_in_currency === 'number'
-                    ? coin.price_change_percentage_1y_in_currency
-                    : 0,
-                chartData: yearlyChartData,
-              },
-            },
-            rsi: rsiValue ?? undefined,
-          } as MarketAsset;
-        });
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'خطای ناشناخته';
-      console.error('Failed to fetch or parse from CoinGecko API:', message);
-      errors.push('اطلاعات کریپتو بارگذاری نشد.');
-    } finally {
-      setMarketAssets((prevAssets) => {
-        const previousCrypto = prevAssets.filter((asset) => asset.category === 'کریپتو');
-        const fallbackCrypto =
-          previousCrypto.length > 0 ? previousCrypto : STATIC_CRYPTO_ASSETS;
-        const nextCrypto =
-          fetchedCryptoAssets && fetchedCryptoAssets.length
-            ? fetchedCryptoAssets
-            : fallbackCrypto;
-        return [...STATIC_NON_CRYPTO_ASSETS, ...nextCrypto];
-      });
-
-      if (errors.length > 0) {
-        setError(errors.join(' '));
-      } else {
-        setError(null);
-      }
-
-      if (!options?.silent) {
-        setIsLoading(false);
-      }
-
-      isFetchingMarketData.current = false;
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchMarketAssets();
-
-    const intervalId = window.setInterval(() => {
-      fetchMarketAssets({ silent: true });
-    }, CRYPTO_REFRESH_INTERVAL);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [fetchMarketAssets]);
 
   useEffect(() => {
     const loadChatHistory = async () => {
@@ -571,7 +267,7 @@ const App: React.FC = () => {
         if (history && history.length > 0) {
             setChatMessages(history);
         } else {
-             setChatMessages([{ role: 'model', text: 'سلام! من دستیار هوشمند مالی شما هستم. آماده‌ام تا به سوالات شما در مورد بورس، کریپتو و بازارهای مالی پاسخ دهم.' }]);
+             setChatMessages([{ role: 'model', text: 'سلام! من دستیار هوشمند مالی شما هستم. آماده‌ام تا به سوالات شما در مورد بورس تهران، صندوق‌های سرمایه‌گذاری و بازار سرمایه ایران پاسخ دهم.' }]);
         }
       } catch (error) {
           console.error("Error loading chat history:", error);
@@ -604,23 +300,56 @@ const App: React.FC = () => {
 
     const assetKeywordMap: { [key: string]: string } = {
       'وبملت': 'webmelat',
-      'دوج': 'dogecoin',
-      'دوجکوین': 'dogecoin',
       'درآمدثابت': 'kamand',
       'خودرو': 'khodro',
       'طلاعیار': 'ayar',
-      'اتریوم': 'ethereum',
       'صندوقطلا': 'ayar',
       'فولاد': 'foolad',
+      'فملی': 'fameli',
+      'فارس': 'fars',
       'شپنا': 'shepna',
+      'شبندر': 'shbandar',
       'دارایکم': 'dara',
       'اونطلا': 'ayar',
-      'بیتکوین': 'bitcoin',
       'طلا': 'ayar',
       'دلار': 'dollar',
       'کگل': 'kegol',
       'کچاد': 'kchad',
+      'میدکو': 'midco',
+      'تاپیکو': 'tapico',
+      'وغدیر': 'vghadir',
       'شستا': 'shasta',
+      'کمند': 'kamand',
+      'عیار': 'ayar',
+      'یاقوت': 'yaghoot',
+      'افران': 'afran',
+      'فیروزا': 'firooza',
+      'زرفام': 'zarfam',
+      'کهربا': 'kahroba',
+      'لوتوس': 'lotus-gold',
+      'مثقال': 'mesghal',
+      'گنج': 'ganj',
+      'گوهر': 'gohar-gold',
+      'آلتون': 'alton',
+      'نفیس': 'nafis',
+      'زر افشان': 'zarafshan',
+      'کارا': 'kara',
+      'ماهور': 'mahoor',
+      'ارکیده': 'orkideh',
+      'موج': 'moj',
+      'کلید': 'kelid',
+      'پارند': 'parand',
+      'اهرم': 'ahram',
+      'همای': 'homay',
+      'کیان': 'kian',
+      'وتجارت': 'tejarat',
+      'بانکتجارت': 'tejarat',
+      'وبصادر': 'saderat',
+      'بانکصادرات': 'saderat',
+      'ذوب': 'zoob',
+      'خساپا': 'khsaipa',
+      'سایپا': 'khsaipa',
+      'خگستر': 'khgostar',
     };
 
     for (const keyword in assetKeywordMap) {
@@ -817,7 +546,7 @@ const App: React.FC = () => {
           const response = await ai.models.generateContent({
               model: 'gemini-2.5-flash',
               contents: prompt,
-              config: { systemInstruction: "You are a helpful financial assistant specializing in stock and cryptocurrency markets for a Persian-speaking audience. Provide concise, informative, and easy-to-understand answers in Persian. Use Persian numerals (۰۱۲۳۴۵۶۷۸۹) for numbers." }
+              config: { systemInstruction: "You are a helpful financial assistant focused on the Iranian capital market, including Tehran Stock Exchange, fixed-income funds, and precious metals. Provide concise, informative answers in Persian and use Persian numerals (۰۱۲۳۴۵۶۷۸۹)." }
           });
           
           const aiResponseText = response.text;
@@ -1052,6 +781,7 @@ const App: React.FC = () => {
       activeTab={activeTab}
       onTabChange={(tab) => navigateTo({ page: 'main', tab })}
       showBottomNav={view.page === 'main'}
+      secondaryActiveItem={secondaryActiveItem}
       onProfile={() => navigateTo({ page: 'profile', payload: { user } })}
       onAlerts={() => navigateTo({ page: 'alerts' })}
       onWallet={() => navigateTo({ page: 'main', tab: 'wallet' })}

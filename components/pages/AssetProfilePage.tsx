@@ -16,9 +16,17 @@ import TechnicalAnalysisSection from '../TechnicalAnalysisSection';
 import { toPersianDigits } from '../formatters';
 import Page from '../layout/Page';
 import { composeSurfaceClasses, SurfacePadding, SurfaceTone } from '../designSystem';
+import AssetIcon, { deriveAssetSymbol } from '../AssetIcon';
 
 
 type Timeframe = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
+const assetVariantMap: Record<MarketAsset['category'], NonNullable<React.ComponentProps<typeof AssetIcon>['variant']>> = {
+  بورس: 'stock',
+  'صندوق‌ها': 'fund',
+  ارزها: 'currency',
+  کالا: 'commodity',
+};
 
 /**
  * Props for the AssetProfilePage component.
@@ -88,81 +96,8 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
 
     // This effect fetches the dynamic chart data whenever the asset or timeframe changes.
     useEffect(() => {
-        const fetchChartData = async () => {
-            // For non-crypto assets, we use the static data from props and don't need to fetch.
-            if (detailedAsset.category !== 'کریپتو') {
-                setIsLoadingChart(false);
-                return;
-            }
-
-            // If chart data for the selected timeframe already exists from the initial load, don't re-fetch.
-            if (detailedAsset.performance[timeframe]?.chartData?.length > 0) {
-                 setIsLoadingChart(false);
-                 return;
-            }
-
-            setIsLoadingChart(true);
-            setChartError(null);
-
-            const daysMap: { [key in Timeframe]: number } = {
-                daily: 1,
-                weekly: 7,
-                monthly: 30,
-                yearly: 365,
-            };
-            const days = daysMap[timeframe];
-
-            try {
-                // We fetch data specific to the selected timeframe.
-                const response = await fetch(`https://api.coingecko.com/api/v3/coins/${detailedAsset.id}/market_chart?vs_currency=usd&days=${days}`);
-                if (!response.ok) {
-                    throw new Error(`Could not fetch chart for ${detailedAsset.name}`);
-                }
-                
-                const data = await response.json();
-                if (!data.prices || data.prices.length === 0) {
-                    throw new Error('Invalid chart data received');
-                }
-
-                const prices: [number, number][] = data.prices;
-                const chartPoints = prices.map((p) => ({ name: String(p[0]), value: p[1] }));
-                
-                const currentPrice = chartPoints[chartPoints.length - 1].value;
-                const oldPrice = chartPoints[0].value;
-                const change = oldPrice > 0 ? ((currentPrice - oldPrice) / oldPrice) * 100 : 0;
-                
-                const newPerformanceData: PerformanceData = {
-                    change,
-                    chartData: chartPoints,
-                };
-
-                // Update the performance data for the specific timeframe in our local asset state.
-                setDetailedAsset(prevAsset => ({
-                    ...prevAsset,
-                    performance: {
-                        ...prevAsset.performance,
-                        [timeframe]: newPerformanceData,
-                    },
-                }));
-
-            } catch (err) {
-                 const message = err instanceof Error ? err.message : 'An unknown error occurred';
-                 setChartError(message);
-                 console.error(err);
-                 // On error, clear the chart for the current timeframe to avoid showing stale data.
-                 setDetailedAsset(prevAsset => ({
-                    ...prevAsset,
-                    performance: {
-                        ...prevAsset.performance,
-                        [timeframe]: { change: 0, chartData: [] },
-                    },
-                 }));
-            } finally {
-                setIsLoadingChart(false);
-            }
-        };
-
-        fetchChartData();
+        setIsLoadingChart(false);
+        setChartError(null);
     }, [detailedAsset.id, detailedAsset.category, timeframe]);
 
     const toggleWatchlist = () => setIsInWatchlist((prev) => !prev);
@@ -212,7 +147,8 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
 
     const performance = detailedAsset.performance[timeframe];
     const isPositive = performance && performance.change >= 0;
-    const chartColor = isPositive ? '#D7FE43' : '#ef4444';
+    const accentColor = 'rgb(var(--neo-accent))';
+    const chartColor = isPositive ? accentColor : '#ef4444';
     const priceUnitLabel = useMemo(() => {
         const priceText = detailedAsset.price;
         if (priceText.includes('$')) return 'دلار';
@@ -264,6 +200,49 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
         return `${toPersianDigits(localeValue)}${priceUnitLabel ? ` ${priceUnitLabel}` : ''}`;
     };
 
+    const chartXAxisLabel = 'زمان';
+    const chartYAxisLabel = priceUnitLabel ? `قیمت (${priceUnitLabel})` : 'قیمت';
+
+    const formatChartLabel = useCallback(
+        (rawLabel: string | number) => {
+            const label = typeof rawLabel === 'number' ? rawLabel.toString() : rawLabel;
+            if (typeof label !== 'string' || !label.trim()) return '';
+            const timestamp = parseInt(label, 10);
+            if (Number.isNaN(timestamp) || timestamp <= 0) {
+                return '';
+            }
+
+            const m = moment(timestamp).locale('fa');
+            if (!m.isValid()) return '';
+
+            switch (timeframe) {
+                case 'daily':
+                    return toPersianDigits(m.format('HH:mm'));
+                case 'weekly':
+                case 'monthly':
+                    return toPersianDigits(m.format('jD jMMM'));
+                case 'yearly':
+                    return toPersianDigits(m.format('jMMM jYY'));
+                default:
+                    return toPersianDigits(m.format('jYYYY/jM/jD'));
+            }
+        },
+        [timeframe],
+    );
+
+    const formatPriceTick = useCallback(
+        (value: number) => {
+            if (typeof value !== 'number' || Number.isNaN(value)) {
+                return '';
+            }
+            const localized = value.toLocaleString('fa-IR', {
+                maximumFractionDigits: value >= 100 ? 0 : 1,
+            });
+            return toPersianDigits(localized);
+        },
+        [],
+    );
+
     const timeframes: { label: string; value: Timeframe }[] = [
         { label: 'روزانه', value: 'daily' },
         { label: 'هفتگی', value: 'weekly' },
@@ -290,11 +269,13 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                     </button>
                     <div className="flex items-center gap-3">
                         <div className="bg-neo-dark-2 p-1 rounded-xl flex items-center justify-center w-12 h-12">
-                            {typeof detailedAsset.icon === 'string' && detailedAsset.icon.startsWith('http') ? (
-                                <img src={detailedAsset.icon} alt={detailedAsset.name} className="w-9 h-9 object-contain" />
-                            ) : (
-                                <span className="text-2xl flex items-center justify-center w-full h-full">{detailedAsset.icon}</span>
-                            )}
+                            <AssetIcon
+                                icon={detailedAsset.icon}
+                                name={detailedAsset.name}
+                                symbol={deriveAssetSymbol(detailedAsset.name)}
+                                size="sm"
+                                variant={assetVariantMap[detailedAsset.category] ?? 'default'}
+                            />
                         </div>
                         <div className="flex flex-col items-start gap-1">
                             <h1 className="text-lg font-bold text-white sm:text-xl">{detailedAsset.name}</h1>
@@ -386,7 +367,10 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                                 <div className="flex h-full items-center justify-center text-red-500">{chartError}</div>
                             ) : performance && performance.chartData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={performance.chartData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+                                    <AreaChart
+                                        data={performance.chartData}
+                                        margin={{ top: 5, right: 20, left: 0, bottom: 20 }}
+                                    >
                                         <defs>
                                             <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="5%" stopColor={chartColor} stopOpacity={0.4} />
@@ -394,7 +378,22 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#2C2C2E" vertical={false} />
-                                        <XAxis dataKey="name" hide />
+                                        <XAxis
+                                            dataKey="name"
+                                            tickFormatter={formatChartLabel}
+                                            tickLine={false}
+                                            axisLine={{ stroke: '#3F3F46' }}
+                                            tick={{ fill: '#D4D4D8', fontSize: 12 }}
+                                            interval="preserveStartEnd"
+                                            minTickGap={16}
+                                            label={{
+                                                value: chartXAxisLabel,
+                                                position: 'insideBottom',
+                                                offset: -10,
+                                                fill: '#9CA3AF',
+                                                fontSize: 12,
+                                            }}
+                                        />
                                         <Tooltip
                                             contentStyle={{
                                                 backgroundColor: 'rgba(28, 28, 30, 0.9)',
@@ -409,35 +408,33 @@ const AssetProfilePage: React.FC<AssetProfilePageProps> = ({ asset, onBack, onBu
                                             labelStyle={{ color: '#fff' }}
                                             itemStyle={{ color: '#fff' }}
                                             labelFormatter={(label: string) => {
-                                                if (typeof label !== 'string' || !label.trim()) return 'تاریخ نامعتبر';
-                                                const timestamp = parseInt(label, 10);
-                                                if (Number.isNaN(timestamp) || timestamp <= 0) {
-                                                    return 'تاریخ نامعتبر';
-                                                }
-
                                                 try {
-                                                    const m = moment(timestamp).locale('fa');
-                                                    if (!m.isValid()) return 'تاریخ نامعتبر';
-
-                                                    switch (timeframe) {
-                                                        case 'daily':
-                                                            return m.format('jD jMMMM، HH:mm');
-                                                        case 'weekly':
-                                                        case 'monthly':
-                                                            return m.format('jD jMMMM');
-                                                        case 'yearly':
-                                                            return m.format('jMMMM jYYYY');
-                                                        default:
-                                                            return m.format('jYYYY/jM/jD');
-                                                    }
+                                                    const formatted = formatChartLabel(label);
+                                                    return formatted || 'تاریخ نامعتبر';
                                                 } catch (e) {
                                                     console.error('Error in date formatting:', e);
                                                     return 'خطا در تاریخ';
                                                 }
                                             }}
-                                            cursor={{ stroke: '#D7FE43', strokeWidth: 1 }}
+                                            cursor={{ stroke: accentColor, strokeWidth: 1 }}
                                         />
-                                        <YAxis hide domain={['dataMin', 'dataMax']} />
+                                        <YAxis
+                                            domain={['dataMin', 'dataMax']}
+                                            tickFormatter={formatPriceTick}
+                                            orientation="right"
+                                            tickLine={false}
+                                            axisLine={{ stroke: '#3F3F46' }}
+                                            tick={{ fill: '#D4D4D8', fontSize: 12 }}
+                                            width={70}
+                                            label={{
+                                                value: chartYAxisLabel,
+                                                angle: -90,
+                                                position: 'insideRight',
+                                                offset: 10,
+                                                fill: '#9CA3AF',
+                                                fontSize: 12,
+                                            }}
+                                        />
                                         <Area type="linear" dataKey="value" stroke={chartColor} strokeWidth={3} fill="url(#chart-gradient)" fillOpacity={1} />
                                     </AreaChart>
                                 </ResponsiveContainer>
